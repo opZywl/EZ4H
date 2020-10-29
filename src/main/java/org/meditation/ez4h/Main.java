@@ -7,16 +7,26 @@ import com.github.steveice10.mc.protocol.MinecraftConstants;
 import com.github.steveice10.mc.protocol.MinecraftProtocol;
 import com.github.steveice10.mc.protocol.ServerLoginHandler;
 import com.github.steveice10.mc.protocol.data.SubProtocol;
+import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
+import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
+import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
+import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.data.status.handler.ServerInfoBuilder;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
 import com.github.steveice10.packetlib.Server;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
+import org.meditation.ez4h.bedrock.BedrockUtils;
+import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
+import org.meditation.ez4h.mcjava.BroadcastPacket;
+import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
 import org.meditation.ez4h.utils.FileUtils;
+import org.meditation.ez4h.utils.OtherUtils;
 
 import java.io.File;
 
@@ -50,7 +60,14 @@ public class Main {
         server.setGlobalFlag(MinecraftConstants.SERVER_LOGIN_HANDLER_KEY, new ServerLoginHandler() {
             @Override
             public void loggedIn(Session session) {
-                System.out.println("LOGGINED");
+                GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
+                Client client=Variables.clientMap.get(profile.getName());
+                client.clientStat.jLogined=true;
+                if(client.clientStat.jPacketMap.get("ServerJoinGame")!=null){
+                    session.send(client.clientStat.jPacketMap.remove("ServerJoinGame"));
+                    session.send(client.clientStat.jPacketMap.remove("ServerPlayerPositionRotation"));
+                    session.send(client.clientStat.jPacketMap.remove("ServerPlayerListData"));
+                }
             }
         });
 
@@ -68,8 +85,11 @@ public class Main {
                 if(protocol.getSubProtocol() == SubProtocol.GAME) {
                     Session session=event.getSession();
                     GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
+                    Client client=Variables.clientMap.remove(profile.getName());
                     Variables.logger.info(profile.getName()+"["+session.getHost()+":"+session.getPort()+"] QUITED.");
-                    Variables.clientMap.get(profile.getName()).session.disconnect();
+                    client.session.disconnect();
+                    PlayerListEntry[] playerListEntry={new PlayerListEntry(new GameProfile(client.playerUUID,client.playerName), GameMode.SURVIVAL,0,new TextMessage(client.playerName))};
+                    BroadcastPacket.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER,playerListEntry));
                 }
             }
         });
