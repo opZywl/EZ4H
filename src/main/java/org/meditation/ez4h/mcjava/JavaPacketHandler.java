@@ -3,6 +3,11 @@ package org.meditation.ez4h.mcjava;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerChangeHeldItemPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerSwingArmPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerUseItemPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.mc.protocol.packet.login.client.LoginStartPacket;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
@@ -41,7 +46,42 @@ public class JavaPacketHandler extends SessionAdapter {
                 case "ClientChatPacket":{
                     if(event.getPacket() instanceof ClientChatPacket){
                         assert clientHandler != null;
-                        clientHandler.handle((ClientChatPacket)event.getPacket());
+                        clientHandler.handle((ClientChatPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientWindowActionPacket":{
+                    if(event.getPacket() instanceof ClientWindowActionPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientWindowActionPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerSwingArmPacket":{
+                    if(event.getPacket() instanceof ClientPlayerSwingArmPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerSwingArmPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientRequestPacket":{
+                    if(event.getPacket() instanceof ClientRequestPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientRequestPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerUseItemPacket":{
+                    if(event.getPacket() instanceof ClientPlayerUseItemPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerUseItemPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerChangeHeldItemPacket":{
+                    if(event.getPacket() instanceof ClientPlayerChangeHeldItemPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerChangeHeldItemPacket) event.getPacket());
                     }
                     break;
                 }

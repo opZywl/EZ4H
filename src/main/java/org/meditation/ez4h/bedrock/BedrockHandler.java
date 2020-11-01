@@ -8,10 +8,7 @@ import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListDataPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.*;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityVelocityPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerHealthPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
@@ -20,6 +17,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSl
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindowItemsPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
 import com.nukkitx.math.vector.Vector3f;
+import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.data.AttributeData;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
@@ -265,13 +263,14 @@ public class BedrockHandler implements BedrockPacketHandler {
         return false;
     }
 
-    public boolean handle(MoveEntityAbsolutePacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
-        return false;
-    }
+//    public boolean handle(MoveEntityAbsolutePacket packet) {
+//        Variables.logger.warning(packet.getClass().getName());
+//        return false;
+//    }
 
     public boolean handle(MovePlayerPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
+        System.out.println(packet.toString());
         return false;
     }
 
@@ -487,6 +486,7 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(LevelEventPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
+        System.out.println(packet.toString());
         return false;
     }
 
@@ -592,7 +592,22 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(RespawnPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        switch (packet.getState()){
+            case SERVER_SEARCHING:{
+                client.JESession.send(new ServerPlayerHealthPacket(0,client.clientStat.food,0));
+                break;
+            }
+            case SERVER_READY:{
+                PlayerActionPacket playerActionPacket=new PlayerActionPacket();
+                playerActionPacket.setAction(PlayerActionPacket.Action.RESPAWN);
+                playerActionPacket.setFace(-1);
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setBlockPosition(Vector3i.from(0,0,0));
+                client.session.sendPacket(playerActionPacket);
+                client.JESession.send(new ServerRespawnPacket(client.clientStat.dimension,client.clientStat.difficulty,client.clientStat.gameMode,WorldType.CUSTOMIZED));
+                break;
+            }
+        }
         return false;
     }
 
@@ -739,6 +754,10 @@ public class BedrockHandler implements BedrockPacketHandler {
             client.clientStat.jPacketMap.put("ServerJoinGame",serverJoinGamePacket);
             client.clientStat.jPacketMap.put("ServerPlayerListData",serverPlayerListDataPacket);
         }
+        client.clientStat.entityId=packet.getRuntimeEntityId();
+        client.clientStat.dimension=packet.getDimensionId();
+        client.clientStat.difficulty=BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
+        client.clientStat.gameMode=gamemode;
         return false;
     }
 
