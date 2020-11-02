@@ -22,6 +22,7 @@ import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import org.meditation.ez4h.bedrock.BedrockUtils;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
+import org.meditation.ez4h.bedrock.tunnel.BlockTranslator;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
@@ -48,6 +49,7 @@ public class Main {
         Variables.config=JSON.parseObject(FileUtils.readFile("./config.json"));
     }
     private static void initPEProtocol() {
+        BlockTranslator.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
         Variables.pingThread=new Ping();
     }
     private static void initJEProtocol() {

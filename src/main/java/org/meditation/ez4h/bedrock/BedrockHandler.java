@@ -3,6 +3,7 @@ package org.meditation.ez4h.bedrock;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
+import com.github.steveice10.mc.protocol.data.game.chunk.Column;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
@@ -15,6 +16,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.Serv
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerSetExperiencePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindowItemsPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
@@ -23,6 +25,8 @@ import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.Variables;
+import org.meditation.ez4h.bedrock.tunnel.BlockTranslator;
+import org.meditation.ez4h.bedrock.tunnel.LevelChunkPacketTranslator;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
 
 import java.util.ArrayList;
@@ -460,7 +464,11 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(LevelChunkPacket packet) {
-        //System.out.println(packet.toString());
+        try {
+            client.JESession.send(LevelChunkPacketTranslator.translate(packet));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -727,6 +735,7 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(StartGamePacket packet) {
+        BlockTranslator.loadRuntime(packet.getBlockPalette());
         String BEGameType=packet.getPlayerGameType().toString();
         if(BEGameType.contains("VIEWER")){
             BEGameType=GameMode.SPECTATOR.name();
