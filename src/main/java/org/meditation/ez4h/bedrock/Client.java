@@ -2,13 +2,6 @@ package org.meditation.ez4h.bedrock;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.steveice10.mc.auth.data.GameProfile;
-import com.github.steveice10.mc.protocol.MinecraftConstants;
-import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
-import com.github.steveice10.mc.protocol.data.message.Message;
-import com.github.steveice10.mc.protocol.data.message.TextMessage;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListDataPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.nukkitx.protocol.bedrock.BedrockClient;
@@ -17,14 +10,11 @@ import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 import io.netty.util.AsciiString;
 import org.meditation.ez4h.Variables;
-import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.ClientStat;
-import org.meditation.ez4h.utils.OtherUtils;
 import org.meditation.ez4h.utils.RandUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.InetSocketAddress;
 import java.util.Base64;
 import java.util.UUID;
@@ -33,6 +23,7 @@ public class Client {
     public BedrockClientSession session;
     public Session JESession;
     public String playerName;
+    public String xuid;
     public UUID playerUUID;
     public ClientHandler javaHandler;
     public ClientStat clientStat;
@@ -73,23 +64,23 @@ public class Client {
         loginPacket.setProtocolVersion(Variables.config.getJSONObject("advanced").getInteger("be_protocol"));
         JSONObject chain=new JSONObject(),chain1=new JSONObject(),extraData=new JSONObject();
         JSONArray chainL=new JSONArray();
-        GameProfile profile = JESession.getFlag(MinecraftConstants.PROFILE_KEY);
-        extraData.put("displayName",profile.getName());
-        extraData.put("identity",profile.getId().toString());
+        extraData.put("displayName",this.playerName);
+        extraData.put("identity",this.playerUUID.toString());
+        extraData.put("XUID",this.xuid);
         chain1.put("extraData",extraData);
         chainL.add("."+ Base64.getEncoder().encodeToString(chain1.toJSONString().getBytes()) +".");
         chain.put("chain",chainL);
         loginPacket.setChainData(new AsciiString(chain.toJSONString()));
         JSONObject skinData=new JSONObject();
         skinData.put("ClientRandomId",RandUtils.rand(0,9999999));
-        skinData.put("SkinId",this.playerName.toLowerCase()+"_skin");
-        skinData.put("CapeId",this.playerName.toLowerCase()+"_cape");
+        skinData.put("SkinId",this.playerName.replaceAll(" ","_").toLowerCase()+"_skin");
+        skinData.put("CapeId",this.playerName.replaceAll(" ","_").toLowerCase()+"_cape");
         skinData.put("SkinData",BedrockUtils.skinTextureToString(new File("./resources/skin.png")));
         skinData.put("SkinImageWidth",64);
         skinData.put("SkinImageHeight",64);
+        skinData.put("SkinGeometryData", Base64.getEncoder().encodeToString(Variables.SKIN_GEOMETRY_DATA.getBytes()));
         skinData.put("SkinResourcePatch",Base64.getEncoder().encodeToString("{\"geometry\" : {\"default\" : \"geometry.humanoid.custom\"}}".getBytes()));
         loginPacket.setSkinData(new AsciiString("."+Base64.getEncoder().encodeToString(skinData.toJSONString().getBytes())+"."));
         session.sendPacket(loginPacket);
     }
-
 }

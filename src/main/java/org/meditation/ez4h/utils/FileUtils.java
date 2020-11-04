@@ -61,6 +61,17 @@ public class FileUtils {
         out.flush();
         out.close();
     }
+    public static String readIS(InputStream inputStream) throws Exception {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        byteArrayOutputStream.close();
+        inputStream.close();
+        return byteArrayOutputStream.toString("UTF-8");
+    }
     public static String readFile(String fileName) {
         File file = new File(fileName);
         Long filelength = file.length();
