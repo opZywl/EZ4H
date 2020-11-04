@@ -5,9 +5,11 @@ import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
 import com.github.steveice10.mc.protocol.data.game.chunk.Column;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
+import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.*;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityVelocityPacket;
@@ -17,10 +19,12 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.Serv
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindowItemsPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotifyClientPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.data.AttributeData;
+import com.nukkitx.protocol.bedrock.data.GameType;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
@@ -273,8 +277,18 @@ public class BedrockHandler implements BedrockPacketHandler {
 //    }
 
     public boolean handle(MovePlayerPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
-        System.out.println(packet.toString());
+        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
+        if(packet.getRuntimeEntityId()==client.clientStat.entityId){
+            if(client.clientStat.x!=position.getX()&&client.clientStat.y!=position.getY()&&client.clientStat.z!=position.getZ()) {
+                client.clientStat.yaw = rotation.getX();
+                client.clientStat.pitch = rotation.getY();
+                client.clientStat.x=position.getX();
+                client.clientStat.y=position.getY();
+                client.clientStat.z=position.getZ();
+                ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), rotation.getY(),rotation.getX(), 1);
+                client.JESession.send(serverPlayerPositionRotationPacket);
+            }
+        }
         return false;
     }
 
@@ -359,7 +373,7 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(SetPlayerGameTypePacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        client.JESession.send(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE,BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()))));
         return false;
     }
 
@@ -613,6 +627,15 @@ public class BedrockHandler implements BedrockPacketHandler {
                 playerActionPacket.setBlockPosition(Vector3i.from(0,0,0));
                 client.session.sendPacket(playerActionPacket);
                 client.JESession.send(new ServerRespawnPacket(client.clientStat.dimension,client.clientStat.difficulty,client.clientStat.gameMode,WorldType.CUSTOMIZED));
+                MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+                movePlayerPacket.setMode(MovePlayerPacket.Mode.RESPAWN);
+                movePlayerPacket.setOnGround(true);
+                movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+                movePlayerPacket.setRidingRuntimeEntityId(0);
+                Vector3f position=packet.getPosition();
+                movePlayerPacket.setPosition(Vector3f.from(position.getX(),position.getY(),position.getZ()));
+                movePlayerPacket.setRotation(Vector3f.from(0, 0, 0));
+                client.session.sendPacket(movePlayerPacket);
                 break;
             }
         }
@@ -736,11 +759,7 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(StartGamePacket packet) {
         BlockTranslator.loadRuntime(packet.getBlockPalette());
-        String BEGameType=packet.getPlayerGameType().toString();
-        if(BEGameType.contains("VIEWER")){
-            BEGameType=GameMode.SPECTATOR.name();
-        }
-        GameMode gamemode=GameMode.valueOf(BEGameType);
+        GameMode gamemode=BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
         ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
                 (int) packet.getUniqueEntityId(),
                 false,
@@ -923,7 +942,7 @@ public class BedrockHandler implements BedrockPacketHandler {
 //    }
 
     public boolean handle(UpdatePlayerGameTypePacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        client.JESession.send(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE,BedrockUtils.convertGameModeToJE(packet.getGameType())));
         return false;
     }
 

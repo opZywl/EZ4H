@@ -4,9 +4,7 @@ import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerChangeHeldItemPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerSwingArmPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerUseItemPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.mc.protocol.packet.login.client.LoginStartPacket;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
@@ -82,6 +80,41 @@ public class JavaPacketHandler extends SessionAdapter {
                     if(event.getPacket() instanceof ClientPlayerChangeHeldItemPacket){
                         assert clientHandler != null;
                         clientHandler.handle((ClientPlayerChangeHeldItemPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerPositionPacket":{
+                    if(event.getPacket() instanceof ClientPlayerPositionPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerPositionPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerPositionRotationPacket":{
+                    if(event.getPacket() instanceof ClientPlayerPositionRotationPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerPositionRotationPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerRotationPacket":{
+                    if(event.getPacket() instanceof ClientPlayerRotationPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerRotationPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerPlaceBlockPacket":{
+                    if(event.getPacket() instanceof ClientPlayerPlaceBlockPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerPlaceBlockPacket) event.getPacket());
+                    }
+                    break;
+                }
+                case "ClientPlayerActionPacket":{
+                    if(event.getPacket() instanceof ClientPlayerActionPacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerActionPacket) event.getPacket());
                     }
                     break;
                 }

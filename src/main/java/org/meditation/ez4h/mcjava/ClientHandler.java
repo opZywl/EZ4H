@@ -1,16 +1,21 @@
 package org.meditation.ez4h.mcjava;
 
 import com.github.steveice10.mc.protocol.data.game.ClientRequest;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerChangeHeldItemPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerSwingArmPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerUseItemPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.nukkitx.math.vector.Vector3f;
+import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginData;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginType;
+import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.*;
+import org.meditation.ez4h.bedrock.BedrockUtils;
 import org.meditation.ez4h.bedrock.Client;
 
 import java.util.ArrayList;
@@ -63,15 +68,116 @@ public class ClientHandler {
         playerHotbarPacket.setSelectedHotbarSlot(packet.getSlot());
         playerHotbarPacket.setSelectHotbarSlot(true);
         client.session.sendPacket(playerHotbarPacket);
+        client.clientStat.slot=packet.getSlot();
     }
     public void handle(ClientPlayerUseItemPacket packet) {
         System.out.println(packet.toString());
     }
-
     public void handle(ClientPlayerSwingArmPacket packet) {
         AnimatePacket animatePacket=new AnimatePacket();
         animatePacket.setAction(AnimatePacket.Action.SWING_ARM);
         animatePacket.setRuntimeEntityId(client.clientStat.entityId);
         client.session.sendPacket(animatePacket);
+    }
+    public void handle(ClientPlayerPositionPacket packet) {
+        MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+        movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
+        movePlayerPacket.setOnGround(packet.isOnGround());
+        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+        movePlayerPacket.setRidingRuntimeEntityId(0);
+        client.clientStat.x= (float) packet.getX();
+        client.clientStat.y= (float) packet.getY();
+        client.clientStat.z= (float) packet.getZ();
+        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setRotation(Vector3f.from(client.clientStat.pitch,client.clientStat.yaw,0));
+        client.session.sendPacket(movePlayerPacket);
+    }
+    public void handle(ClientPlayerPositionRotationPacket packet) {
+        MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+        movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
+        movePlayerPacket.setOnGround(true);
+        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+        movePlayerPacket.setRidingRuntimeEntityId(0);
+        client.clientStat.x= (float) packet.getX();
+        client.clientStat.y= (float) packet.getY();
+        client.clientStat.z= (float) packet.getZ();
+        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
+        client.clientStat.yaw= (float) packet.getYaw();
+        client.clientStat.pitch= (float) packet.getPitch();
+        client.session.sendPacket(movePlayerPacket);
+    }
+    public void handle(ClientPlayerRotationPacket packet) {
+        MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+        movePlayerPacket.setMode(MovePlayerPacket.Mode.HEAD_ROTATION);
+        movePlayerPacket.setOnGround(true);
+        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+        movePlayerPacket.setRidingRuntimeEntityId(0);
+        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
+        client.clientStat.yaw= (float) packet.getYaw();
+        client.clientStat.pitch= (float) packet.getPitch();
+        client.session.sendPacket(movePlayerPacket);
+    }
+    public void handle(ClientPlayerPlaceBlockPacket packet) {
+        InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
+        inventoryTransactionPacket.setActionType(2);
+        inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
+        inventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
+        Position blockPos=packet.getPosition();
+        inventoryTransactionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(), blockPos.getZ()));
+        inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+        ItemStack inHand=client.clientStat.inventory[36+client.clientStat.slot];
+        inventoryTransactionPacket.setItemInHand(ItemData.of(inHand.getId(), (short) inHand.getData(),inHand.getAmount()));
+        inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+        inventoryTransactionPacket.setRuntimeEntityId(client.clientStat.entityId);
+        inventoryTransactionPacket.setHeadPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
+        inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
+        client.session.sendPacket(inventoryTransactionPacket);
+    }
+    public void handle(ClientPlayerActionPacket packet) {
+        Position blockPos=packet.getPosition();
+        switch (packet.getAction()){
+            case START_DIGGING:{
+                PlayerActionPacket playerActionPacket = new PlayerActionPacket();
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
+                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
+                playerActionPacket.setFace(packet.getFace().ordinal());
+                client.session.sendPacket(playerActionPacket);
+                break;
+            }
+            case CANCEL_DIGGING:{
+                PlayerActionPacket playerActionPacket = new PlayerActionPacket();
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
+                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
+                playerActionPacket.setFace(packet.getFace().ordinal());
+                client.session.sendPacket(playerActionPacket);
+                break;
+            }
+            case FINISH_DIGGING:{
+                Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
+                PlayerActionPacket playerActionPacket = new PlayerActionPacket();
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
+                playerActionPacket.setBlockPosition(blockPosition);
+                playerActionPacket.setFace(packet.getFace().ordinal());
+                client.session.sendPacket(playerActionPacket);
+
+                InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+                inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
+                inventoryTransactionPacket.setActionType(2);
+                inventoryTransactionPacket.setBlockPosition(blockPosition);
+                inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
+                inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+                ItemStack inHand=client.clientStat.inventory[36+client.clientStat.slot];
+                inventoryTransactionPacket.setItemInHand(ItemData.of(inHand.getId(), (short) inHand.getData(),inHand.getAmount()));
+                inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+                inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
+                client.session.sendPacket(inventoryTransactionPacket);
+                break;
+            }
+        }
     }
 }

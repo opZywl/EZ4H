@@ -74,7 +74,7 @@ public class LevelChunkPacketTranslator {
 					}
 				}
 			}
-			chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray,lightArray);
+			chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray,new NibbleArray3d(4096));
 		}
 		byte[] biomeArray = new byte[256];
 		Arrays.fill(biomeArray, (byte) 1);

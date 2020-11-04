@@ -54,6 +54,7 @@ public class BlockTranslator {
         Integer result=JAVA_NAME_TO_INTEGER.get(name);
         if(result==null){
             result=1;
+//            System.out.println(name);
         }
         return result;
     }

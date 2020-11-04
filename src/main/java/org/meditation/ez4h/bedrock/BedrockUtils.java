@@ -7,11 +7,17 @@ import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
+import com.nukkitx.protocol.bedrock.data.GameType;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.utils.OtherUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Base64;
 
 public class BedrockUtils {
@@ -37,21 +43,30 @@ public class BedrockUtils {
         }
         return difficulty;
     }
-    public static byte[] readSkinByte(String fileName) {
-        File file = new File(fileName);
-        long filelength = file.length();
-        if(filelength<8192){
-            filelength=8192;
+    public static GameMode convertGameModeToJE(GameType gameType){
+        String BEGameType=gameType.toString();
+        if(BEGameType.contains("VIEWER")){
+            BEGameType=GameMode.SPECTATOR.name();
         }
-        byte[] filecontent = new byte[(int) filelength];
-        try {
-            FileInputStream in = new FileInputStream(file);
-            in.read(filecontent);
-            in.close();
-            return filecontent;
+        return GameMode.valueOf(BEGameType);
+    }
+    public static String skinTextureToString(File file) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try{
+        BufferedImage bufferedImage = ImageIO.read(file);
+        for (int y = 0; y < bufferedImage.getHeight(); y++) {
+            for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                Color color = new Color(bufferedImage.getRGB(x, y));
+                byteArrayOutputStream.write(color.getRed());
+                byteArrayOutputStream.write(color.getGreen());
+                byteArrayOutputStream.write(color.getBlue());
+                byteArrayOutputStream.write(color.getAlpha());
+            }
+        }
+        byteArrayOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
     }
 }

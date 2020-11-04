@@ -11,6 +11,8 @@ import java.util.Map;
 public class ClientStat {
     public long entityId;
     public int dimension;
+    public float x,y,z,yaw,pitch;
+    public int slot;
     public Difficulty difficulty;
     public GameMode gameMode;
     public boolean onLogin=true;

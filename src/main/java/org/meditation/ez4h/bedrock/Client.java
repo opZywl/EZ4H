@@ -84,7 +84,7 @@ public class Client {
         skinData.put("ClientRandomId",RandUtils.rand(0,9999999));
         skinData.put("SkinId",this.playerName.toLowerCase()+"_skin");
         skinData.put("CapeId",this.playerName.toLowerCase()+"_cape");
-        skinData.put("SkinData",Base64.getEncoder().encodeToString(BedrockUtils.readSkinByte("./resources/skin.png")));
+        skinData.put("SkinData",BedrockUtils.skinTextureToString(new File("./resources/skin.png")));
         skinData.put("SkinImageWidth",64);
         skinData.put("SkinImageHeight",64);
         skinData.put("SkinResourcePatch",Base64.getEncoder().encodeToString("{\"geometry\" : {\"default\" : \"geometry.humanoid.custom\"}}".getBytes()));
