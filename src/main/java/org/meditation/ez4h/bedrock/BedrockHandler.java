@@ -1,28 +1,38 @@
 package org.meditation.ez4h.bedrock;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
+import com.github.steveice10.mc.protocol.data.game.MessageType;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
 import com.github.steveice10.mc.protocol.data.game.chunk.Column;
+import com.github.steveice10.mc.protocol.data.game.entity.Effect;
+import com.github.steveice10.mc.protocol.data.game.entity.attribute.Attribute;
+import com.github.steveice10.mc.protocol.data.game.entity.attribute.AttributeType;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
+import com.github.steveice10.mc.protocol.data.game.entity.type.GlobalEntityType;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
+import com.github.steveice10.mc.protocol.data.game.world.block.BlockChangeRecord;
+import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
+import com.github.steveice10.mc.protocol.data.status.PlayerInfo;
 import com.github.steveice10.mc.protocol.packet.ingame.server.*;
-import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityVelocityPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.*;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerHealthPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerSetExperiencePacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.ServerSpawnGlobalEntityPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.ServerSpawnPlayerPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindowItemsPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotifyClientPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.world.*;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.protocol.bedrock.BedrockPacketType;
 import com.nukkitx.protocol.bedrock.data.AttributeData;
 import com.nukkitx.protocol.bedrock.data.GameType;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
@@ -32,9 +42,11 @@ import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.bedrock.tunnel.BlockTranslator;
 import org.meditation.ez4h.bedrock.tunnel.LevelChunkPacketTranslator;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
+import org.meditation.ez4h.mcjava.cache.EntityInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BedrockHandler implements BedrockPacketHandler {
     private Client client;
@@ -288,6 +300,12 @@ public class BedrockHandler implements BedrockPacketHandler {
                 ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), rotation.getY(),rotation.getX(), 1);
                 client.JESession.send(serverPlayerPositionRotationPacket);
             }
+        }else{
+            EntityInfo entityInfo=Variables.entityInfoMap.get((int)packet.getRuntimeEntityId());
+            client.JESession.send(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), position.getX()-entityInfo.x,(position.getY()-1.62)-entityInfo.y,position.getZ()-entityInfo.z,rotation.getY(),rotation.getX(), packet.isOnGround()));
+            entityInfo.x=position.getX();
+            entityInfo.y= (float) (position.getY()-1.62);
+            entityInfo.z=position.getZ();
         }
         return false;
     }
@@ -397,10 +415,13 @@ public class BedrockHandler implements BedrockPacketHandler {
         return false;
     }
 
-    public boolean handle(AddItemEntityPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
-        return false;
-    }
+//    public boolean handle(AddItemEntityPacket packet) {
+//        Variables.logger.warning(packet.getClass().getName());
+//        Vector3f position=packet.getPosition();
+//        new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(), null, position.getX(), position.getY(), position.getZ());
+//        new ServerUpdateTileEntityPacket();
+//        return false;
+//    }
 
     public boolean handle(AddPaintingPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
@@ -408,7 +429,9 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(AddPlayerPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
+        Variables.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
+        client.JESession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
         return false;
     }
 
@@ -480,7 +503,7 @@ public class BedrockHandler implements BedrockPacketHandler {
     public boolean handle(LevelChunkPacket packet) {
         try {
             client.JESession.send(LevelChunkPacketTranslator.translate(packet));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
@@ -518,7 +541,33 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(MobEffectPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        Variables.logger.warning(packet.toString());
+        Effect effect=BedrockUtils.effectConverter(packet.getEffectId());
+        switch (packet.getEvent()){
+            case ADD:
+            case MODIFY: {
+                switch (effect){
+                    case SPEED:{
+                        List<Attribute> attributes1=new ArrayList<>();
+                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1+packet.getAmplifier()*0.02));
+                        client.JESession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
+                    }
+                }
+                client.JESession.send(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(),effect,packet.getAmplifier(),packet.getDuration(),true,packet.isParticles()));
+                break;
+            }
+            case REMOVE:{
+                switch (effect){
+                    case SPEED:{
+                        List<Attribute> attributes1=new ArrayList<>();
+                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1));
+                        client.JESession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
+                    }
+                }
+                client.JESession.send(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(),effect));
+                break;
+            }
+        }
         return false;
     }
 
@@ -580,6 +629,9 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(RemoveEntityPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
+        int[] entityIds=new int[1];
+        entityIds[0]= (int) packet.getUniqueEntityId();
+        client.JESession.send(new ServerEntityDestroyPacket(entityIds));
         return false;
     }
 
@@ -723,7 +775,19 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(SetTitlePacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        switch (packet.getType()){
+            case TITLE:{
+                client.JESession.send(new ServerTitlePacket(packet.getText(),false));
+                break;
+            }
+            case SUBTITLE:{
+                client.JESession.send(new ServerTitlePacket(packet.getText(),true));
+            }
+            case RESET:{
+                client.JESession.send(new ServerTitlePacket("",true));
+                client.JESession.send(new ServerTitlePacket("",false));
+            }
+        }
         return false;
     }
 
@@ -770,6 +834,9 @@ public class BedrockHandler implements BedrockPacketHandler {
                 WorldType.CUSTOMIZED,
                 true
         );
+        List<Attribute> attributes1=new ArrayList<>();
+        attributes1.add(new Attribute(AttributeType.GENERIC_ATTACK_SPEED,0));
+        ServerEntityPropertiesPacket serverEntityPropertiesPacket=new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1);
         ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.ping.getDescription(),new TextMessage(""));
         Vector3f position=packet.getPlayerPosition();
         ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket=new ServerPlayerPositionRotationPacket(position.getX(), position.getY(), position.getZ(), 90,90,1);
@@ -777,9 +844,11 @@ public class BedrockHandler implements BedrockPacketHandler {
             client.JESession.send(serverJoinGamePacket);
             client.JESession.send(serverPlayerPositionRotationPacket);
             client.JESession.send(serverPlayerListDataPacket);
+            client.JESession.send(serverEntityPropertiesPacket);
         }else {
             client.clientStat.jPacketMap.put("ServerPlayerPositionRotation",serverPlayerPositionRotationPacket);
             client.clientStat.jPacketMap.put("ServerJoinGame",serverJoinGamePacket);
+            client.clientStat.jPacketMap.put("ServerEntityProperties",serverEntityPropertiesPacket);
             client.clientStat.jPacketMap.put("ServerPlayerListData",serverPlayerListDataPacket);
         }
         client.clientStat.entityId=packet.getRuntimeEntityId();
@@ -815,7 +884,24 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(TextPacket packet) {
-        client.JESession.send(new ServerChatPacket(packet.getMessage()));
+        switch (packet.getType()){
+            case TIP:{
+                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
+                break;
+            }
+            case POPUP:{
+                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
+                break;
+            }
+            case SYSTEM:{
+                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.SYSTEM));
+                break;
+            }
+            default:{
+                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.CHAT));
+                break;
+            }
+        }
         return false;
     }
 
@@ -830,34 +916,44 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(UpdateAttributesPacket packet) {
-        List<AttributeData> attributes=packet.getAttributes();
-        for(AttributeData attribute:attributes){
-            switch (attribute.getName()){
-                case "minecraft:health":{
-                    client.clientStat.health=attribute.getValue();
-                    break;
-                }
-                case "minecraft:player.experience":{
-                    client.clientStat.exp=attribute.getValue()/attribute.getMaximum();
-                    break;
-                }
-                case "minecraft:player.hunger":{
-                    client.clientStat.food= (int) attribute.getValue();
-                    break;
-                }
-                case "minecraft:player.level":{
-                    client.clientStat.expLevel=attribute.getValue();
-                    break;
+        if(packet.getRuntimeEntityId()==client.clientStat.entityId) {
+            List<AttributeData> attributes = packet.getAttributes();
+            for (AttributeData attribute : attributes) {
+                switch (attribute.getName()) {
+                    case "minecraft:health": {
+                        List<Attribute> attributes1 = new ArrayList<>();
+                        attributes1.add(new Attribute(AttributeType.GENERIC_MAX_HEALTH, attribute.getMaximum()));
+                        client.JESession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId, attributes1));
+                        client.clientStat.health = attribute.getValue();
+                        break;
+                    }
+                    case "minecraft:player.experience": {
+                        client.clientStat.exp = attribute.getValue() / attribute.getMaximum();
+                        break;
+                    }
+                    case "minecraft:player.hunger": {
+                        client.clientStat.food = (int) attribute.getValue();
+                        break;
+                    }
+                    case "minecraft:player.level": {
+                        client.clientStat.expLevel = attribute.getValue();
+                        break;
+                    }
                 }
             }
+            client.JESession.send(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
+            client.JESession.send(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
         }
-        client.JESession.send(new ServerPlayerHealthPacket(client.clientStat.health,client.clientStat.food,0));
-        client.JESession.send(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
         return false;
     }
 
     public boolean handle(UpdateBlockPacket packet) {
-        //Variables.logger.warning(packet.getClass().getName());
+        System.out.println(packet.toString());
+        if (packet.getDataLayer() == 0) {//TunnelMC says we cant use dataLayer 1
+            Vector3i pos=packet.getBlockPosition();
+            BlockState blockState = new BlockState(BlockTranslator.getJavaIdByJavaName(BlockTranslator.getJavaNameByBedrockName(BlockTranslator.getBedrockNameByRuntime(packet.getRuntimeId()))),0);
+            client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),blockState)));
+        }
         return false;
     }
 

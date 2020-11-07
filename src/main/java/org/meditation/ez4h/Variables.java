@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
+import org.meditation.ez4h.mcjava.cache.EntityInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class Variables {
     public static JSONObject config;
     public static Ping pingThread;
     public static Map<String, Client> clientMap=new HashMap<>();
+    public static Map<String, String> accessTokens=new HashMap<>();
+    public static Map<Integer, EntityInfo> entityInfoMap=new HashMap<>();
     public static JSONObject JEInventory_0= JSON.parseObject("{\n" +
             "    \"0\":\"36\",\n" +
             "    \"1\":\"37\",\n" +

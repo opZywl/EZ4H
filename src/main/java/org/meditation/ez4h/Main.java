@@ -10,14 +10,20 @@ import com.github.steveice10.mc.protocol.data.SubProtocol;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
+import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
+import com.github.steveice10.mc.protocol.data.game.world.WorldType;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.data.status.handler.ServerInfoBuilder;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import com.github.steveice10.packetlib.Server;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
+import com.github.steveice10.packetlib.event.session.SessionAdapter;
+import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import org.apache.commons.text.StringEscapeUtils;
 import org.meditation.ez4h.bedrock.BedrockUtils;
@@ -29,6 +35,7 @@ import org.meditation.ez4h.bedrock.tunnel.BlockTranslator;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
+import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
 import org.meditation.ez4h.utils.FileUtils;
 import org.meditation.ez4h.utils.OtherUtils;
 
@@ -67,11 +74,29 @@ public class Main {
             public void loggedIn(Session session) {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
                 Client client=Variables.clientMap.get(profile.getName());
-                client.clientStat.jLogined=true;
-                if(client.clientStat.jPacketMap.get("ServerJoinGame")!=null){
-                    session.send(client.clientStat.jPacketMap.remove("ServerJoinGame"));
-                    session.send(client.clientStat.jPacketMap.remove("ServerPlayerPositionRotation"));
-                    session.send(client.clientStat.jPacketMap.remove("ServerPlayerListData"));
+                if(client!=null) {
+                    client.clientStat.jLogined = true;
+                    if (client.clientStat.jPacketMap.get("ServerJoinGame") != null) {
+                        session.send(client.clientStat.jPacketMap.remove("ServerJoinGame"));
+                        session.send(client.clientStat.jPacketMap.remove("ServerPlayerPositionRotation"));
+                        session.send(client.clientStat.jPacketMap.remove("ServerPlayerListData"));
+                        session.send(client.clientStat.jPacketMap.remove("ServerEntityProperties"));
+                    }
+                }else{
+                    ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
+                            1,
+                            false,
+                            GameMode.SURVIVAL,
+                            0,
+                            Difficulty.NORMAL,
+                            1,
+                            WorldType.CUSTOMIZED,
+                            true
+                    );
+                    ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket=new ServerPlayerPositionRotationPacket(0, 70, 0, 90,90,1);
+                    session.send(serverJoinGamePacket);
+                    session.send(serverPlayerPositionRotationPacket);
+                    session.addListener(new FakeServer(session,profile.getName()));
                 }
             }
         });
@@ -91,10 +116,17 @@ public class Main {
                     Session session=event.getSession();
                     GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
                     Client client=Variables.clientMap.remove(profile.getName());
-                    Variables.logger.info(profile.getName()+"["+session.getHost()+":"+session.getPort()+"] QUITED.");
-                    client.session.disconnect();
-                    PlayerListEntry[] playerListEntry={new PlayerListEntry(new GameProfile(client.playerUUID,client.playerName), GameMode.SURVIVAL,0,new TextMessage(client.playerName))};
-                    BroadcastPacket.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER,playerListEntry));
+                    Variables.logger.info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
+                    if(client!=null) {
+                        client.session.disconnect();
+                        PlayerListEntry[] playerListEntry = {new PlayerListEntry(new GameProfile(client.playerUUID, client.playerName), GameMode.SURVIVAL, 0, new TextMessage(client.playerName))};
+                        BroadcastPacket.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntry));
+                    }else{
+                        for(SessionListener sessionListener:session.getListeners()){
+                            FakeServer fakeServer=(FakeServer)sessionListener;
+                            fakeServer.setAuthstat(3);
+                        }
+                    }
                 }
             }
         });

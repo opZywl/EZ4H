@@ -19,7 +19,7 @@ public class JavaPacketHandler extends SessionAdapter {
     @Override
     public void packetReceived(PacketReceivedEvent event) {
         try {
-            System.out.println("CLIENT!"+event.getPacket().getClass().getSimpleName());
+            System.out.println(event.getPacket().getClass().getSimpleName());
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
             ClientHandler clientHandler = null;
             if(!OtherUtils.isNull(profile)){
@@ -32,12 +32,16 @@ public class JavaPacketHandler extends SessionAdapter {
                 case "LoginStartPacket":{
                     if(event.getPacket() instanceof LoginStartPacket) {
                         LoginStartPacket packet=(LoginStartPacket)event.getPacket();
-                        UUID uuid=java.util.UUID.nameUUIDFromBytes((packet.getUsername()).getBytes());
-                        GameProfile gameProfile=new GameProfile(uuid,packet.getUsername());
-                        event.getSession().setFlag(MinecraftConstants.PROFILE_KEY,gameProfile);
-                        Client client=new Client(event,packet.getUsername(),uuid);
-                        Variables.clientMap.put(packet.getUsername(),client);
-                        Variables.logger.info(packet.getUsername()+"["+event.getSession().getHost()+":"+event.getSession().getPort()+"] JOINED.");
+                        UUID uuid = java.util.UUID.nameUUIDFromBytes((packet.getUsername()).getBytes());
+                        GameProfile gameProfile = new GameProfile(uuid, packet.getUsername());
+                        event.getSession().setFlag(MinecraftConstants.PROFILE_KEY, gameProfile);
+                        if((!Variables.config.getBoolean("xbox-auth"))||Variables.accessTokens.containsKey(packet.getUsername())) {
+                            Client client = new Client(event, packet.getUsername(), uuid);
+                            Variables.clientMap.put(packet.getUsername(), client);
+                        }else{
+                            event.getSession().removeListener(this);
+                        }
+                        Variables.logger.info(packet.getUsername() + "[" + event.getSession().getHost() + ":" + event.getSession().getPort() + "] JOINED.");
                     }
                     break;
                 }

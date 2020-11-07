@@ -7,6 +7,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.nbt.NbtMap;
@@ -31,7 +32,7 @@ public class ClientHandler {
             CommandRequestPacket commandRequestPacket=new CommandRequestPacket();
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
-            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1000));
+            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1));
             client.session.sendPacket(commandRequestPacket);
         }else{
             TextPacket textPacket = new TextPacket();
@@ -82,7 +83,7 @@ public class ClientHandler {
     public void handle(ClientPlayerPositionPacket packet) {
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
         movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
-        movePlayerPacket.setOnGround(packet.isOnGround());
+        movePlayerPacket.setOnGround(true);
         movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
         movePlayerPacket.setRidingRuntimeEntityId(0);
         client.clientStat.x= (float) packet.getX();
@@ -120,20 +121,21 @@ public class ClientHandler {
         client.session.sendPacket(movePlayerPacket);
     }
     public void handle(ClientPlayerPlaceBlockPacket packet) {
-        InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
-        inventoryTransactionPacket.setActionType(2);
-        inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
-        inventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
-        Position blockPos=packet.getPosition();
-        inventoryTransactionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(), blockPos.getZ()));
-        inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
-        ItemStack inHand=client.clientStat.inventory[36+client.clientStat.slot];
-        inventoryTransactionPacket.setItemInHand(ItemData.of(inHand.getId(), (short) inHand.getData(),inHand.getAmount()));
-        inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-        inventoryTransactionPacket.setRuntimeEntityId(client.clientStat.entityId);
-        inventoryTransactionPacket.setHeadPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
-        inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
-        client.session.sendPacket(inventoryTransactionPacket);
+        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
+        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
+        Position position=packet.getPosition();
+
+        InventoryTransactionPacket useInventoryTransactionPacket = new InventoryTransactionPacket();
+        useInventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
+        useInventoryTransactionPacket.setActionType(0);
+        useInventoryTransactionPacket.setBlockPosition(Vector3i.from(position.getX(),position.getY(), position.getZ()));
+        useInventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
+        useInventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+        useInventoryTransactionPacket.setItemInHand(itemData);
+        useInventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+        useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
+        useInventoryTransactionPacket.setBlockRuntimeId(0);
+        client.session.sendPacket(useInventoryTransactionPacket);
     }
     public void handle(ClientPlayerActionPacket packet) {
         Position blockPos=packet.getPosition();

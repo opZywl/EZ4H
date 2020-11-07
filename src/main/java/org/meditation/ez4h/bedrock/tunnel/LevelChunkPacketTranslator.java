@@ -38,7 +38,6 @@ public class LevelChunkPacketTranslator {
 			byte storageSize = byteBuf.readByte();
 			BlockStorage blockStorage=new BlockStorage();
 			for (int storageReadIndex = 0; storageReadIndex < storageSize; storageReadIndex++) {//1 appears to basically be empty, also nukkit basically says its empty
-				//PalettedBlockStorage
 				byte paletteHeader = byteBuf.readByte();
 				int paletteVersion = (paletteHeader | 1) >> 1;
 				BitArrayVersion bitArrayVersion = BitArrayVersion.get(paletteVersion, true);
@@ -65,7 +64,7 @@ public class LevelChunkPacketTranslator {
 						for (int y = 0; y < 16; y++) {
 							int paletteIndex = bitArray.get(index);
 							int mcbeBlockId = sectionPalette[paletteIndex];
-							if (mcbeBlockId != 0) {//air? probably want to check with the ServerBlockPaletteTranslator, but for now we will do this
+							if (mcbeBlockId != 0) {
 								BlockState blockState = new BlockState(BlockTranslator.getJavaIdByJavaName(BlockTranslator.getJavaNameByBedrockName(BlockTranslator.getBedrockNameByRuntime(mcbeBlockId))),0);
 								blockStorage.set(x,y,z,blockState);
 							}
