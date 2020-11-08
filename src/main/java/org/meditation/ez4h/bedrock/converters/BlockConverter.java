@@ -1,4 +1,4 @@
-package org.meditation.ez4h.bedrock.tunnel;
+package org.meditation.ez4h.bedrock.converters;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -8,7 +8,7 @@ import com.nukkitx.nbt.NbtMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockTranslator {
+public class BlockConverter {
     public static Map<String, Integer> JAVA_NAME_TO_INTEGER=new HashMap<>();
     public static Map<String, String> BEDROCK_TO_JAVA=new HashMap<>();
     public static Map<Integer, String> BEDROCK_RUNTIME_TO_NAME=new HashMap<>();

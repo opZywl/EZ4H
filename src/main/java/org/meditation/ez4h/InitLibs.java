@@ -4,15 +4,13 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.logging.Logger;
 
 public class InitLibs {
+    public static String VERSION="1.0";
     public static void main(String[] args){
-        Variables.logger= Logger.getLogger("EZ4H");
-        Variables.logger.info("Starting EZ4H v"+Variables.VERSION);
+        System.out.println("Starting EZ4H v"+VERSION);
         new File("./libs").mkdir();
-        new File("./resources").mkdir();
-        Variables.logger.info("Loading libs...");
+        System.out.println("Loading libs...");
         loadLib();
         Main.main(args);
     }
@@ -20,7 +18,7 @@ public class InitLibs {
         File[] files=new File("./libs").listFiles();
         for(File file:files){
             if(getSuffix(file.getName()).equals("jar")) {
-                Variables.logger.warning("Loading " + file.getName() + " as a lib!");
+                System.out.println("Loading " + file.getName() + " as a lib!");
                 injectClass(file);
             }
         }

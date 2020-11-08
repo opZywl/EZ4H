@@ -1,4 +1,4 @@
-package org.meditation.ez4h.bedrock.tunnel;
+package org.meditation.ez4h.bedrock.converters;
 
 import com.github.steveice10.mc.protocol.data.game.chunk.BlockStorage;
 import com.github.steveice10.mc.protocol.data.game.chunk.Chunk;
@@ -16,7 +16,7 @@ import org.meditation.ez4h.bedrock.tunnel.nukkit.BitArrayVersion;
 
 import java.util.Arrays;
 
-public class LevelChunkPacketTranslator {
+public class LevelChunkPacketConverter {
 	//TODO: 生物群系,亮度
 	public static ServerChunkDataPacket translate(LevelChunkPacket packet) {
 		Chunk[] chunkSections = new Chunk[16];
@@ -65,7 +65,7 @@ public class LevelChunkPacketTranslator {
 							int paletteIndex = bitArray.get(index);
 							int mcbeBlockId = sectionPalette[paletteIndex];
 							if (mcbeBlockId != 0) {
-								BlockState blockState = new BlockState(BlockTranslator.getJavaIdByJavaName(BlockTranslator.getJavaNameByBedrockName(BlockTranslator.getBedrockNameByRuntime(mcbeBlockId))),0);
+								BlockState blockState = new BlockState(BlockConverter.getJavaIdByJavaName(BlockConverter.getJavaNameByBedrockName(BlockConverter.getBedrockNameByRuntime(mcbeBlockId))),0);
 								blockStorage.set(x,y,z,blockState);
 							}
 							index++;

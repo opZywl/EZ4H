@@ -72,7 +72,19 @@ public class ClientHandler {
         client.clientStat.slot=packet.getSlot();
     }
     public void handle(ClientPlayerUseItemPacket packet) {
-        System.out.println(packet.toString());
+        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
+        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
+
+        InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+        inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
+        inventoryTransactionPacket.setActionType(1);
+        inventoryTransactionPacket.setBlockPosition(Vector3i.ZERO);
+        inventoryTransactionPacket.setBlockFace(255);
+        inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+        inventoryTransactionPacket.setItemInHand(itemData);
+        inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
+        inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
+        client.session.sendPacket(inventoryTransactionPacket);
     }
     public void handle(ClientPlayerSwingArmPacket packet) {
         AnimatePacket animatePacket=new AnimatePacket();
@@ -181,5 +193,19 @@ public class ClientHandler {
                 break;
             }
         }
+    }
+    public void handle(ClientPlayerInteractEntityPacket packet) {
+        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
+        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
+
+        InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+        inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE_ON_ENTITY);
+        inventoryTransactionPacket.setActionType(1);
+        inventoryTransactionPacket.setRuntimeEntityId(packet.getEntityId());
+        inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+        inventoryTransactionPacket.setItemInHand(itemData);
+        inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+        inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
+        client.session.sendPacket(inventoryTransactionPacket);
     }
 }

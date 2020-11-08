@@ -22,29 +22,24 @@ import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
-import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
-import org.apache.commons.text.StringEscapeUtils;
-import org.meditation.ez4h.bedrock.BedrockUtils;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
-import org.meditation.ez4h.bedrock.auth.Xbox;
-import org.meditation.ez4h.bedrock.auth.XboxAuthtoken;
-import org.meditation.ez4h.bedrock.tunnel.BlockTranslator;
+import org.meditation.ez4h.bedrock.converters.BlockConverter;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
-import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
 import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
 import org.meditation.ez4h.utils.FileUtils;
-import org.meditation.ez4h.utils.OtherUtils;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 public class Main {
     public static String JarDir=Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
     public static Server server;
     public static void main(String[] args) {
+        Variables.logger= Logger.getLogger("EZ4H");
         Variables.logger.info("Init files...");
         init();
         Variables.logger.info("Init PE Protocol...");
@@ -56,10 +51,20 @@ public class Main {
         if(!new File("./config.json").exists()){
             FileUtils.ReadJar("resources/config.json",JarDir,"./config.json");
         }
+        new File("./resources").mkdir();
+        if(!new File("./resources/blockMap.json").exists()){
+            FileUtils.ReadJar("resources/resources/blockMap.json",JarDir,"./resources/blockMap.json");
+        }
+        if(!new File("./resources/block.json").exists()){
+            FileUtils.ReadJar("resources/resources/block.json",JarDir,"./resources/block.json");
+        }
+        if(!new File("./resources/skin.png").exists()){
+            FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
+        }
         Variables.config=JSON.parseObject(FileUtils.readFile("./config.json"));
     }
     private static void initPEProtocol() {
-        BlockTranslator.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
+        BlockConverter.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
         Variables.pingThread=new Ping();
     }
     private static void initJEProtocol() {
