@@ -22,6 +22,7 @@ import com.github.steveice10.mc.protocol.data.game.world.block.BlockChangeRecord
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.data.game.world.block.UpdatedTileType;
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
+import com.github.steveice10.mc.protocol.data.game.world.sound.Sound;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.*;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.*;
@@ -64,7 +65,24 @@ public class BedrockHandler implements BedrockPacketHandler {
 //    }
 
     public boolean handle(AnimatePacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        switch (packet.getAction()){
+            case SWING_ARM:{
+                client.JESession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.SWING_ARM));
+                break;
+            }
+            case WAKE_UP:{
+                client.JESession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.LEAVE_BED));
+                break;
+            }
+            case CRITICAL_HIT:{
+                client.JESession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.CRITICAL_HIT));
+                break;
+            }
+            case MAGIC_CRITICAL_HIT:{
+                client.JESession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.ENCHANTMENT_CRITICAL_HIT));
+                break;
+            }
+        }
         return false;
     }
 
@@ -262,10 +280,10 @@ public class BedrockHandler implements BedrockPacketHandler {
         return false;
     }
 
-    public boolean handle(LevelSoundEventPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
-        return false;
-    }
+//    public boolean handle(LevelSoundEventPacket packet) {
+//        Variables.logger.warning(packet.toString());
+//        return false;
+//    }
 
     public boolean handle(LoginPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
@@ -645,7 +663,7 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(ModalFormRequestPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        Variables.logger.warning(packet.toString());
         return false;
     }
 
@@ -701,7 +719,6 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(RemoveEntityPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
         int[] entityIds=new int[1];
         entityIds[0]= (int) packet.getUniqueEntityId();
         client.clientStat.entityInfoMap.remove( (int) packet.getUniqueEntityId());
@@ -990,11 +1007,8 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(TextPacket packet) {
         switch (packet.getType()){
-            case TIP:{
-                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
-                break;
-            }
-            case POPUP:{
+            case TIP:
+            case POPUP: {
                 client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
                 break;
             }
@@ -1003,7 +1017,7 @@ public class BedrockHandler implements BedrockPacketHandler {
                 break;
             }
             default:{
-                client.JESession.send(new ServerChatPacket(packet.getMessage(), MessageType.CHAT));
+                client.sendMessage(packet.getMessage());
                 break;
             }
         }

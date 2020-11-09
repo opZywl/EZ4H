@@ -129,6 +129,13 @@ public class JavaPacketHandler extends SessionAdapter {
                     }
                     break;
                 }
+                case "ClientPlayerStatePacket":{
+                    if(event.getPacket() instanceof ClientPlayerStatePacket){
+                        assert clientHandler != null;
+                        clientHandler.handle((ClientPlayerStatePacket) event.getPacket());
+                    }
+                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -27,6 +27,8 @@ import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
 import org.meditation.ez4h.bedrock.converters.BlockConverter;
+import org.meditation.ez4h.command.CommandManager;
+import org.meditation.ez4h.command.commands.SayCommand;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
 import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
@@ -46,6 +48,12 @@ public class Main {
         initPEProtocol();
         Variables.logger.info("Init JE Server...");
         initJEProtocol();
+        Variables.logger.info("Init Commands...");
+        registerCommands();
+        Variables.logger.info("Done!");
+    }
+    private static void registerCommands(){
+        CommandManager.registerCommand("say",new SayCommand());
     }
     private static void init(){
         if(!new File("./config.json").exists()){

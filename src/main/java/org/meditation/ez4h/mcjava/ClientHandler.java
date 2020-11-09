@@ -1,23 +1,20 @@
 package org.meditation.ez4h.mcjava;
 
-import com.github.steveice10.mc.protocol.data.game.ClientRequest;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
-import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginData;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginType;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.*;
-import org.meditation.ez4h.bedrock.BedrockUtils;
 import org.meditation.ez4h.bedrock.Client;
+import org.meditation.ez4h.command.CommandManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +25,23 @@ public class ClientHandler {
         this.client=client;
     }
     public void handle(ClientChatPacket packet){
-        if(packet.getMessage().charAt(0)=='/') {
+        Character firstChar=packet.getMessage().charAt(0);
+        if(firstChar.equals('/')) {
             CommandRequestPacket commandRequestPacket=new CommandRequestPacket();
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
             commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1));
             client.session.sendPacket(commandRequestPacket);
+        }else if(firstChar.equals('`')) {
+            if(packet.getMessage().length()>1) {
+                String[] commandList = packet.getMessage().substring(1).split(" "),argsList=new String[commandList.length-1];
+                if(commandList.length!=1){
+                    for(int i=1;i<commandList.length;i++){
+                        argsList[i-1]=commandList[i];
+                    }
+                }
+                CommandManager.runCommand(commandList[0],argsList,client);
+            }
         }else{
             TextPacket textPacket = new TextPacket();
             textPacket.setMessage(packet.getMessage());
@@ -207,5 +215,43 @@ public class ClientHandler {
         inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
         client.session.sendPacket(inventoryTransactionPacket);
+    }
+    public void handle(ClientPlayerStatePacket packet) {
+        switch (packet.getState()){
+            case START_SNEAKING:{
+                PlayerActionPacket playerActionPacket=new PlayerActionPacket();
+                playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
+                playerActionPacket.setBlockPosition(Vector3i.ZERO);
+                playerActionPacket.setFace(0);
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                client.session.sendPacket(playerActionPacket);
+                break;
+            }
+            case STOP_SNEAKING:{
+                PlayerActionPacket playerActionPacket=new PlayerActionPacket();
+                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SNEAK);
+                playerActionPacket.setBlockPosition(Vector3i.ZERO);
+                playerActionPacket.setFace(0);
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                client.session.sendPacket(playerActionPacket);
+                break;
+            }
+            case START_SPRINTING:{
+                PlayerActionPacket playerActionPacket=new PlayerActionPacket();
+                playerActionPacket.setAction(PlayerActionPacket.Action.START_SPRINT);
+                playerActionPacket.setBlockPosition(Vector3i.ZERO);
+                playerActionPacket.setFace(0);
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                client.session.sendPacket(playerActionPacket);
+            }
+            case STOP_SPRINTING:{
+                PlayerActionPacket playerActionPacket=new PlayerActionPacket();
+                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SPRINT);
+                playerActionPacket.setBlockPosition(Vector3i.ZERO);
+                playerActionPacket.setFace(0);
+                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                client.session.sendPacket(playerActionPacket);
+            }
+        }
     }
 }

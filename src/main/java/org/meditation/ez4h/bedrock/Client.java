@@ -2,6 +2,7 @@ package org.meditation.ez4h.bedrock;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.nukkitx.protocol.bedrock.BedrockClient;
@@ -82,5 +83,11 @@ public class Client {
         skinData.put("SkinResourcePatch",Base64.getEncoder().encodeToString("{\"geometry\" : {\"default\" : \"geometry.humanoid.custom\"}}".getBytes()));
         loginPacket.setSkinData(new AsciiString("."+Base64.getEncoder().encodeToString(skinData.toJSONString().getBytes())+"."));
         session.sendPacket(loginPacket);
+    }
+    public void sendMessage(String msg){
+        this.JESession.send(new ServerChatPacket(msg));
+    }
+    public void sendAlert(String msg){
+        this.JESession.send(new ServerChatPacket("§f[§bEZ§a4§bH§f]"+msg));
     }
 }

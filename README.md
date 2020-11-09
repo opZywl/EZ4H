@@ -9,12 +9,13 @@ Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.20) servers!
 - [X] Move  
 - [X] Players  
 - [ ] Entitys  
-  [ ] Block Entitys  
+- [ ] Block Entitys  
 - [X] Entity Interact  
 - [X] Block Interact  
 - [X] Titles and other Messages  
-  [ ] Inventory Action
-  [ ] Form UI
+- [ ] Inventory Action  
+- [ ] Form UI  
+- [ ] Level Events  
 
 # Credits
 This generally would not be possible without some open source projects, wheather its just looking how thing works inorder to reverse translate them, looking at their code to see how thing work, and or copying a little bit of their code. We apperiate all these projects.  
