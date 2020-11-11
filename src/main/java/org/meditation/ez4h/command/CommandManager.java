@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CommandManager {
     private static Map<String,CommandBase> commandMap=new HashMap<>();
-    private static ArrayList<CommandBase> commandList=new ArrayList<>();
+    private static ArrayList<String> commandList=new ArrayList<>();
     private static CommandBase helpCommand=new HelpCommand();
     public static void runCommand(String commandName, String[] args, Client client){
         CommandBase commandBase=commandMap.get(commandName.toLowerCase());
@@ -30,9 +30,12 @@ public class CommandManager {
     public static void registerCommand(String commandName,CommandBase commandBase){
         commandBase.commandName=commandName;
         commandMap.put(commandName.toLowerCase(),commandBase);
-        commandList.add(commandBase);
+        commandList.add(commandName);
     }
-    public static ArrayList<CommandBase> getCommandList(){
+    public static ArrayList<String> getCommandList(){
         return commandList;
+    }
+    public static CommandBase getCommandBase(String commandName){
+        return commandMap.get(commandName);
     }
 }

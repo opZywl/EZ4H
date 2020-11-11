@@ -9,9 +9,10 @@ import java.util.ArrayList;
 public class HelpCommand extends CommandBase {
     @Override
     public void exec(String[] args, Client client) {
-        ArrayList<CommandBase> commandList=CommandManager.getCommandList();
+        ArrayList<String> commandList=CommandManager.getCommandList();
         client.sendAlert("EZ4H COMMANDS("+commandList.size()+" TOTAL)");
-        for(CommandBase commandBase:commandList){
+        for(String commandName:commandList){
+            CommandBase commandBase=CommandManager.getCommandBase(commandName);
             client.sendMessage("`"+commandBase.commandName+" - "+commandBase.getHelpMessage());
         }
     }

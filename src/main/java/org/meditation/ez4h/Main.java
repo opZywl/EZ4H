@@ -28,13 +28,14 @@ import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
 import org.meditation.ez4h.bedrock.converters.BlockConverter;
 import org.meditation.ez4h.command.CommandManager;
-import org.meditation.ez4h.command.commands.SayCommand;
+import org.meditation.ez4h.command.commands.*;
 import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
 import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
 import org.meditation.ez4h.utils.FileUtils;
 
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Logger;
 
 public class Main {
@@ -50,10 +51,12 @@ public class Main {
         initJEProtocol();
         Variables.logger.info("Init Commands...");
         registerCommands();
-        Variables.logger.info("Done!");
+        Variables.logger.info("Done!("+(new Date().getTime()-InitLibs.launchTime)+" ms)");
     }
     private static void registerCommands(){
         CommandManager.registerCommand("say",new SayCommand());
+        CommandManager.registerCommand("form",new FormCommand());
+        CommandManager.registerCommand("mform",new MFormCommand());
     }
     private static void init(){
         if(!new File("./config.json").exists()){

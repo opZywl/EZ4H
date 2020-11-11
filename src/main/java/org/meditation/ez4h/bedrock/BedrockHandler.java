@@ -13,7 +13,10 @@ import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.Animation;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.entity.type.MobType;
+import com.github.steveice10.mc.protocol.data.game.entity.type.object.FallingBlockData;
+import com.github.steveice10.mc.protocol.data.game.entity.type.object.HangingDirection;
 import com.github.steveice10.mc.protocol.data.game.entity.type.object.ObjectType;
+import com.github.steveice10.mc.protocol.data.game.entity.type.object.ProjectileData;
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ObjectiveAction;
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreType;
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreboardPosition;
@@ -46,6 +49,8 @@ import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.bedrock.converters.BlockConverter;
+import org.meditation.ez4h.bedrock.converters.FormConverter;
+import org.meditation.ez4h.bedrock.converters.ItemConverter;
 import org.meditation.ez4h.bedrock.converters.LevelChunkPacketConverter;
 import org.meditation.ez4h.mcjava.cache.EntityInfo;
 
@@ -201,20 +206,20 @@ public class BedrockHandler implements BedrockPacketHandler {
         switch (packet.getContainerId()){
             case 0:{
                 for(int i=0;i<36;i++){
-                    ItemData itemData1=itemData[i];
-                    client.clientStat.inventory[Variables.JEInventory_0.getInteger(i+"")]=new ItemStack(itemData1.getId(),itemData1.getCount(),itemData1.getDamage());
+                    client.clientStat.inventory[ItemConverter.inventoryIndex(i,false)]=ItemConverter.convertToJE(itemData[i]);
+                    client.clientStat.bedrockInventory[ItemConverter.inventoryIndex(i,false)]=itemData[i];
                 }
                 break;
             }
             case 119:{
-                ItemData itemData1=itemData[0];
-                client.clientStat.inventory[45]=new ItemStack(itemData1.getId(),itemData1.getCount(),itemData1.getDamage());
+                client.clientStat.inventory[45]=ItemConverter.convertToJE(itemData[0]);
+                client.clientStat.bedrockInventory[45]=itemData[0];
                 break;
             }
             case 120:{
                 for(int i=0;i<4;i++){
-                    ItemData itemData1=itemData[i];
-                    client.clientStat.inventory[i+5]=new ItemStack(itemData1.getId(),itemData1.getCount(),itemData1.getDamage());
+                    client.clientStat.inventory[i+5]=ItemConverter.convertToJE(itemData[i]);
+                    client.clientStat.bedrockInventory[i+5]=itemData[i];
                 }
                 break;
             }
@@ -224,22 +229,24 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(InventorySlotPacket packet) {
-        ItemData itemData=packet.getItem();
-        ItemStack itemStack=new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage());
+        ItemStack itemStack=ItemConverter.convertToJE(packet.getItem());
         ServerSetSlotPacket serverSetSlotPacket;
         switch (packet.getContainerId()){
             case 0:{
-                client.clientStat.inventory[Variables.JEInventory_0.getInteger(packet.getSlot()+"")]=itemStack;
-                serverSetSlotPacket=new ServerSetSlotPacket(0,Variables.JEInventory_0.getInteger(packet.getSlot()+""),itemStack);
+                client.clientStat.inventory[ItemConverter.inventoryIndex(packet.getSlot(),false)]=itemStack;
+                client.clientStat.bedrockInventory[ItemConverter.inventoryIndex(packet.getSlot(),false)]=packet.getItem();
+                serverSetSlotPacket=new ServerSetSlotPacket(0,ItemConverter.inventoryIndex(packet.getSlot(),false),itemStack);
                 break;
             }
             case 119:{
                 client.clientStat.inventory[45]=itemStack;
+                client.clientStat.bedrockInventory[45]=packet.getItem();
                 serverSetSlotPacket=new ServerSetSlotPacket(0,45,itemStack);
                 break;
             }
             case 120:{
                 client.clientStat.inventory[packet.getSlot()+5]=itemStack;
+                client.clientStat.bedrockInventory[packet.getSlot()+5]=packet.getItem();
                 serverSetSlotPacket=new ServerSetSlotPacket(0,packet.getSlot()+5,itemStack);
                 break;
             }
@@ -296,27 +303,21 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(MobArmorEquipmentPacket packet) {
-        ItemData itemData=packet.getHelmet();
-        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.HELMET,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
-        itemData=packet.getChestplate();
-        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.CHESTPLATE,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
-        itemData=packet.getLeggings();
-        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.LEGGINGS,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
-        itemData=packet.getBoots();
-        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.BOOTS,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
+        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.HELMET,ItemConverter.convertToJE(packet.getHelmet())));
+        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.CHESTPLATE,ItemConverter.convertToJE(packet.getChestplate())));
+        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.LEGGINGS,ItemConverter.convertToJE(packet.getLeggings())));
+        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.BOOTS,ItemConverter.convertToJE(packet.getBoots())));
         return false;
     }
 
     public boolean handle(MobEquipmentPacket packet) {
         switch (packet.getContainerId()){
             case 0:{
-                ItemData itemData=packet.getItem();
-                client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
+                client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND,ItemConverter.convertToJE(packet.getItem())));
                 break;
             }
             case 119:{
-                ItemData itemData=packet.getItem();
-                client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.OFF_HAND,new ItemStack(itemData.getId(), itemData.getCount(), itemData.getDamage())));
+                client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.OFF_HAND,ItemConverter.convertToJE(packet.getItem())));
                 break;
             }
         }
@@ -480,15 +481,12 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(AddItemEntityPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
-//        Vector3f position=packet.getPosition();
-//        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
-//        EntityMetadata[] metadata=new EntityMetadata[1];
-//        ItemData itemData=packet.getItemInHand();
-//        metadata[0]=new EntityMetadata(7, MetadataType.ITEM,new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage()));
-//        System.out.println(packet.getMetadata());
-//        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),90,0));
-//        client.JESession.send(new ServerSetSlotPacket(0,0,new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage())));
-//        client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+        Vector3f position=packet.getPosition();
+        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
+        EntityMetadata[] metadata=new EntityMetadata[1];
+        metadata[0]=new EntityMetadata(7, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
+        client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
         return false;
     }
 
@@ -661,9 +659,9 @@ public class BedrockHandler implements BedrockPacketHandler {
         }
         return false;
     }
-
     public boolean handle(ModalFormRequestPacket packet) {
         Variables.logger.warning(packet.toString());
+        FormConverter.showForm(client,packet.getFormData(),packet.getFormId());
         return false;
     }
 

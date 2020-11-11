@@ -14,6 +14,7 @@ import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.bedrock.Client;
+import org.meditation.ez4h.bedrock.converters.ItemConverter;
 import org.meditation.ez4h.command.CommandManager;
 
 import java.util.ArrayList;
@@ -80,16 +81,13 @@ public class ClientHandler {
         client.clientStat.slot=packet.getSlot();
     }
     public void handle(ClientPlayerUseItemPacket packet) {
-        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
-        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
-
         InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
         inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
         inventoryTransactionPacket.setActionType(1);
         inventoryTransactionPacket.setBlockPosition(Vector3i.ZERO);
         inventoryTransactionPacket.setBlockFace(255);
         inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-        inventoryTransactionPacket.setItemInHand(itemData);
+        inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
         inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
         client.session.sendPacket(inventoryTransactionPacket);
@@ -141,8 +139,6 @@ public class ClientHandler {
         client.session.sendPacket(movePlayerPacket);
     }
     public void handle(ClientPlayerPlaceBlockPacket packet) {
-        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
-        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
         Position position=packet.getPosition();
 
         InventoryTransactionPacket useInventoryTransactionPacket = new InventoryTransactionPacket();
@@ -151,7 +147,7 @@ public class ClientHandler {
         useInventoryTransactionPacket.setBlockPosition(Vector3i.from(position.getX(),position.getY(), position.getZ()));
         useInventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
         useInventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-        useInventoryTransactionPacket.setItemInHand(itemData);
+        useInventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
         useInventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
         useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
         useInventoryTransactionPacket.setBlockRuntimeId(0);
@@ -193,8 +189,7 @@ public class ClientHandler {
                 inventoryTransactionPacket.setBlockPosition(blockPosition);
                 inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
                 inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-                ItemStack inHand=client.clientStat.inventory[36+client.clientStat.slot];
-                inventoryTransactionPacket.setItemInHand(ItemData.of(inHand.getId(), (short) inHand.getData(),inHand.getAmount()));
+                inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
                 client.session.sendPacket(inventoryTransactionPacket);
@@ -203,15 +198,12 @@ public class ClientHandler {
         }
     }
     public void handle(ClientPlayerInteractEntityPacket packet) {
-        ItemStack itemStack=client.clientStat.inventory[36+client.clientStat.slot];
-        ItemData itemData=ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
-
         InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
         inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE_ON_ENTITY);
         inventoryTransactionPacket.setActionType(1);
         inventoryTransactionPacket.setRuntimeEntityId(packet.getEntityId());
         inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-        inventoryTransactionPacket.setItemInHand(itemData);
+        inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
         inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
         client.session.sendPacket(inventoryTransactionPacket);
