@@ -1,5 +1,7 @@
 package org.meditation.ez4h.bedrock;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.data.game.*;
 import com.github.steveice10.mc.protocol.data.game.entity.Effect;
@@ -11,6 +13,7 @@ import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.Animation;
+import com.github.steveice10.mc.protocol.data.game.entity.player.BlockBreakStage;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.entity.type.MobType;
 import com.github.steveice10.mc.protocol.data.game.entity.type.object.FallingBlockData;
@@ -20,11 +23,15 @@ import com.github.steveice10.mc.protocol.data.game.entity.type.object.Projectile
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ObjectiveAction;
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreType;
 import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreboardPosition;
+import com.github.steveice10.mc.protocol.data.game.world.Particle;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockChangeRecord;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.data.game.world.block.UpdatedTileType;
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
+import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotificationValue;
+import com.github.steveice10.mc.protocol.data.game.world.notify.RainStrengthValue;
+import com.github.steveice10.mc.protocol.data.game.world.notify.ThunderStrengthValue;
 import com.github.steveice10.mc.protocol.data.game.world.sound.Sound;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.*;
@@ -44,6 +51,7 @@ import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.data.AttributeData;
 import com.nukkitx.protocol.bedrock.data.GameType;
 import com.nukkitx.protocol.bedrock.data.ScoreInfo;
+import com.nukkitx.protocol.bedrock.data.entity.EntityData;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.*;
@@ -55,6 +63,7 @@ import org.meditation.ez4h.bedrock.converters.LevelChunkPacketConverter;
 import org.meditation.ez4h.mcjava.cache.EntityInfo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -480,13 +489,19 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(AddItemEntityPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
-        Vector3f position=packet.getPosition();
+        //idk why its not work :(
+        Vector3f position=packet.getPosition(),motion=packet.getMotion();
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
-        EntityMetadata[] metadata=new EntityMetadata[1];
-        metadata[0]=new EntityMetadata(7, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
+        EntityMetadata[] metadata=new EntityMetadata[7];
+        metadata[0]=new EntityMetadata(0, MetadataType.BYTE, (byte)0);
+        metadata[1]=new EntityMetadata(2, MetadataType.STRING, "");
+        metadata[2]=new EntityMetadata(6, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
+        metadata[3]=new EntityMetadata(4, MetadataType.BOOLEAN,false);
+        metadata[4]=new EntityMetadata(1, MetadataType.INT,300);
+        metadata[5]=new EntityMetadata(3, MetadataType.BOOLEAN,false);
+        metadata[6]=new EntityMetadata(5, MetadataType.BOOLEAN,false);
+        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0, motion.getX(), motion.getY(), motion.getZ()));
         client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
-        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
         return false;
     }
 
@@ -496,9 +511,15 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(AddPlayerPacket packet) {
+        ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
+        playerListEntries.add(new PlayerListEntry(new GameProfile(packet.getUuid(),BedrockUtils.nameSuiter(packet.getMetadata().getString(EntityData.NAMETAG))),GameMode.SURVIVAL,0,new TextMessage(packet.getMetadata().getString(EntityData.NAMETAG))));
+        PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
+        client.JESession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
+
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
         client.JESession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
+        client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND,ItemConverter.convertToJE(packet.getHand())));
         return false;
     }
 
@@ -620,7 +641,36 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(LevelEventPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        //TODO:PARTICLE
+        switch (packet.getType()){
+            case BLOCK_START_BREAK:{
+                Vector3f pos=packet.getPosition();
+                client.JESession.send(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.STAGE_1));
+                break;
+            }
+            case BLOCK_STOP_BREAK:{
+                Vector3f pos=packet.getPosition();
+                client.JESession.send(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.RESET));
+            }
+            case STOP_RAINING:{
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH,new RainStrengthValue(0)));
+                break;
+            }
+            case START_RAINING:{
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH,new RainStrengthValue(1)));
+                break;
+            }
+            case START_THUNDERSTORM:{
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH,new RainStrengthValue(1)));
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.THUNDER_STRENGTH,new ThunderStrengthValue(1)));
+                break;
+            }
+            case STOP_THUNDERSTORM:{
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH,new RainStrengthValue(0)));
+                client.JESession.send(new ServerNotifyClientPacket(ClientNotification.THUNDER_STRENGTH,new ThunderStrengthValue(0)));
+                break;
+            }
+        }
         System.out.println(packet.toString());
         return false;
     }
@@ -660,7 +710,6 @@ public class BedrockHandler implements BedrockPacketHandler {
         return false;
     }
     public boolean handle(ModalFormRequestPacket packet) {
-        Variables.logger.warning(packet.toString());
         FormConverter.showForm(client,packet.getFormData(),packet.getFormId());
         return false;
     }

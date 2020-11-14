@@ -6,7 +6,7 @@ import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.command.CommandBase;
 import org.meditation.ez4h.mcjava.cache.Form;
 
-public class FormCommand extends CommandBase {
+public class FormCommand implements CommandBase {
     @Override
     public String getHelpMessage(){
         return "Simple Form";
@@ -33,6 +33,7 @@ public class FormCommand extends CommandBase {
                 }
                 reqPacket.setFormData(index+"");
                 client.session.sendPacket(reqPacket);
+                client.clientStat.formData=null;
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
             }
@@ -41,6 +42,7 @@ public class FormCommand extends CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
                 client.session.sendPacket(reqPacket);
+                client.clientStat.formData=null;
                 client.sendAlert("Form Closed.");
                 break;
             }

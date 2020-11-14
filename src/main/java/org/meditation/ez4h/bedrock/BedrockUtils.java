@@ -156,4 +156,11 @@ public class BedrockUtils {
     public static double calcDistance(double x,double y,double z){
         return Math.sqrt((x*x)+(y*y))+z;
     }
+    public static String nameSuiter(String bedrockName){
+        if(bedrockName.length()>16){
+            return bedrockName.substring(0,16);
+        }else{
+            return bedrockName;
+        }
+    }
 }

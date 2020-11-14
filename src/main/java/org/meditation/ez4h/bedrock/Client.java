@@ -61,6 +61,7 @@ public class Client {
         }
     }
     public void startLogin(BedrockClientSession session){
+        //TODO:PocketMine support
         LoginPacket loginPacket=new LoginPacket();
         loginPacket.setProtocolVersion(Variables.config.getJSONObject("advanced").getInteger("be_protocol"));
         JSONObject chain=new JSONObject(),chain1=new JSONObject(),extraData=new JSONObject();

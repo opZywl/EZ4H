@@ -45,7 +45,7 @@ public class FormConverter {
         client.sendMessage("Use `form close to close the window.");
     }
     public static void showCustomForm(Client client,JSONObject formJson){
-        JSONArray contents=formJson.getJSONArray("content"),defaults=new JSONArray();
+        JSONArray contents=formJson.getJSONArray("content"),defaults=new JSONArray(),types=new JSONArray();
         client.clientStat.formData=new Form(2,contents.size(),formJson);
         client.sendAlert("You Received A Custom FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
@@ -63,10 +63,15 @@ public class FormConverter {
                     message.append("\nType `cform toggle ").append(i).append(" <true/false> to change toggle");
                     break;
                 }
-                case "dropdown":
                 case "step_slider":{
+                    singleObject.put("options",singleObject.getJSONArray("steps"));
+                    singleObject.put("steps",null);
+                }
+                case "dropdown":{
                     message.append("\nType `cform view-choose ").append(i).append(" to view options");
                     message.append("\nType `cform choose ").append(i).append(" <index> to choose options");
+                    singleObject.put("type","choose");
+                    contents.set(i,singleObject);
                     break;
                 }
                 case "slider":{
@@ -75,11 +80,13 @@ public class FormConverter {
                     break;
                 }
             }
+            types.add(i,singleObject.getString("type"));
             client.sendMessage(message.toString());
         }
         client.sendMessage("\nUse `cform submit to submit the form.");
         client.sendMessage("Use `cform value <index> view the value of the form.");
         client.sendMessage("Use `cform close to close the window.");
         formJson.put("values",defaults);
+        formJson.put("types",types);
     }
 }

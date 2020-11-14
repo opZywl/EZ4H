@@ -57,6 +57,7 @@ public class Main {
         CommandManager.registerCommand("say",new SayCommand());
         CommandManager.registerCommand("form",new FormCommand());
         CommandManager.registerCommand("mform",new MFormCommand());
+        CommandManager.registerCommand("cform",new CFormCommand());
     }
     private static void init(){
         if(!new File("./config.json").exists()){

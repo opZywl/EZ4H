@@ -21,8 +21,7 @@ public class ItemConverter {
         }
     }
     public static ItemStack convertToJE(ItemData itemData){
-        CompoundTag compoundTag=new CompoundTag("");
-        return new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage(),compoundTag);
+        return new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage());
     }
     public static ItemData convertToBedrock(ItemStack itemStack){
         return ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());

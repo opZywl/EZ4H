@@ -28,7 +28,6 @@ public class CommandManager {
         }
     }
     public static void registerCommand(String commandName,CommandBase commandBase){
-        commandBase.commandName=commandName;
         commandMap.put(commandName.toLowerCase(),commandBase);
         commandList.add(commandName);
     }

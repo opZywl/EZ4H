@@ -8,7 +8,7 @@ import org.meditation.ez4h.command.CommandBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SayCommand extends CommandBase {
+public class SayCommand implements CommandBase {
     @Override
     public String getHelpMessage(){
         return "Say Messages To Server.";

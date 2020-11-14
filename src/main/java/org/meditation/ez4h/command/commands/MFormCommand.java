@@ -1,12 +1,11 @@
 package org.meditation.ez4h.command.commands;
 
-import com.alibaba.fastjson.JSONArray;
 import com.nukkitx.protocol.bedrock.packet.ModalFormResponsePacket;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.command.CommandBase;
 import org.meditation.ez4h.mcjava.cache.Form;
 
-public class MFormCommand extends CommandBase {
+public class MFormCommand implements CommandBase {
     @Override
     public String getHelpMessage(){
         return "Medal Form";
@@ -34,6 +33,7 @@ public class MFormCommand extends CommandBase {
                     client.sendAlert("[ERROR]Please input `mform choose <1/2>");
                 }
                 client.session.sendPacket(reqPacket);
+                client.clientStat.formData=null;
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
             }
@@ -42,6 +42,7 @@ public class MFormCommand extends CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
                 client.session.sendPacket(reqPacket);
+                client.clientStat.formData=null;
                 client.sendAlert("Form Closed.");
                 break;
             }
