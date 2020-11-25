@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.UUID;
 
 public class BedrockUtils {
     public static Difficulty convertDifficultyToJE(int diff){
@@ -156,11 +157,14 @@ public class BedrockUtils {
     public static double calcDistance(double x,double y,double z){
         return Math.sqrt((x*x)+(y*y))+z;
     }
-    public static String nameSuiter(String bedrockName){
-        if(bedrockName.length()>16){
-            return bedrockName.substring(0,16);
+    public static String lengthCutter(String bedrockName,int leng){
+        if(bedrockName.length()>leng){
+            return bedrockName.substring(0,leng);
         }else{
             return bedrockName;
         }
+    }
+    public static UUID getUUID(Object obj){
+        return UUID.nameUUIDFromBytes(String.valueOf(obj).getBytes());
     }
 }

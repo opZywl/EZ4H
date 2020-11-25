@@ -94,7 +94,6 @@ public class ClientHandler {
                 break;
             }
         }
-        System.out.println(packet.toString());
     }
     public void handle(ClientPlayerChangeHeldItemPacket packet) {
         PlayerHotbarPacket playerHotbarPacket=new PlayerHotbarPacket();
@@ -216,6 +215,20 @@ public class ClientHandler {
                 inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
+                client.session.sendPacket(inventoryTransactionPacket);
+                break;
+            }
+            case DROP_ITEM:{
+                //18:38:34 [TRACE] Inbound RicoPlayz: InventoryTransactionPacket(transactionType=0, actions=[NetworkInventoryAction(sourceType=0, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Dirt (3:0)x1, newItem=Item Air (0:0)x0, stackNetworkId=0), NetworkInventoryAction(sourceType=2, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Air (0:0)x0, newItem=Item Dirt (3:0)x1, stackNetworkId=0)], transactionData=null, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
+
+                //transactionType=0, actions=[NetworkInventoryAction(sourceType=0, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Dirt (3:0)x1, newItem=Item Air (0:0)x0, stackNetworkId=0), NetworkInventoryAction(sourceType=2, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Air (0:0)x0, newItem=Item Dirt (3:0)x1, stackNetworkId=0)]
+                // transactionData=null, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
+                System.out.println(packet);
+                InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
+                inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
+                inventoryTransactionPacket.setHasNetworkIds(false);
+                inventoryTransactionPacket.setLegacyRequestId(0);
+//                inventoryTransactionPacket.
                 client.session.sendPacket(inventoryTransactionPacket);
                 break;
             }

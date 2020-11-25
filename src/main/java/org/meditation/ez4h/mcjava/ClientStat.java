@@ -22,6 +22,7 @@ public class ClientStat {
     public GameMode gameMode;
     public boolean onLogin=true;
     public boolean jLogined=false;
+    public boolean rain=false,thunder=false;
     public Map<String, Packet> jPacketMap=new HashMap<>();
     public Map<String, String> scoreboards=new HashMap<>();
     public Map<Long, ScoreInfo> scoreboardBars=new HashMap<>();

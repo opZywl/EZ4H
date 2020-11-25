@@ -8,12 +8,15 @@ Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.20) servers!
 - [X] Chunks  
 - [X] Move  
 - [X] Players  
-- [ ] Entitys  
+- [X] Entitys  
 - [ ] Block Entitys  
+- [X] Item Entitys  
+- [ ] Entity Metadata  
 - [X] Entity Interact  
 - [X] Block Interact  
 - [X] Titles and other Messages  
 - [ ] Inventory Action  
+- [ ] UIes  
 - [X] Form UI  
 - [X] Level Events  
 
