@@ -21,6 +21,9 @@ public class ItemConverter {
         }
     }
     public static ItemStack convertToJE(ItemData itemData){
+        if(itemData.getId()<0){
+            return new ItemStack(1,itemData.getCount(), 0);
+        }
         return new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage());
     }
     public static ItemData convertToBedrock(ItemStack itemStack){

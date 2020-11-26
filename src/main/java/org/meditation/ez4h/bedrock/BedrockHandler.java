@@ -48,6 +48,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindo
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.*;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.data.AttributeData;
 import com.nukkitx.protocol.bedrock.data.GameType;
@@ -115,7 +116,31 @@ public class BedrockHandler implements BedrockPacketHandler {
 //    }
 
     public boolean handle(BlockEntityDataPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        Variables.logger.warning(packet.toString());
+        Vector3i pos=packet.getBlockPosition();
+        NbtMap data=packet.getData();
+        switch (data.getString("id")){
+            case "Chest":{
+                client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(54,3))));
+                break;
+            }
+            case "Furnace":{
+                client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(61,4))));
+                break;
+            }
+            case "ShulkerBox":{
+                client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(219,1))));
+                break;
+            }
+            case "EnderChest":{
+                client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(130,2))));
+                break;
+            }
+            case "Sign":{
+                client.JESession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(63,0))));
+                break;
+            }
+        }
         return false;
     }
 
@@ -350,7 +375,11 @@ public class BedrockHandler implements BedrockPacketHandler {
             if (BedrockUtils.calcDistance(moveX, moveY, moveZ) < 8) {
                 client.JESession.send(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX, moveY, moveZ, rotation.getY(), rotation.getX(), packet.isOnGround()));
             } else {
-                client.JESession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY() - 1.62, position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
+                if(entityInfo.type.equals("item_entity")){
+                    client.JESession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
+                }else {
+                    client.JESession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
+                }
             }
             entityInfo.x = position.getX();
             entityInfo.y = (float) (position.getY() - 1.62);
@@ -484,10 +513,10 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(AddEntityPacket packet) {
-        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
-        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
-        System.out.println(packet);
-        EntityConverter.convert(packet,client);
+        Vector3f position=packet.getPosition();
+        EntityInfo entityInfo=new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"entity");
+        EntityConverter.convert(packet,client,entityInfo);
+        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),entityInfo);
         return false;
     }
 
@@ -498,10 +527,10 @@ public class BedrockHandler implements BedrockPacketHandler {
 
     public boolean handle(AddItemEntityPacket packet) {
         Vector3f position=packet.getPosition(),motion=packet.getMotion();
-        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), (float) (position.getY()+1.62), position.getZ(), (int) packet.getRuntimeEntityId()));
+        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), (float) (position.getY()-1.62), position.getZ(), (int) packet.getRuntimeEntityId(),"item_entity"));
         EntityMetadata[] metadata=new EntityMetadata[1];
         metadata[0]=new EntityMetadata(6, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
-        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0, motion.getX(), motion.getY(), motion.getZ()));
+        client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
         client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
         return false;
     }
@@ -518,7 +547,7 @@ public class BedrockHandler implements BedrockPacketHandler {
         client.JESession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
-        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId()));
+        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"player"));
         client.JESession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
         client.JESession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND,ItemConverter.convertToJE(packet.getHand())));
         return false;
