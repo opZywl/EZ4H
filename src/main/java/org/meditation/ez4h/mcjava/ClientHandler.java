@@ -234,16 +234,35 @@ public class ClientHandler {
             }
         }
     }
+    /*
+    12:30:35 [TRACE] Inbound Steve: InteractPacket(action=4, target=60)
+12:30:36 [TRACE] Inbound Steve: InventoryTransactionPacket(transactionType=3, actions=[], transactionData=cn.nukkit.inventory.transaction.data.UseItemOnEntityData@27422187, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
+     */
     public void handle(ClientPlayerInteractEntityPacket packet) {
-        InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
-        inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE_ON_ENTITY);
-        inventoryTransactionPacket.setActionType(1);
-        inventoryTransactionPacket.setRuntimeEntityId(packet.getEntityId());
-        inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-        inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
-        inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
-        inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
-        client.session.sendPacket(inventoryTransactionPacket);
+        System.out.println(packet);
+        switch (packet.getAction()){
+            case INTERACT_AT:
+            case INTERACT:{
+                InteractPacket interactPacket=new InteractPacket();
+                interactPacket.setAction(InteractPacket.Action.INTERACT);
+                interactPacket.setRuntimeEntityId(packet.getEntityId());
+                interactPacket.setMousePosition(Vector3f.ZERO);
+                client.session.sendPacket(interactPacket);
+                break;
+            }
+            case ATTACK:{
+                InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+                inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE_ON_ENTITY);
+                inventoryTransactionPacket.setActionType(1);
+                inventoryTransactionPacket.setRuntimeEntityId(packet.getEntityId());
+                inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+                inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
+                inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+                inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
+                client.session.sendPacket(inventoryTransactionPacket);
+                break;
+            }
+        }
     }
     public void handle(ClientPlayerStatePacket packet) {
         switch (packet.getState()){

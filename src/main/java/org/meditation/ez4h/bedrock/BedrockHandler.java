@@ -32,7 +32,9 @@ import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotificati
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotificationValue;
 import com.github.steveice10.mc.protocol.data.game.world.notify.RainStrengthValue;
 import com.github.steveice10.mc.protocol.data.game.world.notify.ThunderStrengthValue;
+import com.github.steveice10.mc.protocol.data.game.world.sound.BuiltinSound;
 import com.github.steveice10.mc.protocol.data.game.world.sound.Sound;
+import com.github.steveice10.mc.protocol.data.game.world.sound.SoundCategory;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.*;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.*;
@@ -724,7 +726,7 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(MobEffectPacket packet) {
-        Effect effect=BedrockUtils.effectConverter(packet.getEffectId());
+        Effect effect=EffectConverter.converter(packet.getEffectId());
         switch (packet.getEvent()){
             case ADD:
             case MODIFY: {
@@ -735,6 +737,9 @@ public class BedrockHandler implements BedrockPacketHandler {
                         client.JESession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
                     }
                 }
+                EntityMetadata[] metadata=new EntityMetadata[1];
+                metadata[0]=new EntityMetadata(8, MetadataType.INT, packet.getEffectId());
+                client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
                 client.JESession.send(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(),effect,packet.getAmplifier(),packet.getDuration(),true,packet.isParticles()));
                 break;
             }
@@ -746,6 +751,9 @@ public class BedrockHandler implements BedrockPacketHandler {
                         client.JESession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
                     }
                 }
+                EntityMetadata[] metadata=new EntityMetadata[1];
+                metadata[0]=new EntityMetadata(8, MetadataType.INT, 0);
+                client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
                 client.JESession.send(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(),effect));
                 break;
             }
@@ -797,7 +805,13 @@ public class BedrockHandler implements BedrockPacketHandler {
     }
 
     public boolean handle(PlaySoundPacket packet) {
-        Variables.logger.warning(packet.getClass().getName());
+        Variables.logger.warning(packet.toString());
+        try{
+            Vector3f pos=packet.getPosition();
+            client.JESession.send(new ServerPlayBuiltinSoundPacket(SoundConverter.convert(packet.getSound()),SoundCategory.VOICE, pos.getX(), pos.getY(), pos.getZ(), packet.getVolume(), packet.getPitch()));
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
         return false;
     }
 
@@ -917,9 +931,10 @@ public class BedrockHandler implements BedrockPacketHandler {
         return false;
     }
 
-//    public boolean handle(SetEntityDataPacket packet) {
-//        return false;
-//    }
+    public boolean handle(SetEntityDataPacket packet) {
+        client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),MetadataConverter.convert(packet.getMetadata())));
+        return false;
+    }
 
     public boolean handle(SetEntityLinkPacket packet) {
         Variables.logger.warning(packet.getClass().getName());
