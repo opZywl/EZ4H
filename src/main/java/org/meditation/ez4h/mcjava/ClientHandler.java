@@ -1,8 +1,6 @@
 package org.meditation.ez4h.mcjava;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
-import com.github.steveice10.mc.protocol.data.game.window.WindowAction;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientRequestPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
@@ -11,11 +9,9 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginData;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginType;
-import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.bedrock.converters.ItemConverter;
 import org.meditation.ez4h.command.CommandManager;
 
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class ClientHandler {
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
             commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1));
-            client.session.sendPacket(commandRequestPacket);
+            client.bedrockSession.sendPacket(commandRequestPacket);
         }else if(firstChar.equals('`')) {
             if(packet.getMessage().length()>1) {
                 String[] commandList = packet.getMessage().substring(1).split(" "),argsList=new String[commandList.length-1];
@@ -54,7 +50,7 @@ public class ClientHandler {
             List<String> para = new ArrayList<>();
             textPacket.setParameters(para);
             textPacket.setSourceName(client.playerName);
-            client.session.sendPacket(textPacket);
+            client.bedrockSession.sendPacket(textPacket);
         }
     }
     public void handle(ClientWindowActionPacket packet) {
@@ -71,8 +67,8 @@ public class ClientHandler {
 //                interactPacket.setMousePosition(Vector3f.ZERO);
 //                interactPacket.setRuntimeEntityId(client.clientStat.entityId);
 //                interactPacket.setAction(InteractPacket.Action.MOUSEOVER);
-//                client.session.sendPacket(inventoryTransactionPacket);
-//                client.session.sendPacket(interactPacket);
+//                client.bedrockSession.sendPacket(inventoryTransactionPacket);
+//                client.bedrockSession.sendPacket(interactPacket);
                 break;
             }
             case DROP_ITEM:{
@@ -90,7 +86,7 @@ public class ClientHandler {
                 respawnPacket.setPosition(Vector3f.from(0,0,0));
                 respawnPacket.setRuntimeEntityId(client.clientStat.entityId);
                 respawnPacket.setState(RespawnPacket.State.CLIENT_READY);
-                client.session.sendPacket(respawnPacket);
+                client.bedrockSession.sendPacket(respawnPacket);
                 break;
             }
         }
@@ -100,7 +96,7 @@ public class ClientHandler {
         playerHotbarPacket.setContainerId(0);
         playerHotbarPacket.setSelectedHotbarSlot(packet.getSlot());
         playerHotbarPacket.setSelectHotbarSlot(true);
-        client.session.sendPacket(playerHotbarPacket);
+        client.bedrockSession.sendPacket(playerHotbarPacket);
         client.clientStat.slot=packet.getSlot();
     }
     public void handle(ClientPlayerUseItemPacket packet) {
@@ -113,13 +109,13 @@ public class ClientHandler {
         inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
         inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
-        client.session.sendPacket(inventoryTransactionPacket);
+        client.bedrockSession.sendPacket(inventoryTransactionPacket);
     }
     public void handle(ClientPlayerSwingArmPacket packet) {
         AnimatePacket animatePacket=new AnimatePacket();
         animatePacket.setAction(AnimatePacket.Action.SWING_ARM);
         animatePacket.setRuntimeEntityId(client.clientStat.entityId);
-        client.session.sendPacket(animatePacket);
+        client.bedrockSession.sendPacket(animatePacket);
     }
     public void handle(ClientPlayerPositionPacket packet) {
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
@@ -132,7 +128,7 @@ public class ClientHandler {
         client.clientStat.z= (float) packet.getZ();
         movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
         movePlayerPacket.setRotation(Vector3f.from(client.clientStat.pitch,client.clientStat.yaw,0));
-        client.session.sendPacket(movePlayerPacket);
+        client.bedrockSession.sendPacket(movePlayerPacket);
     }
     public void handle(ClientPlayerPositionRotationPacket packet) {
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
@@ -147,7 +143,7 @@ public class ClientHandler {
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
         client.clientStat.yaw= (float) packet.getYaw();
         client.clientStat.pitch= (float) packet.getPitch();
-        client.session.sendPacket(movePlayerPacket);
+        client.bedrockSession.sendPacket(movePlayerPacket);
     }
     public void handle(ClientPlayerRotationPacket packet) {
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
@@ -159,7 +155,7 @@ public class ClientHandler {
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
         client.clientStat.yaw= (float) packet.getYaw();
         client.clientStat.pitch= (float) packet.getPitch();
-        client.session.sendPacket(movePlayerPacket);
+        client.bedrockSession.sendPacket(movePlayerPacket);
     }
     public void handle(ClientPlayerPlaceBlockPacket packet) {
         Position position=packet.getPosition();
@@ -174,7 +170,7 @@ public class ClientHandler {
         useInventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
         useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
         useInventoryTransactionPacket.setBlockRuntimeId(0);
-        client.session.sendPacket(useInventoryTransactionPacket);
+        client.bedrockSession.sendPacket(useInventoryTransactionPacket);
     }
     public void handle(ClientPlayerActionPacket packet) {
         Position blockPos=packet.getPosition();
@@ -185,7 +181,7 @@ public class ClientHandler {
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
                 break;
             }
             case CANCEL_DIGGING:{
@@ -194,7 +190,7 @@ public class ClientHandler {
                 playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
                 break;
             }
             case FINISH_DIGGING:{
@@ -204,7 +200,7 @@ public class ClientHandler {
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
                 playerActionPacket.setBlockPosition(blockPosition);
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
 
                 InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
                 inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
@@ -215,7 +211,7 @@ public class ClientHandler {
                 inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
-                client.session.sendPacket(inventoryTransactionPacket);
+                client.bedrockSession.sendPacket(inventoryTransactionPacket);
                 break;
             }
             case DROP_ITEM:{
@@ -228,8 +224,7 @@ public class ClientHandler {
                 inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
                 inventoryTransactionPacket.setHasNetworkIds(false);
                 inventoryTransactionPacket.setLegacyRequestId(0);
-//                inventoryTransactionPacket.
-                client.session.sendPacket(inventoryTransactionPacket);
+                client.bedrockSession.sendPacket(inventoryTransactionPacket);
                 break;
             }
         }
@@ -247,7 +242,7 @@ public class ClientHandler {
                 interactPacket.setAction(InteractPacket.Action.INTERACT);
                 interactPacket.setRuntimeEntityId(packet.getEntityId());
                 interactPacket.setMousePosition(Vector3f.ZERO);
-                client.session.sendPacket(interactPacket);
+                client.bedrockSession.sendPacket(interactPacket);
                 break;
             }
             case ATTACK:{
@@ -259,7 +254,7 @@ public class ClientHandler {
                 inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
-                client.session.sendPacket(inventoryTransactionPacket);
+                client.bedrockSession.sendPacket(inventoryTransactionPacket);
                 break;
             }
         }
@@ -272,7 +267,7 @@ public class ClientHandler {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
                 break;
             }
             case STOP_SNEAKING:{
@@ -281,7 +276,7 @@ public class ClientHandler {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
                 break;
             }
             case START_SPRINTING:{
@@ -290,7 +285,7 @@ public class ClientHandler {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
             }
             case STOP_SPRINTING:{
                 PlayerActionPacket playerActionPacket=new PlayerActionPacket();
@@ -298,7 +293,7 @@ public class ClientHandler {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.session.sendPacket(playerActionPacket);
+                client.bedrockSession.sendPacket(playerActionPacket);
             }
         }
     }

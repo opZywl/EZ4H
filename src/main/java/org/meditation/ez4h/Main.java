@@ -7,15 +7,14 @@ import com.github.steveice10.mc.protocol.MinecraftConstants;
 import com.github.steveice10.mc.protocol.MinecraftProtocol;
 import com.github.steveice10.mc.protocol.ServerLoginHandler;
 import com.github.steveice10.mc.protocol.data.SubProtocol;
-import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
-import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
-import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.data.status.handler.ServerInfoBuilder;
+import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
+import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEntryPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import com.github.steveice10.packetlib.Server;
 import com.github.steveice10.packetlib.Session;
@@ -24,14 +23,18 @@ import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
+import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
-import org.meditation.ez4h.bedrock.converters.BlockConverter;
+import org.meditation.ez4h.converters.BlockConverter;
 import org.meditation.ez4h.command.CommandManager;
 import org.meditation.ez4h.command.commands.*;
-import org.meditation.ez4h.mcjava.BroadcastPacket;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
 import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
+import org.meditation.ez4h.translators.BedrockTranslatorManager;
+import org.meditation.ez4h.translators.JavaTranslatorManager;
+import org.meditation.ez4h.translators.bedrockTranslators.*;
+import org.meditation.ez4h.translators.javaTranslators.*;
 import org.meditation.ez4h.utils.FileUtils;
 
 import java.io.File;
@@ -74,12 +77,76 @@ public class Main {
             FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
         }
         Variables.config=JSON.parseObject(FileUtils.readFile("./config.json"));
+        if(Variables.config.getJSONObject("advanced").getBoolean("debug")){
+
+        }
+        Variables.debug=Variables.config.getJSONObject("advanced").getInteger("debug");
     }
     private static void initPEProtocol() {
+        //register translators
+        BedrockTranslatorManager.addTranslator(new AddEntityPacketTranslator(), AddEntityPacket.class);
+        BedrockTranslatorManager.addTranslator(new AddItemEntityPacketTranslator(), AddItemEntityPacket.class);
+        BedrockTranslatorManager.addTranslator(new AddPlayerPacketTranslator(), AddPlayerPacket.class);
+        BedrockTranslatorManager.addTranslator(new AnimatePacketTranslator(), AnimatePacket.class);
+        BedrockTranslatorManager.addTranslator(new BlockEntityDataPacketTranslator(), BlockEntityDataPacket.class);
+        BedrockTranslatorManager.addTranslator(new BossEventPacketTranslator(),BossEventPacket.class);
+        BedrockTranslatorManager.addTranslator(new DisconnectPacketTranslator(),DisconnectPacket.class);
+        BedrockTranslatorManager.addTranslator(new EntityEventPacketTranslator(),EntityEventPacket.class);
+        BedrockTranslatorManager.addTranslator(new InventoryContentPacketTranslator(),InventoryContentPacket.class);
+        BedrockTranslatorManager.addTranslator(new InventorySlotPacketTranslator(),InventorySlotPacket.class);
+        BedrockTranslatorManager.addTranslator(new LevelChunkPacketTranslator(),LevelChunkPacket.class);
+        BedrockTranslatorManager.addTranslator(new LevelEventPacketTranslator(),LevelEventPacket.class);
+        BedrockTranslatorManager.addTranslator(new MobArmorEquipmentPacketTranslator(),MobArmorEquipmentPacket.class);
+        BedrockTranslatorManager.addTranslator(new MobEffectPacketTranslator(),MobEffectPacket.class);
+        BedrockTranslatorManager.addTranslator(new MobEquipmentPacketTranslator(),MobEquipmentPacket.class);
+        BedrockTranslatorManager.addTranslator(new ModalFormRequestPacketTranslator(),ModalFormRequestPacket.class);
+        BedrockTranslatorManager.addTranslator(new MoveEntityAbsolutePacketTranslator(),MoveEntityAbsolutePacket.class);
+        BedrockTranslatorManager.addTranslator(new MovePlayerPacketTranslator(),MovePlayerPacket.class);
+        BedrockTranslatorManager.addTranslator(new PlayerListPacketTranslator(),PlayerListPacket.class);
+        BedrockTranslatorManager.addTranslator(new PlaySoundPacketTranslator(),PlaySoundPacket.class);
+        BedrockTranslatorManager.addTranslator(new PlayStatusPacketTranslator(),PlayStatusPacket.class);
+        BedrockTranslatorManager.addTranslator(new RemoveEntityPacketTranslator(),RemoveEntityPacket.class);
+        BedrockTranslatorManager.addTranslator(new RemoveObjectivePacketTranslator(),RemoveObjectivePacket.class);
+        BedrockTranslatorManager.addTranslator(new ResourcePacksInfoPacketTranslator(),ResourcePacksInfoPacket.class);
+        BedrockTranslatorManager.addTranslator(new ResourcePackStackPacketTranslator(),ResourcePackStackPacket.class);
+        BedrockTranslatorManager.addTranslator(new RespawnPacketTranslator(),RespawnPacket.class);
+        BedrockTranslatorManager.addTranslator(new SetDisplayObjectivePacketTranslator(),SetDisplayObjectivePacket.class);
+        BedrockTranslatorManager.addTranslator(new SetEntityDataPacketTranslator(),SetEntityDataPacket.class);
+        BedrockTranslatorManager.addTranslator(new SetEntityMotionPacketTranslator(),SetEntityMotionPacket.class);
+        BedrockTranslatorManager.addTranslator(new SetPlayerGameTypePacketTranslator(),SetPlayerGameTypePacket.class);
+        BedrockTranslatorManager.addTranslator(new SetScorePacketTranslator(),SetScorePacket.class);
+        BedrockTranslatorManager.addTranslator(new SetTimePacketTranslator(),SetTimePacket.class);
+        BedrockTranslatorManager.addTranslator(new SetTitlePacketTranslator(),SetTitlePacket.class);
+        BedrockTranslatorManager.addTranslator(new StartGamePacketTranslator(),StartGamePacket.class);
+        BedrockTranslatorManager.addTranslator(new TakeItemEntityPacketTranslator(),TakeItemEntityPacket.class);
+        BedrockTranslatorManager.addTranslator(new TextPacketTranslator(),TextPacket.class);
+        BedrockTranslatorManager.addTranslator(new UpdateAttributesPacketTranslator(),UpdateAttributesPacket.class);
+        BedrockTranslatorManager.addTranslator(new UpdateBlockPacketTranslator(),UpdateBlockPacket.class);
+        BedrockTranslatorManager.addTranslator(new UpdatePlayerGameTypePacketTranslator(),UpdatePlayerGameTypePacket.class);
+
+        //load block data
         BlockConverter.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
+
+        //start ping thread
         Variables.pingThread=new Ping();
     }
     private static void initJEProtocol() {
+        //register translators
+        JavaTranslatorManager.addTranslator(new ClientChatPacketTranslator(), ClientChatPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerActionPacketTranslator(), ClientPlayerActionPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerChangeHeldItemPacketTranslator(), ClientPlayerChangeHeldItemPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerInteractEntityPacketTranslator(), ClientPlayerInteractEntityPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerPlaceBlockPacketTranslator(), ClientPlayerPlaceBlockPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerPositionPacketTranslator(), ClientPlayerPositionPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerPositionRotationPacketTranslator(),ClientPlayerPositionRotationPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerRotationPacketTranslator(),ClientPlayerRotationPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerStatePacketTranslator(),ClientPlayerStatePacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerSwingArmPacketTranslator(),ClientPlayerSwingArmPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientPlayerUseItemPacketTranslator(),ClientPlayerUseItemPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientRequestPacketTranslator(), ClientRequestPacketTranslator.class);
+        JavaTranslatorManager.addTranslator(new ClientWindowActionPacketTranslator(), ClientWindowActionPacket.class);
+
+        //opening server
         SessionService sessionService = new SessionService();
         server = new Server(Variables.config.getString("host"), Variables.config.getInteger("port"), MinecraftProtocol.class, new TcpSessionFactory());
         server.setGlobalFlag("session-service", sessionService);
@@ -135,9 +202,7 @@ public class Main {
                     Client client=Variables.clientMap.remove(profile.getName());
                     Variables.logger.info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
                     if(client!=null) {
-                        client.session.disconnect();
-                        PlayerListEntry[] playerListEntry = {new PlayerListEntry(new GameProfile(client.playerUUID, client.playerName), GameMode.SURVIVAL, 0, new TextMessage(client.playerName))};
-                        BroadcastPacket.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntry));
+                        client.bedrockSession.disconnect();
                     }else{
                         for(SessionListener sessionListener:session.getListeners()){
                             FakeServer fakeServer=(FakeServer)sessionListener;

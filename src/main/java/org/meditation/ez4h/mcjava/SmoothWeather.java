@@ -37,9 +37,9 @@ class WeatherThread implements Runnable {
                     to -= 0.025;
                 }
                 if (isThunder) {
-                    client.JESession.send(new ServerNotifyClientPacket(ClientNotification.THUNDER_STRENGTH, new RainStrengthValue(to)));
+                    client.javaSession.send(new ServerNotifyClientPacket(ClientNotification.THUNDER_STRENGTH, new RainStrengthValue(to)));
                 }else{
-                    client.JESession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH, new RainStrengthValue(to)));
+                    client.javaSession.send(new ServerNotifyClientPacket(ClientNotification.RAIN_STRENGTH, new RainStrengthValue(to)));
                 }
                 Thread.sleep(100);
             }

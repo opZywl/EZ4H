@@ -1,9 +1,8 @@
-package org.meditation.ez4h.bedrock.converters;
+package org.meditation.ez4h.converters;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.entity.type.GlobalEntityType;
@@ -16,7 +15,6 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListEn
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityMetadataPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.*;
 import com.nukkitx.math.vector.Vector3f;
-import com.nukkitx.protocol.bedrock.data.entity.EntityData;
 import com.nukkitx.protocol.bedrock.packet.AddEntityPacket;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.bedrock.BedrockUtils;
@@ -36,14 +34,14 @@ public class EntityConverter {
         }
         if(entityType instanceof MobType){
             Vector3f position=packet.getPosition(),rotation=packet.getRotation(),motion=packet.getMotion();
-            client.JESession.send(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(),BedrockUtils.getUUID(packet.getRuntimeEntityId()),(MobType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(),rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), MetadataConverter.convert(packet.getMetadata())));
+            client.javaSession.send(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(),BedrockUtils.getUUID(packet.getRuntimeEntityId()),(MobType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(),rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), MetadataConverter.convert(packet.getMetadata())));
         }else if(entityType instanceof ObjectType){
             Vector3f position=packet.getPosition(),rotation=packet.getRotation(),motion=packet.getMotion();
-            client.JESession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),BedrockUtils.getUUID(packet.getRuntimeEntityId()),(ObjectType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
-            client.JESession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),MetadataConverter.convert(packet.getMetadata())));
+            client.javaSession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(),BedrockUtils.getUUID(packet.getRuntimeEntityId()),(ObjectType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
+            client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata())));
         }else if(entityType instanceof GlobalEntityType){
             Vector3f position=packet.getPosition();
-            client.JESession.send(new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(),(GlobalEntityType)entityType, position.getX(), position.getY()+1.62, position.getZ()));
+            client.javaSession.send(new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(),(GlobalEntityType)entityType, position.getX(), position.getY()+1.62, position.getZ()));
         }
     }
     public static void addUnknownEntity(AddEntityPacket packet,Client client){
@@ -51,13 +49,13 @@ public class EntityConverter {
         ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
         playerListEntries.add(new PlayerListEntry(new GameProfile(uuid,BedrockUtils.lengthCutter(prepareEntityName(packet.getIdentifier()),16)), GameMode.SURVIVAL,0,new TextMessage(packet.getIdentifier())));
         PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
-        client.JESession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
+        client.javaSession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"player"));
-        client.JESession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),uuid, position.getX(), position.getY()+1.62, position.getZ(),rotation.getY(),rotation.getX(),MetadataConverter.convert(packet.getMetadata())));
+        client.javaSession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),uuid, position.getX(), position.getY()+1.62, position.getZ(),rotation.getY(),rotation.getX(), MetadataConverter.convert(packet.getMetadata())));
 
-        client.JESession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
+        client.javaSession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
     }
     public static Object convertEntityType(AddEntityPacket packet, Client client){
         Object entityType=null;
@@ -274,7 +272,7 @@ public class EntityConverter {
             case "xp_orb":{
                 entityType="xp_orb";
                 Vector3f position=packet.getPosition();
-                client.JESession.send(new ServerSpawnExpOrbPacket((int) packet.getRuntimeEntityId(),position.getX(), position.getY()+1.62, position.getZ(), 1));
+                client.javaSession.send(new ServerSpawnExpOrbPacket((int) packet.getRuntimeEntityId(),position.getX(), position.getY()+1.62, position.getZ(), 1));
                 break;
             }
             case "eye_of_ender_signal":{
@@ -314,7 +312,7 @@ public class EntityConverter {
                 entityType="painting";
                 Vector3f position=packet.getPosition();
                 Position j_position=new Position(position.getFloorX(), position.getFloorY()+2, position.getFloorZ());
-                client.JESession.send(new ServerSpawnPaintingPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), PaintingType.ALBAN,j_position, HangingDirection.EAST));
+                client.javaSession.send(new ServerSpawnPaintingPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), PaintingType.ALBAN,j_position, HangingDirection.EAST));
                 break;
             }
             case "fireball":{

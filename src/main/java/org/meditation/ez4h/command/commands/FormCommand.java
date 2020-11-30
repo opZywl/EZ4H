@@ -32,7 +32,7 @@ public class FormCommand implements CommandBase {
                     return;
                 }
                 reqPacket.setFormData(index+"");
-                client.session.sendPacket(reqPacket);
+                client.bedrockSession.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
@@ -41,7 +41,7 @@ public class FormCommand implements CommandBase {
                 ModalFormResponsePacket reqPacket=new ModalFormResponsePacket();
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
-                client.session.sendPacket(reqPacket);
+                client.bedrockSession.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Closed.");
                 break;

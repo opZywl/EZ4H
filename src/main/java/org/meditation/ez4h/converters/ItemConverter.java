@@ -1,7 +1,6 @@
-package org.meditation.ez4h.bedrock.converters;
+package org.meditation.ez4h.converters;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
-import com.github.steveice10.opennbt.tag.builtin.*;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 
 public class ItemConverter {

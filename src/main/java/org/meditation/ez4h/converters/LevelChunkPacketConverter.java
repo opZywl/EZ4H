@@ -1,4 +1,4 @@
-package org.meditation.ez4h.bedrock.converters;
+package org.meditation.ez4h.converters;
 
 import com.github.steveice10.mc.protocol.data.game.chunk.BlockStorage;
 import com.github.steveice10.mc.protocol.data.game.chunk.Chunk;

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 public class Variables {
     public static Logger logger;
     public static JSONObject config;
+    public static int debug=0;
     public static Ping pingThread;
     public static Map<String, Client> clientMap=new HashMap<>();
     public static Map<String, String> accessTokens=new HashMap<>();

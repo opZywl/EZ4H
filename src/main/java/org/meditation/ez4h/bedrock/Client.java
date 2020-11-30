@@ -5,15 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jwt.SignedJWT;
 import com.nukkitx.protocol.bedrock.BedrockClient;
 import com.nukkitx.protocol.bedrock.BedrockClientSession;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 import io.netty.util.AsciiString;
-import org.checkerframework.checker.units.qual.A;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.ClientStat;
@@ -22,7 +19,6 @@ import org.meditation.ez4h.utils.RandUtils;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
@@ -33,8 +29,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
-    public BedrockClientSession session;
-    public Session JESession;
+    public BedrockClientSession bedrockSession;
+    public Session javaSession;
     public String playerName;
     public String xuid;
     public UUID playerUUID;
@@ -45,7 +41,7 @@ public class Client {
         this.playerUUID=playerUUID;
         Client clientM=this;
         try {
-            JESession=event.getSession();
+            javaSession=event.getSession();
             this.clientStat=new ClientStat();
             this.javaHandler=new ClientHandler(clientM);
             InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000,50000));
@@ -56,12 +52,14 @@ public class Client {
                 if (throwable != null) {
                     return;
                 }
-                this.session=session;
+                this.bedrockSession=session;
                 session.setPacketCodec(Bedrock_v408.V408_CODEC);
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
-                session.setPacketHandler(new BedrockHandler(clientM));
+
+                bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
+                bedrockSession.setLogging(false);
                 if(Variables.config.getBoolean("xbox-auth")){
                     //TODO:ONLINE LOGIN
                 }else {
@@ -70,8 +68,8 @@ public class Client {
             }).join();
         } catch (Exception e) {
             event.getSession().disconnect("EZ4H ERROR!\nCaused by "+e.getLocalizedMessage());
-            if(session != null){
-                session.disconnect();
+            if(bedrockSession != null){
+                bedrockSession.disconnect();
             }
             e.printStackTrace();
         }
@@ -163,9 +161,9 @@ public class Client {
         return OtherUtils.base64Encode(jwtHeader.toJSONString()) + "." + OtherUtils.base64Encode(skinData.toJSONString()) + "." + OtherUtils.base64Encode(new String(publicKey.getEncoded()));
     }
     public void sendMessage(String msg){
-        this.JESession.send(new ServerChatPacket(msg));
+        this.javaSession.send(new ServerChatPacket(msg));
     }
     public void sendAlert(String msg){
-        this.JESession.send(new ServerChatPacket("§f[§bEZ§a4§bH§f]"+msg));
+        this.javaSession.send(new ServerChatPacket("§f[§bEZ§a4§bH§f]"+msg));
     }
 }
