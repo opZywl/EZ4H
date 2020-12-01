@@ -12,6 +12,9 @@ public class MobEquipmentPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobEquipmentPacket packet=(MobEquipmentPacket)inPacket;
+        if(packet.getRuntimeEntityId()==client.clientStat.entityId){
+            return;
+        }
         switch (packet.getContainerId()){
             case 0:{
                 client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getItem())));

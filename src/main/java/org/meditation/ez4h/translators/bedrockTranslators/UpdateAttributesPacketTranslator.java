@@ -17,6 +17,7 @@ import java.util.List;
 public class UpdateAttributesPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
+        boolean updateHP=false,updateEXP=false;
         UpdateAttributesPacket packet=(UpdateAttributesPacket)inPacket;
         if(packet.getRuntimeEntityId()==client.clientStat.entityId) {
             List<AttributeData> attributes = packet.getAttributes();
@@ -27,24 +28,32 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                         attributes1.add(new Attribute(AttributeType.GENERIC_MAX_HEALTH, attribute.getMaximum()));
                         client.javaSession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId, attributes1));
                         client.clientStat.health = attribute.getValue();
+                        updateHP=true;
                         break;
                     }
                     case "minecraft:player.experience": {
                         client.clientStat.exp = attribute.getValue() / attribute.getMaximum();
+                        updateEXP=true;
                         break;
                     }
                     case "minecraft:player.hunger": {
                         client.clientStat.food = (int) attribute.getValue();
+                        updateHP=true;
                         break;
                     }
                     case "minecraft:player.level": {
                         client.clientStat.expLevel = attribute.getValue();
+                        updateEXP=true;
                         break;
                     }
                 }
             }
-            client.javaSession.send(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
-            client.javaSession.send(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
+            if(updateHP) {
+                client.javaSession.send(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
+            }
+            if(updateEXP) {
+                client.javaSession.send(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
+            }
         }
     }
 }

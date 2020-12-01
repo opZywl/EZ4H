@@ -2,8 +2,10 @@ package org.meditation.ez4h.converters;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.mcjava.cache.Form;
+import org.meditation.ez4h.utils.OtherUtils;
 
 //simple form:{"type":"form","title":"LSSW","content":"Choose Kits","buttons":[{"text":"Empty(NOW)"}],"closed":false}
 //modal form:{"type":"modal","title":"TITLE","content":"Context","button1":"button1","button2":"button2","closed":false}
@@ -13,6 +15,10 @@ public class FormConverter {
     public static void showForm(Client client, String formJson,int formId){
         JSONObject formJSON=JSONObject.parseObject(formJson);
         formJSON.put("id",formId);
+        JSONObject formJ=new JSONObject();
+        formJ.put("type","form");
+        formJ.put("data", OtherUtils.base64Encode(formJSON.toJSONString()));
+        client.javaSession.send(new ServerPluginMessagePacket("EZ4H",formJ.toJSONString().getBytes()));
         if(formJSON.getString("type").equals("form")){
             showSimpleForm(client,formJSON);
         }else if(formJSON.getString("type").equals("custom_form")){

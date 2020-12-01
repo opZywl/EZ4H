@@ -11,10 +11,11 @@ import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
 import com.github.steveice10.mc.protocol.data.status.handler.ServerInfoBuilder;
-import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.client.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.*;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import com.github.steveice10.packetlib.Server;
 import com.github.steveice10.packetlib.Session;
@@ -36,6 +37,7 @@ import org.meditation.ez4h.translators.JavaTranslatorManager;
 import org.meditation.ez4h.translators.bedrockTranslators.*;
 import org.meditation.ez4h.translators.javaTranslators.*;
 import org.meditation.ez4h.utils.FileUtils;
+import org.meditation.ez4h.utils.OtherUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -143,7 +145,7 @@ public class Main {
         JavaTranslatorManager.addTranslator(new ClientPlayerStatePacketTranslator(),ClientPlayerStatePacket.class);
         JavaTranslatorManager.addTranslator(new ClientPlayerSwingArmPacketTranslator(),ClientPlayerSwingArmPacket.class);
         JavaTranslatorManager.addTranslator(new ClientPlayerUseItemPacketTranslator(),ClientPlayerUseItemPacket.class);
-        JavaTranslatorManager.addTranslator(new ClientRequestPacketTranslator(), ClientRequestPacketTranslator.class);
+        JavaTranslatorManager.addTranslator(new ClientRequestPacketTranslator(), ClientRequestPacket.class);
         JavaTranslatorManager.addTranslator(new ClientWindowActionPacketTranslator(), ClientWindowActionPacket.class);
 
         //opening server
@@ -166,6 +168,7 @@ public class Main {
                         session.send(client.clientStat.jPacketMap.remove("ServerPlayerListData"));
                         session.send(client.clientStat.jPacketMap.remove("ServerEntityProperties"));
                     }
+                    session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(Variables.config.toJSONString()) +"\"}").getBytes()));
                 }else{
                     ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
                             1,
