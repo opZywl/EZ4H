@@ -61,7 +61,6 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
 
                 //transactionType=0, actions=[NetworkInventoryAction(sourceType=0, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Dirt (3:0)x1, newItem=Item Air (0:0)x0, stackNetworkId=0), NetworkInventoryAction(sourceType=2, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Air (0:0)x0, newItem=Item Dirt (3:0)x1, stackNetworkId=0)]
                 // transactionData=null, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
-                System.out.println(packet);
                 InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
                 inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
                 inventoryTransactionPacket.setHasNetworkIds(false);

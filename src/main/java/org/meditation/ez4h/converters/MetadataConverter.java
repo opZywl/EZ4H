@@ -21,6 +21,7 @@ public class MetadataConverter {
             metadata.add(new EntityMetadata(7, MetadataType.FLOAT, (float)bedrockMetadata.getInt(EntityData.HEALTH)));
         }
         //not works
+        //TODO: fix this
         if(bedrockMetadata.containsKey(EntityData.FUSE_LENGTH)) {
             if(bedrockMetadata.getInt(EntityData.FUSE_LENGTH)<=0){
                 metadata.add(new EntityMetadata(15, MetadataType.INT, 1));
@@ -28,19 +29,15 @@ public class MetadataConverter {
                 metadata.add(new EntityMetadata(15, MetadataType.INT, -1));
             }
         }
-        if(bedrockMetadata.containsValue(EntityFlag.CAN_SHOW_NAME)) {
-            if (bedrockMetadata.getFlags().getFlag(EntityFlag.CAN_SHOW_NAME)) {
-                metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, true));
-            } else {
-                metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, false));
-            }
+        if (bedrockMetadata.getFlags().getFlag(EntityFlag.CAN_SHOW_NAME)) {
+            metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, true));
+        } else {
+            metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, false));
         }
-        if(bedrockMetadata.containsValue(EntityFlag.HAS_GRAVITY)) {
-            if (bedrockMetadata.getFlags().getFlag(EntityFlag.HAS_GRAVITY)) {
-                metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, false));
-            } else {
-                metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, true));
-            }
+        if (bedrockMetadata.getFlags().getFlag(EntityFlag.HAS_GRAVITY)) {
+            metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, false));
+        } else {
+            metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, true));
         }
         return metadata.toArray(new EntityMetadata[metadata.size()]);
     }

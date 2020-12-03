@@ -65,10 +65,12 @@ public class ItemConverter {
     }
     public static CompoundTag nbtMapTranslator(String name,NbtMap nbtMap){
         CompoundTag compoundTag=new CompoundTag(name);
-        for (Map.Entry<String, Object> e : nbtMap.entrySet()) {
-            Tag tag=nbtTagTranslator(e.getKey(),e.getValue());
-            if(tag!=null){
-                compoundTag.put(tag);
+        if(nbtMap!=null) {
+            for (Map.Entry<String, Object> e : nbtMap.entrySet()) {
+                Tag tag = nbtTagTranslator(e.getKey(), e.getValue());
+                if (tag != null) {
+                    compoundTag.put(tag);
+                }
             }
         }
         return compoundTag;
@@ -77,10 +79,10 @@ public class ItemConverter {
         if(itemData.getId()<0){
             return new ItemStack(1,itemData.getCount(), 0);
         }
-        CompoundTag tag=null;
-//        if(tag.contains("Damage")&&tag.size()==1){
-//            tag=null;
-//        }
+        CompoundTag tag=nbtMapTranslator("",itemData.getTag());
+        if(tag.contains("Damage")&&tag.size()==1){
+            tag=null;
+        }
         return new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage(),tag);
     }
     public static ItemData convertToBedrock(ItemStack itemStack){

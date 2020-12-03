@@ -75,6 +75,9 @@ public class Main {
         if(!new File("./resources/block.json").exists()){
             FileUtils.ReadJar("resources/resources/block.json",JarDir,"./resources/block.json");
         }
+        if(!new File("./resources/lang.json").exists()){
+            FileUtils.ReadJar("resources/resources/lang.json",JarDir,"./resources/lang.json");
+        }
         if(!new File("./resources/skin.png").exists()){
             FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
         }
@@ -128,6 +131,9 @@ public class Main {
 
         //load block data
         BlockConverter.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
+
+        //load text data
+        TextPacketTranslator.load(FileUtils.readFile("./resources/lang.json"));
 
         //start ping thread
         Variables.pingThread=new Ping();

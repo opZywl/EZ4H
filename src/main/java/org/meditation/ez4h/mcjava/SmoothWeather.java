@@ -8,7 +8,6 @@ import org.meditation.ez4h.bedrock.Client;
 public class SmoothWeather {
     public static void changeWeather(float to,boolean isThunder,Client client){
         WeatherThread weatherThread=new WeatherThread();
-        System.out.println(isThunder);
         weatherThread.isThunder=isThunder;
         weatherThread.to=to;
         weatherThread.client=client;
@@ -23,7 +22,6 @@ class WeatherThread implements Runnable {
     public float to;
     public void run() {
         try {
-            System.out.println(isThunder);
             if (to == 1) {
                 mode = true;
                 to = 0;

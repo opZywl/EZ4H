@@ -9,6 +9,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePack
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListDataPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityPropertiesPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
 import org.meditation.ez4h.bedrock.BedrockUtils;
@@ -25,7 +26,6 @@ public class StartGamePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         StartGamePacket packet=(StartGamePacket)inPacket;
-        BlockConverter.loadRuntime(packet.getBlockPalette());
         GameMode gamemode= BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
         ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
                 (int) packet.getUniqueEntityId(),
@@ -58,5 +58,6 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         client.clientStat.dimension=packet.getDimensionId();
         client.clientStat.difficulty=BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
         client.clientStat.gameMode=gamemode;
+        BlockConverter.loadRuntime(packet.getBlockPalette());
     }
 }

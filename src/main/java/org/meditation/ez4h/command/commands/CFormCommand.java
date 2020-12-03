@@ -62,7 +62,6 @@ public class CFormCommand implements CommandBase {
                     client.sendAlert("[ERROR]Array Outside The Bound Of Array.");
                     return;
                 }
-                System.out.println(formData.data.getJSONArray("types").getString(index));
                 if(!formData.data.getJSONArray("types").getString(index).equals("choose")){
                     client.sendAlert("Invalid type.");
                     return;

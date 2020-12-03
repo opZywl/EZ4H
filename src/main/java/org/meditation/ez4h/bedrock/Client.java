@@ -12,7 +12,6 @@ import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
 import io.netty.util.AsciiString;
 import org.meditation.ez4h.Variables;
-import org.meditation.ez4h.mcjava.ClientHandler;
 import org.meditation.ez4h.mcjava.ClientStat;
 import org.meditation.ez4h.utils.OtherUtils;
 import org.meditation.ez4h.utils.RandUtils;
@@ -34,7 +33,6 @@ public class Client {
     public String playerName;
     public String xuid;
     public UUID playerUUID;
-    public ClientHandler javaHandler;
     public ClientStat clientStat;
     public Client(PacketReceivedEvent event, String playerName, UUID playerUUID){
         this.playerName=playerName;
@@ -43,7 +41,6 @@ public class Client {
         try {
             javaSession=event.getSession();
             this.clientStat=new ClientStat();
-            this.javaHandler=new ClientHandler(clientM);
             InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000,50000));
             BedrockClient client = new BedrockClient(bindAddress);
             client.bind().join();

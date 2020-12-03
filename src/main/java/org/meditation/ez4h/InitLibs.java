@@ -7,14 +7,14 @@ import java.net.URLClassLoader;
 import java.util.Date;
 
 public class InitLibs {
-    public static String VERSION="1.0";
+    public static String VERSION="20201203";
     public static long launchTime=0;
     public static void main(String[] args){
         launchTime=new Date().getTime();
-        System.out.println("Starting EZ4H v"+VERSION);
         new File("./libs").mkdir();
         System.out.println("Loading libs...");
         loadLib();
+        System.out.println("Starting EZ4H v"+VERSION);
         Main.main(args);
     }
     public static void loadLib(){
