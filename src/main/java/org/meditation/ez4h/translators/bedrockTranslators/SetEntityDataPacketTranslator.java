@@ -1,5 +1,6 @@
 package org.meditation.ez4h.translators.bedrockTranslators;
 
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityMetadataPacket;
 import com.nukkitx.protocol.bedrock.packet.SetEntityDataPacket;
 import org.meditation.ez4h.bedrock.Client;

@@ -19,7 +19,7 @@ public class JavaPacketHandler extends SessionAdapter {
         try {
             Packet packet=event.getPacket();
             if(Variables.debug==2){
-                Variables.logger.warning("Bedrock > "+packet.toString());
+                Variables.logger.warning("Java > "+packet.toString());
             }
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
             Client client=null;

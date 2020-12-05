@@ -32,7 +32,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = 0; y < 16; y++) {
-                    lightArray.set(x,y,z,15);
+                    lightArray.set(x,y,z,14);
                 }
             }
         }
@@ -70,8 +70,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                             int paletteIndex = bitArray.get(index);
                             int mcbeBlockId = sectionPalette[paletteIndex];
                             if (mcbeBlockId != 0) {
-                                BlockState blockState = new BlockState(BlockConverter.getJavaIdByJavaName(BlockConverter.getJavaNameByBedrockName(BlockConverter.getBedrockNameByRuntime(mcbeBlockId))),0);
-                                blockStorage.set(x,y,z,blockState);
+                                blockStorage.set(x,y,z,BlockConverter.getBlockByName(BlockConverter.getBedrockNameByRuntime(mcbeBlockId)));
                             }
                             index++;
                         }

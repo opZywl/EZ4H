@@ -10,6 +10,7 @@ import com.nukkitx.protocol.bedrock.BedrockClientSession;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
+import com.nukkitx.protocol.bedrock.v419.Bedrock_v419;
 import io.netty.util.AsciiString;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.mcjava.ClientStat;
@@ -50,7 +51,10 @@ public class Client {
                     return;
                 }
                 this.bedrockSession=session;
-                session.setPacketCodec(Bedrock_v408.V408_CODEC);
+                session.setPacketCodec(Bedrock_v419.V419_CODEC);
+                session.setHardcodedBlockingId(0);
+                session.setLogging(false);
+                session.setCompressionLevel(1);
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
@@ -132,7 +136,7 @@ public class Client {
         skinData.put("DeviceId", UUID.randomUUID().toString());
         skinData.put("DeviceModel", "");
         skinData.put("DeviceOS", 7);//windows 10?
-        skinData.put("GameVersion", "1.16.40.2");
+        skinData.put("GameVersion", "1.16.100");
         skinData.put("GuiScale", 0);
         skinData.put("LanguageCode", "en_US");
         skinData.put("PersonaPieces", new JSONArray());

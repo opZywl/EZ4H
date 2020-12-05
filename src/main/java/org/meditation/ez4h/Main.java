@@ -24,6 +24,8 @@ import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
+import com.google.common.io.ByteStreams;
+import com.nukkitx.nbt.NBTInputStream;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
@@ -39,8 +41,11 @@ import org.meditation.ez4h.translators.javaTranslators.*;
 import org.meditation.ez4h.utils.FileUtils;
 import org.meditation.ez4h.utils.OtherUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Main {
@@ -69,11 +74,8 @@ public class Main {
             FileUtils.ReadJar("resources/config.json",JarDir,"./config.json");
         }
         new File("./resources").mkdir();
-        if(!new File("./resources/blockMap.json").exists()){
-            FileUtils.ReadJar("resources/resources/blockMap.json",JarDir,"./resources/blockMap.json");
-        }
-        if(!new File("./resources/block.json").exists()){
-            FileUtils.ReadJar("resources/resources/block.json",JarDir,"./resources/block.json");
+        if(!new File("./resources/blocks.json").exists()){
+            FileUtils.ReadJar("resources/resources/blocks.json",JarDir,"./resources/blocks.json");
         }
         if(!new File("./resources/lang.json").exists()){
             FileUtils.ReadJar("resources/resources/lang.json",JarDir,"./resources/lang.json");
@@ -82,9 +84,6 @@ public class Main {
             FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
         }
         Variables.config=JSON.parseObject(FileUtils.readFile("./config.json"));
-        if(Variables.config.getJSONObject("advanced").getBoolean("debug")){
-
-        }
         Variables.debug=Variables.config.getJSONObject("advanced").getInteger("debug");
     }
     private static void initPEProtocol() {
@@ -130,7 +129,7 @@ public class Main {
         BedrockTranslatorManager.addTranslator(new UpdatePlayerGameTypePacketTranslator(),UpdatePlayerGameTypePacket.class);
 
         //load block data
-        BlockConverter.load(FileUtils.readFile("./resources/block.json"),FileUtils.readFile("./resources/blockMap.json"));
+        BlockConverter.load(FileUtils.readFile("./resources/blocks.json"));
 
         //load text data
         TextPacketTranslator.load(FileUtils.readFile("./resources/lang.json"));

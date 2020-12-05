@@ -1,5 +1,6 @@
 package org.meditation.ez4h.translators.bedrockTranslators;
 
+import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
 import com.nukkitx.protocol.bedrock.packet.ResourcePackClientResponsePacket;
 import com.nukkitx.protocol.bedrock.packet.ResourcePacksInfoPacket;
 import org.meditation.ez4h.bedrock.Client;
@@ -13,5 +14,11 @@ public class ResourcePacksInfoPacketTranslator implements BedrockTranslator {
         ResourcePackClientResponsePacket resourcePackClientResponsePacket=new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket.setStatus(ResourcePackClientResponsePacket.Status.HAVE_ALL_PACKS);
         client.bedrockSession.sendPacket(resourcePackClientResponsePacket);
+//        ResourcePackClientResponsePacket resourcePackClientResponsePacket2=new ResourcePackClientResponsePacket();
+//        resourcePackClientResponsePacket2.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
+//        client.bedrockSession.sendPacket(resourcePackClientResponsePacket2);
+        RequestChunkRadiusPacket requestChunkRadiusPacket=new RequestChunkRadiusPacket();
+        requestChunkRadiusPacket.setRadius(11);
+        client.bedrockSession.sendPacket(requestChunkRadiusPacket);
     }
 }

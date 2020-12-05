@@ -17,8 +17,7 @@ public class UpdateBlockPacketTranslator implements BedrockTranslator {
         UpdateBlockPacket packet=(UpdateBlockPacket)inPacket;
         if (packet.getDataLayer() == 0) {
             Vector3i pos=packet.getBlockPosition();
-            BlockState blockState = new BlockState(BlockConverter.getJavaIdByJavaName(BlockConverter.getJavaNameByBedrockName(BlockConverter.getBedrockNameByRuntime(packet.getRuntimeId()))),0);
-            client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),blockState)));
+            client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),BlockConverter.getBlockByName(BlockConverter.getBedrockNameByRuntime(packet.getRuntimeId())))));
         }else if(packet.getDataLayer() == 1){
             //TODO:含水方块
         }

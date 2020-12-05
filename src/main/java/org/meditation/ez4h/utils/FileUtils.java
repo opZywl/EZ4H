@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.GZIPInputStream;
 
 public class FileUtils {
     public static void CopyFile(File orifile,File tofile) throws IOException {
@@ -106,6 +107,18 @@ public class FileUtils {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public static InputStream ReadJarIS(String fileName,String JarDir){
+        try {
+            JarFile jarFile = new JarFile(JarDir);
+            JarEntry entry = jarFile.getJarEntry(fileName);
+            InputStream input = jarFile.getInputStream(entry);
+            jarFile.close();
+            return input;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
     private static void writeIS(InputStream input,File file) {
         try {
