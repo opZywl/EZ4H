@@ -5,7 +5,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerPlayBu
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.PlaySoundPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.SoundConverter;
+import org.meditation.ez4h.translators.converters.SoundConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 

@@ -1,4 +1,4 @@
-package org.meditation.ez4h.converters;
+package org.meditation.ez4h.translators.converters;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.opennbt.tag.builtin.*;
@@ -7,7 +7,6 @@ import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 public class ItemConverter {

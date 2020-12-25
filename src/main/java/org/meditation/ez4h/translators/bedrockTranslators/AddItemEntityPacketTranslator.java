@@ -8,7 +8,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.Serve
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.AddItemEntityPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.ItemConverter;
+import org.meditation.ez4h.translators.converters.ItemConverter;
 import org.meditation.ez4h.mcjava.cache.EntityInfo;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;

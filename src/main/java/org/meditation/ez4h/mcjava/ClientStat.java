@@ -20,7 +20,7 @@ public class ClientStat {
     public int slot;
     public Difficulty difficulty;
     public GameMode gameMode;
-    public boolean onLogin=true;
+    public boolean onLogin=false;
     public boolean jLogined=false;
     public boolean rain=false,thunder=false;
     public Map<String, Packet> jPacketMap=new HashMap<>();

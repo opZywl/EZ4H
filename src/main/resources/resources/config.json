@@ -5,7 +5,7 @@
   "be_port": 19132,
   "xbox-auth": false,
   "advanced": {
-    "be_protocol": 419,
+    "be_protocol": 422,
     "debug": 0
   }
 }

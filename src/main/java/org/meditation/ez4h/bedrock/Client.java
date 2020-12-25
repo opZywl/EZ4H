@@ -10,7 +10,7 @@ import com.nukkitx.protocol.bedrock.BedrockClientSession;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
-import com.nukkitx.protocol.bedrock.v419.Bedrock_v419;
+import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import io.netty.util.AsciiString;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.mcjava.ClientStat;
@@ -51,14 +51,10 @@ public class Client {
                     return;
                 }
                 this.bedrockSession=session;
-                session.setPacketCodec(Bedrock_v419.V419_CODEC);
-                session.setHardcodedBlockingId(0);
-                session.setLogging(false);
-                session.setCompressionLevel(1);
+                session.setPacketCodec(Bedrock_v422.V422_CODEC);
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
-
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
                 if(Variables.config.getBoolean("xbox-auth")){

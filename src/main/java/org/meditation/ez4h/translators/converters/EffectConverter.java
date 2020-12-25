@@ -1,4 +1,4 @@
-package org.meditation.ez4h.converters;
+package org.meditation.ez4h.translators.converters;
 
 import com.github.steveice10.mc.protocol.data.game.entity.Effect;
 

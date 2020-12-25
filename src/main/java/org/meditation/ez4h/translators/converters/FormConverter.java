@@ -1,4 +1,4 @@
-package org.meditation.ez4h.converters;
+package org.meditation.ez4h.translators.converters;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

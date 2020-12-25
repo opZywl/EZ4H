@@ -13,7 +13,7 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         ClientPlayerPositionRotationPacket packet=(ClientPlayerPositionRotationPacket)inPacket;
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
         movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
-        movePlayerPacket.setOnGround(true);
+        movePlayerPacket.setOnGround(packet.isOnGround());
         movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
         movePlayerPacket.setRidingRuntimeEntityId(0);
         client.clientStat.x= (float) packet.getX();

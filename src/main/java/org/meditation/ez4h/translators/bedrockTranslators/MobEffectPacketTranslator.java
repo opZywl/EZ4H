@@ -11,7 +11,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntit
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityRemoveEffectPacket;
 import com.nukkitx.protocol.bedrock.packet.MobEffectPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.EffectConverter;
+import org.meditation.ez4h.translators.converters.EffectConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 

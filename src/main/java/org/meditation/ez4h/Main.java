@@ -1,6 +1,7 @@
 package org.meditation.ez4h;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.service.SessionService;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
@@ -24,12 +25,10 @@ import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
-import com.google.common.io.ByteStreams;
-import com.nukkitx.nbt.NBTInputStream;
 import com.nukkitx.protocol.bedrock.packet.*;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
-import org.meditation.ez4h.converters.BlockConverter;
+import org.meditation.ez4h.translators.converters.BlockConverter;
 import org.meditation.ez4h.command.CommandManager;
 import org.meditation.ez4h.command.commands.*;
 import org.meditation.ez4h.mcjava.JavaPacketHandler;
@@ -41,11 +40,8 @@ import org.meditation.ez4h.translators.javaTranslators.*;
 import org.meditation.ez4h.utils.FileUtils;
 import org.meditation.ez4h.utils.OtherUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 public class Main {
@@ -76,6 +72,9 @@ public class Main {
         new File("./resources").mkdir();
         if(!new File("./resources/blocks.json").exists()){
             FileUtils.ReadJar("resources/resources/blocks.json",JarDir,"./resources/blocks.json");
+        }
+        if(!new File("./resources/block_runtime.json").exists()){
+            FileUtils.ReadJar("resources/resources/block_runtime.json",JarDir,"./resources/block_runtime.json");
         }
         if(!new File("./resources/lang.json").exists()){
             FileUtils.ReadJar("resources/resources/lang.json",JarDir,"./resources/lang.json");
@@ -108,7 +107,6 @@ public class Main {
         BedrockTranslatorManager.addTranslator(new MovePlayerPacketTranslator(),MovePlayerPacket.class);
         BedrockTranslatorManager.addTranslator(new PlayerListPacketTranslator(),PlayerListPacket.class);
         BedrockTranslatorManager.addTranslator(new PlaySoundPacketTranslator(),PlaySoundPacket.class);
-        BedrockTranslatorManager.addTranslator(new PlayStatusPacketTranslator(),PlayStatusPacket.class);
         BedrockTranslatorManager.addTranslator(new RemoveEntityPacketTranslator(),RemoveEntityPacket.class);
         BedrockTranslatorManager.addTranslator(new RemoveObjectivePacketTranslator(),RemoveObjectivePacket.class);
         BedrockTranslatorManager.addTranslator(new ResourcePacksInfoPacketTranslator(),ResourcePacksInfoPacket.class);
@@ -129,7 +127,7 @@ public class Main {
         BedrockTranslatorManager.addTranslator(new UpdatePlayerGameTypePacketTranslator(),UpdatePlayerGameTypePacket.class);
 
         //load block data
-        BlockConverter.load(FileUtils.readFile("./resources/blocks.json"));
+        BlockConverter.load(JSONArray.parseArray(FileUtils.readFile("./resources/blocks.json")),JSONArray.parseArray(FileUtils.readFile("./resources/block_runtime.json")));
 
         //load text data
         TextPacketTranslator.load(FileUtils.readFile("./resources/lang.json"));

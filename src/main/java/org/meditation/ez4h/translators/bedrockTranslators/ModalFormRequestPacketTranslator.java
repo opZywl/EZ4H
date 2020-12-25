@@ -2,7 +2,7 @@ package org.meditation.ez4h.translators.bedrockTranslators;
 
 import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.FormConverter;
+import org.meditation.ez4h.translators.converters.FormConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 

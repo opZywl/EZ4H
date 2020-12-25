@@ -5,7 +5,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSl
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.InventorySlotPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.ItemConverter;
+import org.meditation.ez4h.translators.converters.ItemConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 
 public class InventorySlotPacketTranslator implements BedrockTranslator {

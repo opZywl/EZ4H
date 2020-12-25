@@ -4,7 +4,6 @@ import com.github.steveice10.mc.protocol.data.game.chunk.BlockStorage;
 import com.github.steveice10.mc.protocol.data.game.chunk.Chunk;
 import com.github.steveice10.mc.protocol.data.game.chunk.Column;
 import com.github.steveice10.mc.protocol.data.game.chunk.NibbleArray3d;
-import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.nukkitx.network.VarInts;
@@ -14,7 +13,7 @@ import io.netty.buffer.Unpooled;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.tunnel.nukkit.BitArray;
 import org.meditation.ez4h.bedrock.tunnel.nukkit.BitArrayVersion;
-import org.meditation.ez4h.converters.BlockConverter;
+import org.meditation.ez4h.translators.converters.BlockConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 
@@ -60,7 +59,6 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                 int[] sectionPalette = new int[paletteSize];//so this holds all the different block types in the chunk section, first index is always air, then we have the block ids
                 for (int i = 0; i < paletteSize; i++) {
                     int id = VarInts.readInt(byteBuf);
-
                     sectionPalette[i] = id;
                 }
                 int index = 0;
@@ -69,7 +67,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                         for (int y = 0; y < 16; y++) {
                             int paletteIndex = bitArray.get(index);
                             int mcbeBlockId = sectionPalette[paletteIndex];
-                            if (mcbeBlockId != 0) {
+                            if (!BlockConverter.getBedrockNameByRuntime(mcbeBlockId).equals("minecraft:air")) {
                                 blockStorage.set(x,y,z,BlockConverter.getBlockByName(BlockConverter.getBedrockNameByRuntime(mcbeBlockId)));
                             }
                             index++;

@@ -2,12 +2,11 @@ package org.meditation.ez4h.translators.bedrockTranslators;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockChangeRecord;
-import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerBlockChangePacket;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.packet.UpdateBlockPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.BlockConverter;
+import org.meditation.ez4h.translators.converters.BlockConverter;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 

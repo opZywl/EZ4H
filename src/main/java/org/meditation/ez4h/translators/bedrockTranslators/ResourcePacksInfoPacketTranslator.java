@@ -14,11 +14,8 @@ public class ResourcePacksInfoPacketTranslator implements BedrockTranslator {
         ResourcePackClientResponsePacket resourcePackClientResponsePacket=new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket.setStatus(ResourcePackClientResponsePacket.Status.HAVE_ALL_PACKS);
         client.bedrockSession.sendPacket(resourcePackClientResponsePacket);
-//        ResourcePackClientResponsePacket resourcePackClientResponsePacket2=new ResourcePackClientResponsePacket();
-//        resourcePackClientResponsePacket2.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
-//        client.bedrockSession.sendPacket(resourcePackClientResponsePacket2);
-        RequestChunkRadiusPacket requestChunkRadiusPacket=new RequestChunkRadiusPacket();
-        requestChunkRadiusPacket.setRadius(11);
-        client.bedrockSession.sendPacket(requestChunkRadiusPacket);
+        ResourcePackClientResponsePacket resourcePackClientResponsePacket2=new ResourcePackClientResponsePacket();
+        resourcePackClientResponsePacket2.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
+        client.bedrockSession.sendPacket(resourcePackClientResponsePacket2);
     }
 }

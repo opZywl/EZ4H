@@ -3,7 +3,7 @@ package org.meditation.ez4h.translators.bedrockTranslators;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.AddEntityPacket;
 import org.meditation.ez4h.bedrock.Client;
-import org.meditation.ez4h.converters.EntityConverter;
+import org.meditation.ez4h.translators.converters.EntityConverter;
 import org.meditation.ez4h.mcjava.cache.EntityInfo;
 import org.meditation.ez4h.translators.BedrockTranslator;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
