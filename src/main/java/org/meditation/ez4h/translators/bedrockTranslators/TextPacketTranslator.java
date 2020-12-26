@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextPacketTranslator implements BedrockTranslator {
-    private static Map<String,String> translateMap=new HashMap<>();
+    private static JSONObject textJson;
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         TextPacket packet=(TextPacket)inPacket;
@@ -56,7 +56,7 @@ public class TextPacketTranslator implements BedrockTranslator {
         return packet.getMessage();
     }
     private static String convertSingle(String msg){
-        String tr=translateMap.get(msg);
+        String tr= (String) textJson.get(msg);
         if(tr==null){
             return msg;
         }
@@ -86,11 +86,7 @@ public class TextPacketTranslator implements BedrockTranslator {
                 .replaceAll("§o","")
                 .replaceAll("§r","");
     }
-    public static void load(String jsonStr){
-        JSONArray texts=JSONArray.parseArray(jsonStr);
-        for(Object jsonObject:texts){
-            JSONObject json=(JSONObject)jsonObject;
-            translateMap.put(json.getString("ori"),json.getString("str"));
-        }
+    public static void load(JSONObject json){
+        textJson=json;
     }
 }

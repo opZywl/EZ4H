@@ -4,8 +4,8 @@
   "be_host": "127.0.0.1",
   "be_port": 19132,
   "xbox-auth": false,
+  "player_list": "A §bEZ§a4§bH§f§r Proxyed Server!\nhttps://github.com/MeditationDev/EZ4H",
   "advanced": {
-    "be_protocol": 422,
     "debug": 0
   }
 }

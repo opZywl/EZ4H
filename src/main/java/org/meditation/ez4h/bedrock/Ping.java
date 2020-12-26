@@ -6,6 +6,7 @@ import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.data.status.PlayerInfo;
 import com.github.steveice10.mc.protocol.data.status.ServerStatusInfo;
 import com.github.steveice10.mc.protocol.data.status.VersionInfo;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListDataPacket;
 import com.nukkitx.protocol.bedrock.BedrockClient;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.utils.RandUtils;

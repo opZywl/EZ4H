@@ -9,9 +9,8 @@ import com.nukkitx.protocol.bedrock.BedrockClient;
 import com.nukkitx.protocol.bedrock.BedrockClientSession;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
-import com.nukkitx.protocol.bedrock.v408.Bedrock_v408;
-import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import io.netty.util.AsciiString;
+import org.meditation.ez4h.Main;
 import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.mcjava.ClientStat;
 import org.meditation.ez4h.utils.OtherUtils;
@@ -51,7 +50,7 @@ public class Client {
                     return;
                 }
                 this.bedrockSession=session;
-                session.setPacketCodec(Bedrock_v422.V422_CODEC);
+                session.setPacketCodec(Main.BEDROCK_CODEC);
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
@@ -104,7 +103,7 @@ public class Client {
         chainDataJsonObject.put("chain", chainDataJsonArray);
         chainDataJsonArray.add(jwt);
         loginPacket.setChainData(new AsciiString(chainDataJsonObject.toJSONString()));
-        loginPacket.setProtocolVersion(Variables.config.getJSONObject("advanced").getInteger("be_protocol"));
+        loginPacket.setProtocolVersion(Main.BEDROCK_PROTOCOL_VERSION);
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
         session.sendPacket(loginPacket);
     }
@@ -161,6 +160,6 @@ public class Client {
         this.javaSession.send(new ServerChatPacket(msg));
     }
     public void sendAlert(String msg){
-        this.javaSession.send(new ServerChatPacket("§f[§bEZ§a4§bH§f]"+msg));
+        this.javaSession.send(new ServerChatPacket("§f[§l§bEZ§a4§bH§f§r]"+msg));
     }
 }

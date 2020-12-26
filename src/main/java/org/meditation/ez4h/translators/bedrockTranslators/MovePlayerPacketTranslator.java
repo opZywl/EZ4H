@@ -18,15 +18,11 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
         MovePlayerPacket packet=(MovePlayerPacket)inPacket;
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         if(packet.getRuntimeEntityId()==client.clientStat.entityId){
-            if(client.clientStat.x!=position.getX()&&client.clientStat.y!=position.getY()&&client.clientStat.z!=position.getZ()) {
-                client.clientStat.yaw=rotation.getX();
-                client.clientStat.pitch=rotation.getY();
-                client.clientStat.x=position.getX();
-                client.clientStat.y=position.getY();
-                client.clientStat.z=position.getZ();
-                ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.61, position.getZ(), rotation.getY(),rotation.getX(), 1);
-                client.javaSession.send(serverPlayerPositionRotationPacket);
-            }
+            client.clientStat.x=position.getX();
+            client.clientStat.y=position.getY();
+            client.clientStat.z=position.getZ();
+            ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.61, position.getZ(), client.clientStat.yaw,client.clientStat.pitch, 1);
+            client.javaSession.send(serverPlayerPositionRotationPacket);
         }else{
             EntityInfo entityInfo=client.clientStat.entityInfoMap.get((int)packet.getRuntimeEntityId());
             double moveX=position.getX()-entityInfo.x,moveY=(position.getY()-1.62)-entityInfo.y,moveZ=position.getZ()-entityInfo.z;

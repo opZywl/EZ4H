@@ -7,7 +7,7 @@ import java.net.URLClassLoader;
 import java.util.Date;
 
 public class InitLibs {
-    public static String VERSION="20201205";
+    public static String VERSION="20201226";
     public static long launchTime=0;
     public static void main(String[] args){
         launchTime=new Date().getTime();

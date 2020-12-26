@@ -1,7 +1,7 @@
 package org.meditation.ez4h;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.service.SessionService;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
@@ -25,7 +25,9 @@ import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
+import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.packet.*;
+import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
 import org.meditation.ez4h.translators.converters.BlockConverter;
@@ -36,6 +38,7 @@ import org.meditation.ez4h.mcjava.fakeAuthServer.FakeServer;
 import org.meditation.ez4h.translators.BedrockTranslatorManager;
 import org.meditation.ez4h.translators.JavaTranslatorManager;
 import org.meditation.ez4h.translators.bedrockTranslators.*;
+import org.meditation.ez4h.translators.converters.ItemConverter;
 import org.meditation.ez4h.translators.javaTranslators.*;
 import org.meditation.ez4h.utils.FileUtils;
 import org.meditation.ez4h.utils.OtherUtils;
@@ -47,6 +50,8 @@ import java.util.logging.Logger;
 public class Main {
     public static String JarDir=Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
     public static Server server;
+    public static int BEDROCK_PROTOCOL_VERSION=422;
+    public static BedrockPacketCodec BEDROCK_CODEC=Bedrock_v422.V422_CODEC;
     public static void main(String[] args) {
         Variables.logger= Logger.getLogger("EZ4H");
         Variables.logger.info("Init files...");
@@ -76,13 +81,19 @@ public class Main {
         if(!new File("./resources/block_runtime.json").exists()){
             FileUtils.ReadJar("resources/resources/block_runtime.json",JarDir,"./resources/block_runtime.json");
         }
+        if(!new File("./resources/java_items.json").exists()){
+            FileUtils.ReadJar("resources/resources/java_items.json",JarDir,"./resources/java_items.json");
+        }
+        if(!new File("./resources/bedrock_items.json").exists()){
+            FileUtils.ReadJar("resources/resources/bedrock_items.json",JarDir,"./resources/bedrock_items.json");
+        }
         if(!new File("./resources/lang.json").exists()){
             FileUtils.ReadJar("resources/resources/lang.json",JarDir,"./resources/lang.json");
         }
         if(!new File("./resources/skin.png").exists()){
             FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
         }
-        Variables.config=JSON.parseObject(FileUtils.readFile("./config.json"));
+        Variables.config=JSONObject.parseObject(FileUtils.readFile("./config.json"));
         Variables.debug=Variables.config.getJSONObject("advanced").getInteger("debug");
     }
     private static void initPEProtocol() {
@@ -127,10 +138,13 @@ public class Main {
         BedrockTranslatorManager.addTranslator(new UpdatePlayerGameTypePacketTranslator(),UpdatePlayerGameTypePacket.class);
 
         //load block data
-        BlockConverter.load(JSONArray.parseArray(FileUtils.readFile("./resources/blocks.json")),JSONArray.parseArray(FileUtils.readFile("./resources/block_runtime.json")));
+        BlockConverter.load(JSONArray.parseArray(FileUtils.readFile("./resources/blocks.json")),JSONObject.parseObject(FileUtils.readFile("./resources/block_runtime.json")));
 
         //load text data
-        TextPacketTranslator.load(FileUtils.readFile("./resources/lang.json"));
+        TextPacketTranslator.load(JSONObject.parseObject(FileUtils.readFile("./resources/lang.json")));
+
+        //load item data
+        ItemConverter.load(JSONObject.parseObject(FileUtils.readFile("./resources/bedrock_items.json")),JSONObject.parseObject(FileUtils.readFile("./resources/java_items.json")));
 
         //start ping thread
         Variables.pingThread=new Ping();
@@ -150,6 +164,7 @@ public class Main {
         JavaTranslatorManager.addTranslator(new ClientPlayerUseItemPacketTranslator(),ClientPlayerUseItemPacket.class);
         JavaTranslatorManager.addTranslator(new ClientRequestPacketTranslator(), ClientRequestPacket.class);
         JavaTranslatorManager.addTranslator(new ClientWindowActionPacketTranslator(), ClientWindowActionPacket.class);
+        JavaTranslatorManager.addTranslator(new ClientKeepAlivePacketTranslator(), ClientKeepAlivePacket.class);
 
         //opening server
         SessionService sessionService = new SessionService();
@@ -168,8 +183,6 @@ public class Main {
                     if (client.clientStat.jPacketMap.get("ServerJoinGame") != null) {
                         session.send(client.clientStat.jPacketMap.remove("ServerJoinGame"));
                         session.send(client.clientStat.jPacketMap.remove("ServerPlayerPositionRotation"));
-                        session.send(client.clientStat.jPacketMap.remove("ServerPlayerListData"));
-                        session.send(client.clientStat.jPacketMap.remove("ServerEntityProperties"));
                     }
                     session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(Variables.config.toJSONString()) +"\"}").getBytes()));
                 }else{

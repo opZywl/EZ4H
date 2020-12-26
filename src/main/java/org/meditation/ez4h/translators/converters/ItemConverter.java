@@ -1,5 +1,6 @@
 package org.meditation.ez4h.translators.converters;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.opennbt.tag.builtin.*;
 import com.nukkitx.nbt.NbtList;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemConverter {
+    private static JSONObject BEDROCK_ID2NAME;
+    private static JSONObject JAVA_NAME2ID;
     public static int inventoryIndex(int index,boolean isToBedrock){
         if(isToBedrock){
             if(index>35){
@@ -75,16 +78,25 @@ public class ItemConverter {
         return compoundTag;
     }
     public static ItemStack convertToJE(ItemData itemData){
-        if(itemData.getId()<0){
-            return new ItemStack(1,itemData.getCount(), 0);
+        int id=1,data=0;
+        String item=(String)JAVA_NAME2ID.get((String) BEDROCK_ID2NAME.get(itemData.getId()+":"+itemData.getDamage()));
+        if(item!=null){
+            String[] splitData=item.split(":");
+            id=new Integer(splitData[0]);
+            if(item.contains(":")){
+                data=new Integer(splitData[1]);
+            }else {
+                data=itemData.getDamage();
+            }
         }
         CompoundTag tag=nbtMapTranslator("",itemData.getTag());
         if(tag.contains("Damage")&&tag.size()==1){
             tag=null;
         }
-        return new ItemStack(itemData.getId(),itemData.getCount(), itemData.getDamage(),tag);
+        return new ItemStack(id,itemData.getCount(), data,tag);
     }
-    public static ItemData convertToBedrock(ItemStack itemStack){
-        return ItemData.of(itemStack.getId(), (short) itemStack.getData(),itemStack.getAmount());
+    public static void load(JSONObject bedrock,JSONObject java){
+        BEDROCK_ID2NAME=bedrock;
+        JAVA_NAME2ID=java;
     }
 }
