@@ -13,6 +13,6 @@ public class RemoveEntityPacketTranslator implements BedrockTranslator {
         int[] entityIds=new int[1];
         entityIds[0]= (int) packet.getUniqueEntityId();
         client.clientStat.entityInfoMap.remove( (int) packet.getUniqueEntityId());
-        client.javaSession.send(new ServerEntityDestroyPacket(entityIds));
+        client.sendPacket(new ServerEntityDestroyPacket(entityIds));
     }
 }

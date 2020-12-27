@@ -32,7 +32,7 @@ public class MFormCommand implements CommandBase {
                 }else{
                     client.sendAlert("[ERROR]Please input `mform choose <1/2>");
                 }
-                client.bedrockSession.sendPacket(reqPacket);
+                client.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
@@ -41,7 +41,7 @@ public class MFormCommand implements CommandBase {
                 ModalFormResponsePacket reqPacket=new ModalFormResponsePacket();
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
-                client.bedrockSession.sendPacket(reqPacket);
+                client.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Closed.");
                 break;

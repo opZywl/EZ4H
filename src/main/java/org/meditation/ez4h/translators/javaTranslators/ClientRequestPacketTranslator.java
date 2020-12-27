@@ -17,7 +17,7 @@ public class ClientRequestPacketTranslator implements JavaTranslator {
                 respawnPacket.setPosition(Vector3f.from(0,0,0));
                 respawnPacket.setRuntimeEntityId(client.clientStat.entityId);
                 respawnPacket.setState(RespawnPacket.State.CLIENT_READY);
-                client.bedrockSession.sendPacket(respawnPacket);
+                client.sendPacket(respawnPacket);
                 break;
             }
         }

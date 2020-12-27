@@ -23,7 +23,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
                 break;
             }
             case CANCEL_DIGGING:{
@@ -32,7 +32,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
                 break;
             }
             case FINISH_DIGGING:{
@@ -42,7 +42,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
                 playerActionPacket.setBlockPosition(blockPosition);
                 playerActionPacket.setFace(packet.getFace().ordinal());
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
 
                 InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
                 inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
@@ -53,7 +53,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
-                client.bedrockSession.sendPacket(inventoryTransactionPacket);
+                client.sendPacket(inventoryTransactionPacket);
                 break;
             }
             case DROP_ITEM:{
@@ -65,7 +65,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
                 inventoryTransactionPacket.setHasNetworkIds(false);
                 inventoryTransactionPacket.setLegacyRequestId(0);
-                client.bedrockSession.sendPacket(inventoryTransactionPacket);
+                client.sendPacket(inventoryTransactionPacket);
                 break;
             }
         }

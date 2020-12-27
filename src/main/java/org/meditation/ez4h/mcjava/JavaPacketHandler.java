@@ -28,11 +28,8 @@ public class JavaPacketHandler extends SessionAdapter {
             }
             if(event.getPacket().getClass().equals(LoginStartPacket.class)){
                 LoginStartPacket lpacket=event.getPacket();
-                UUID uuid = java.util.UUID.nameUUIDFromBytes((lpacket.getUsername()).getBytes());
-                GameProfile gameProfile = new GameProfile(uuid, lpacket.getUsername());
-                event.getSession().setFlag(MinecraftConstants.PROFILE_KEY, gameProfile);
                 if((!Variables.config.getBoolean("xbox-auth"))||Variables.accessTokens.containsKey(lpacket.getUsername())) {
-                    Client client_n = new Client(event, lpacket.getUsername(), uuid);
+                    Client client_n = new Client(event, lpacket.getUsername());
                     Variables.clientMap.put(lpacket.getUsername(), client_n);
                 }else{
                     event.getSession().removeListener(this);

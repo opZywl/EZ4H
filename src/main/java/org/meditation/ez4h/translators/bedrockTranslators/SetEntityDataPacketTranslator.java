@@ -11,6 +11,6 @@ public class SetEntityDataPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetEntityDataPacket packet=(SetEntityDataPacket)inPacket;
-        client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata())));
+        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata())));
     }
 }

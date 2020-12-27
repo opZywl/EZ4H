@@ -36,6 +36,6 @@ public class InventoryContentPacketTranslator implements BedrockTranslator {
                 break;
             }
         }
-        client.javaSession.send(new ServerWindowItemsPacket(0,client.clientStat.inventory));
+        client.sendPacket(new ServerWindowItemsPacket(0,client.clientStat.inventory));
     }
 }

@@ -20,8 +20,8 @@ public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
                 String name= BedrockUtils.lengthCutter(packet.getDisplayName(),32);
                 client.clientStat.scoreboardOrder=packet.getSortOrder();
                 client.clientStat.scoreboards.put(packet.getObjectiveId(),name);
-                client.javaSession.send(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD,name, ScoreType.HEARTS));
-                client.javaSession.send(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, packet.getObjectiveId()));
+                client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD,name, ScoreType.HEARTS));
+                client.sendPacket(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, packet.getObjectiveId()));
                 break;
             }
         }

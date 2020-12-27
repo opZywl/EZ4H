@@ -20,18 +20,18 @@ public class MoveEntityAbsolutePacketTranslator implements BedrockTranslator {
         if(entityInfo!=null) {
             double moveX = position.getX() - entityInfo.x, moveY = (position.getY() - 1.62) - entityInfo.y, moveZ = position.getZ() - entityInfo.z;
             if (BedrockUtils.calcDistance(moveX, moveY, moveZ) < 8) {
-                client.javaSession.send(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX, moveY, moveZ, rotation.getY(), rotation.getX(), packet.isOnGround()));
+                client.sendPacket(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX, moveY, moveZ, rotation.getY(), rotation.getX(), packet.isOnGround()));
             } else {
                 if(entityInfo.type.equals("item_entity")){
-                    client.javaSession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
+                    client.sendPacket(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
                 }else {
-                    client.javaSession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
+                    client.sendPacket(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), packet.isOnGround()));
                 }
             }
             entityInfo.x = position.getX();
             entityInfo.y = (float) (position.getY() - 1.62);
             entityInfo.z = position.getZ();
-            client.javaSession.send(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
+            client.sendPacket(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
         }
     }
 }

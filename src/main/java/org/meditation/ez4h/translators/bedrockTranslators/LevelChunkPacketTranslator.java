@@ -79,8 +79,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
         }
         byte[] biomeArray = new byte[256];
         Arrays.fill(biomeArray, (byte) 1);
-
         ServerChunkDataPacket serverChunkDataPacket=new ServerChunkDataPacket(new Column(chunkX,chunkZ,chunkSections,biomeArray,new CompoundTag[0]));
-        client.javaSession.send(serverChunkDataPacket);
+        client.sendPacket(serverChunkDataPacket);
     }
 }

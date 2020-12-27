@@ -1,8 +1,10 @@
 package org.meditation.ez4h.mcjava.fakeAuthServer;
 
+import com.github.steveice10.mc.protocol.data.game.TitleAction;
 import com.github.steveice10.mc.protocol.data.message.ChatColor;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerTitlePacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
@@ -10,10 +12,12 @@ import org.meditation.ez4h.Variables;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.auth.XboxAuthtoken;
 
+import java.util.Locale;
+
 public class FakeServer extends SessionAdapter {
     public AuthAlertThread runnable;
     public Thread thread;
-    private String username,password,playerName;
+    private String playerName;
     public FakeServer(Session session,String playerName){
         this.playerName=playerName;
         runnable = new AuthAlertThread();
@@ -29,33 +33,29 @@ public class FakeServer extends SessionAdapter {
     public void packetReceived(PacketReceivedEvent event) {
         if(event.getPacket() instanceof ClientChatPacket){
             ClientChatPacket clientChatPacket=event.getPacket();
-            String message=clientChatPacket.getMessage();
-            switch (runnable.authStatus){
-                case 0:{
-                    username=message;
-                    runnable.session.send(new ServerChatPacket("§aSUCCESSFUL INPUT EMAIL!"));
-                    setAuthstat(1);
-                    break;
-                }
-                case 1:{
-                    if(message.length()>=8) {
-                        password = message;
-                        runnable.session.send(new ServerChatPacket("§aSUCCESSFUL INPUT PASSWORD!"));
-                        runnable.session.send(new ServerChatPacket("§eLogging...(EMAIL=" + username + ";PASSWORD=" + password + ")"));
-                        setAuthstat(2);
-                        try {
-                            Variables.accessTokens.put(playerName,XboxAuthtoken.getAccessToken(XboxAuthtoken.getPreAuthToken(),username,password));
-                            runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
-                            setAuthstat(3);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            runnable.session.disconnect("§cLogin FAILED:\n"+e);
-                        }
-                    }else{
-                        runnable.session.send(new ServerChatPacket("§cINVALID PASSWORD!"));
-                    }
-                    break;
-                }
+            String[] message=clientChatPacket.getMessage().split(":");
+            if(message.length!=2){
+                runnable.session.send(new ServerChatPacket("§cWRONG FORMAT"));
+                return;
+            }
+            if(message[1].length()<8){
+                runnable.session.send(new ServerChatPacket("§cWRONG PASSWORD LENGTH"));
+                return;
+            }
+            if(message[0].equalsIgnoreCase("at")){
+                Variables.accessTokens.put(playerName,message[1]);
+                runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
+                runnable.session.send(new ServerTitlePacket(true));
+                return;
+            }
+            try {
+                Variables.accessTokens.put(playerName,XboxAuthtoken.getAccessToken(XboxAuthtoken.getPreAuthToken(),message[0],message[1]));
+                runnable.session.send(new ServerTitlePacket(true));
+                runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
+                setAuthstat(3);
+            } catch (Exception e) {
+                e.printStackTrace();
+                runnable.session.disconnect("§cLogin FAILED:\n"+e);
             }
         }
     }
@@ -66,17 +66,10 @@ class AuthAlertThread implements Runnable {
     public void run() {
         while (authStatus!=3){
             try {
-                Thread.sleep(1000);
-                switch (authStatus){
-                    case 0:{
-                        session.send(new ServerChatPacket("§cPlease input your EMAIL for XBOX Account in the ChatArea!"));
-                        break;
-                    }
-                    case 1:{
-                        session.send(new ServerChatPacket("§cPlease input your PASSWORD for XBOX Account in the ChatArea!"));
-                        break;
-                    }
-                }
+                session.send(new ServerTitlePacket(0,3000,0));
+                session.send(new ServerTitlePacket(TitleAction.TITLE,"§cInput your XBOX Account in the Chat"));
+                session.send(new ServerTitlePacket(TitleAction.SUBTITLE,"Format mail@outlook.com:password or at:AUTHTOKEN"));
+                Thread.sleep(2000);
             } catch (Exception e) {
                 e.printStackTrace();
             }

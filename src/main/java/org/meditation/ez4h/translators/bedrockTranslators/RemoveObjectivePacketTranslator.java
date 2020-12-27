@@ -12,7 +12,7 @@ public class RemoveObjectivePacketTranslator implements BedrockTranslator {
         RemoveObjectivePacket packet=(RemoveObjectivePacket )inPacket;
         String displayName=client.clientStat.scoreboards.get(packet.getObjectiveId());
         if(displayName!=null){
-            client.javaSession.send(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));
+            client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));
         }
     }
 }

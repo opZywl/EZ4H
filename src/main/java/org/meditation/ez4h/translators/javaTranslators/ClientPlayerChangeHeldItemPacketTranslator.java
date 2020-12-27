@@ -14,7 +14,7 @@ public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslato
         playerHotbarPacket.setContainerId(0);
         playerHotbarPacket.setSelectedHotbarSlot(packet.getSlot());
         playerHotbarPacket.setSelectHotbarSlot(true);
-        client.bedrockSession.sendPacket(playerHotbarPacket);
+        client.sendPacket(playerHotbarPacket);
         client.clientStat.slot=packet.getSlot();
     }
 }

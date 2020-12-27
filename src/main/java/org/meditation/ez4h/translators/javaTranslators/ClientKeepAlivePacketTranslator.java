@@ -18,6 +18,6 @@ public class ClientKeepAlivePacketTranslator implements JavaTranslator {
     }
     @Override
     public void translate(Packet inPacket, Client client) {
-        client.javaSession.send(new ServerPlayerListDataPacket(Ping.ping.getDescription(),new TextMessage(player_list)));
+        client.sendPacket(new ServerPlayerListDataPacket(Ping.ping.getDescription(),new TextMessage(player_list)));
     }
 }

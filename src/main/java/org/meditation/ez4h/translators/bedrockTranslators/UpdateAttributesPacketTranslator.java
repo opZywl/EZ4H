@@ -26,7 +26,7 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                     case "minecraft:health": {
                         List<Attribute> attributes1 = new ArrayList<>();
                         attributes1.add(new Attribute(AttributeType.GENERIC_MAX_HEALTH, attribute.getMaximum()));
-                        client.javaSession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId, attributes1));
+                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId, attributes1));
                         client.clientStat.health = attribute.getValue();
                         updateHP=true;
                         break;
@@ -49,10 +49,10 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                 }
             }
             if(updateHP) {
-                client.javaSession.send(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
+                client.sendPacket(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
             }
             if(updateEXP) {
-                client.javaSession.send(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
+                client.sendPacket(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
             }
         }
     }

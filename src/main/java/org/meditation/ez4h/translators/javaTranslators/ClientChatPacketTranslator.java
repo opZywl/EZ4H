@@ -23,7 +23,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
             commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1));
-            client.bedrockSession.sendPacket(commandRequestPacket);
+            client.sendPacket(commandRequestPacket);
         }else if(firstChar.equals('`')) {
             if(packet.getMessage().length()>1) {
                 String[] commandList = packet.getMessage().substring(1).split(" "),argsList=new String[commandList.length-1];
@@ -44,7 +44,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             List<String> para = new ArrayList<>();
             textPacket.setParameters(para);
             textPacket.setSourceName(client.playerName);
-            client.bedrockSession.sendPacket(textPacket);
+            client.sendPacket(textPacket);
         }
     }
 }

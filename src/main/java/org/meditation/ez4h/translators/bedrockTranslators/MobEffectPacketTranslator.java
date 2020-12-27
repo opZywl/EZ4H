@@ -30,13 +30,13 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
                     case SPEED:{
                         List<Attribute> attributes1=new ArrayList<>();
                         attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1+packet.getAmplifier()*0.02));
-                        client.javaSession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
+                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
                     }
                 }
                 EntityMetadata[] metadata=new EntityMetadata[1];
                 metadata[0]=new EntityMetadata(8, MetadataType.INT, packet.getEffectId());
-                client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
-                client.javaSession.send(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(),effect,packet.getAmplifier(),packet.getDuration(),true,packet.isParticles()));
+                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+                client.sendPacket(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(),effect,packet.getAmplifier(),packet.getDuration(),true,packet.isParticles()));
                 break;
             }
             case REMOVE:{
@@ -44,13 +44,13 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
                     case SPEED:{
                         List<Attribute> attributes1=new ArrayList<>();
                         attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1));
-                        client.javaSession.send(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
+                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
                     }
                 }
                 EntityMetadata[] metadata=new EntityMetadata[1];
                 metadata[0]=new EntityMetadata(8, MetadataType.INT, 0);
-                client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
-                client.javaSession.send(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(),effect));
+                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+                client.sendPacket(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(),effect));
                 break;
             }
         }

@@ -18,23 +18,25 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
         MovePlayerPacket packet=(MovePlayerPacket)inPacket;
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         if(packet.getRuntimeEntityId()==client.clientStat.entityId){
+            if(client.clientStat.x!=position.getX()&&client.clientStat.y!=position.getY()&&client.clientStat.z!=position.getZ()) {
+                ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), client.clientStat.yaw, client.clientStat.pitch, 1);
+                client.sendPacket(serverPlayerPositionRotationPacket);
+            }
             client.clientStat.x=position.getX();
             client.clientStat.y=position.getY();
             client.clientStat.z=position.getZ();
-            ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.61, position.getZ(), client.clientStat.yaw,client.clientStat.pitch, 1);
-            client.javaSession.send(serverPlayerPositionRotationPacket);
         }else{
             EntityInfo entityInfo=client.clientStat.entityInfoMap.get((int)packet.getRuntimeEntityId());
             double moveX=position.getX()-entityInfo.x,moveY=(position.getY()-1.62)-entityInfo.y,moveZ=position.getZ()-entityInfo.z;
             if(BedrockUtils.calcDistance(moveX,moveY,moveZ)<8){
-                client.javaSession.send(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX,moveY,moveZ,rotation.getY(),rotation.getX(), packet.isOnGround()));
+                client.sendPacket(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX,moveY,moveZ,rotation.getY(),rotation.getX(), packet.isOnGround()));
             }else{
-                client.javaSession.send(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(),position.getY()-1.62, position.getZ(),rotation.getY(),rotation.getX(), packet.isOnGround()));
+                client.sendPacket(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(),position.getY()-1.62, position.getZ(),rotation.getY(),rotation.getX(), packet.isOnGround()));
             }
             entityInfo.x=position.getX();
             entityInfo.y= (float) (position.getY()-1.62);
             entityInfo.z=position.getZ();
-            client.javaSession.send(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
+            client.sendPacket(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
         }
     }
 }

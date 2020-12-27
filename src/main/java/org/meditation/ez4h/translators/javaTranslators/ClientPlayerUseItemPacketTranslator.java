@@ -22,6 +22,6 @@ public class ClientPlayerUseItemPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
         inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
-        client.bedrockSession.sendPacket(inventoryTransactionPacket);
+        client.sendPacket(inventoryTransactionPacket);
     }
 }

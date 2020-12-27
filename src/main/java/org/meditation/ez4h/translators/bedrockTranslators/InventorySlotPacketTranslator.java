@@ -36,6 +36,6 @@ public class InventorySlotPacketTranslator implements BedrockTranslator {
             default:
                 throw new IllegalStateException("Unexpected value: " + packet.getContainerId());
         }
-        client.javaSession.send(serverSetSlotPacket);
+        client.sendPacket(serverSetSlotPacket);
     }
 }

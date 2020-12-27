@@ -12,9 +12,9 @@ public class MobArmorEquipmentPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobArmorEquipmentPacket packet=(MobArmorEquipmentPacket)inPacket;
-        client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.HELMET, ItemConverter.convertToJE(packet.getHelmet())));
-        client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.CHESTPLATE,ItemConverter.convertToJE(packet.getChestplate())));
-        client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.LEGGINGS,ItemConverter.convertToJE(packet.getLeggings())));
-        client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.BOOTS,ItemConverter.convertToJE(packet.getBoots())));
+        client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.HELMET, ItemConverter.convertToJE(packet.getHelmet())));
+        client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.CHESTPLATE,ItemConverter.convertToJE(packet.getChestplate())));
+        client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.LEGGINGS,ItemConverter.convertToJE(packet.getLeggings())));
+        client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.BOOTS,ItemConverter.convertToJE(packet.getBoots())));
     }
 }

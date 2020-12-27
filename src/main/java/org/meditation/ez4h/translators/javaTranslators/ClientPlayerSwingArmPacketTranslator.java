@@ -13,6 +13,6 @@ public class ClientPlayerSwingArmPacketTranslator implements JavaTranslator {
         AnimatePacket animatePacket=new AnimatePacket();
         animatePacket.setAction(AnimatePacket.Action.SWING_ARM);
         animatePacket.setRuntimeEntityId(client.clientStat.entityId);
-        client.bedrockSession.sendPacket(animatePacket);
+        client.sendPacket(animatePacket);
     }
 }

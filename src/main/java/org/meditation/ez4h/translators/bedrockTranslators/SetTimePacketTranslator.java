@@ -10,6 +10,6 @@ public class SetTimePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetTimePacket packet=(SetTimePacket)inPacket;
-        client.javaSession.send(new ServerUpdateTimePacket(0,packet.getTime()));
+        client.sendPacket(new ServerUpdateTimePacket(0,packet.getTime()));
     }
 }

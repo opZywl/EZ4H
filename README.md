@@ -1,5 +1,5 @@
 # EZ4H
-Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.20) servers!  
+Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.200) servers!  
 ## Features
 - [x] Login  
 - [x] Chat  

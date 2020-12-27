@@ -18,7 +18,7 @@ public class RespawnPacketTranslator implements BedrockTranslator {
         RespawnPacket packet=(RespawnPacket)inPacket;
         switch (packet.getState()){
             case SERVER_SEARCHING:{
-                client.javaSession.send(new ServerPlayerHealthPacket(0,client.clientStat.food,0));
+                client.sendPacket(new ServerPlayerHealthPacket(0,client.clientStat.food,0));
                 break;
             }
             case SERVER_READY:{
@@ -27,8 +27,8 @@ public class RespawnPacketTranslator implements BedrockTranslator {
                 playerActionPacket.setFace(-1);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
                 playerActionPacket.setBlockPosition(Vector3i.from(0,0,0));
-                client.bedrockSession.sendPacket(playerActionPacket);
-                client.javaSession.send(new ServerRespawnPacket(client.clientStat.dimension,client.clientStat.difficulty,client.clientStat.gameMode, WorldType.CUSTOMIZED));
+                client.sendPacket(playerActionPacket);
+                client.sendPacket(new ServerRespawnPacket(client.clientStat.dimension,client.clientStat.difficulty,client.clientStat.gameMode, WorldType.CUSTOMIZED));
                 MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
                 movePlayerPacket.setMode(MovePlayerPacket.Mode.RESPAWN);
                 movePlayerPacket.setOnGround(true);
@@ -37,7 +37,7 @@ public class RespawnPacketTranslator implements BedrockTranslator {
                 Vector3f position=packet.getPosition();
                 movePlayerPacket.setPosition(Vector3f.from(position.getX(),position.getY(),position.getZ()));
                 movePlayerPacket.setRotation(Vector3f.from(0, 0, 0));
-                client.bedrockSession.sendPacket(movePlayerPacket);
+                client.sendPacket(movePlayerPacket);
                 break;
             }
         }

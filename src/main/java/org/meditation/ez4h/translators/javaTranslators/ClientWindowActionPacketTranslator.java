@@ -21,8 +21,8 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
 //                interactPacket.setMousePosition(Vector3f.ZERO);
 //                interactPacket.setRuntimeEntityId(client.clientStat.entityId);
 //                interactPacket.setAction(InteractPacket.Action.MOUSEOVER);
-//                client.bedrockSession.sendPacket(inventoryTransactionPacket);
-//                client.bedrockSession.sendPacket(interactPacket);
+//                client.sendPacket(inventoryTransactionPacket);
+//                client.sendPacket(interactPacket);
                 break;
             }
             case DROP_ITEM:{

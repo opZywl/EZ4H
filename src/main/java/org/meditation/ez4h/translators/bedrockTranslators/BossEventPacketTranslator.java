@@ -19,19 +19,19 @@ public class BossEventPacketTranslator implements BedrockTranslator {
         UUID uuid=UUID.nameUUIDFromBytes(String.valueOf(packet.getBossUniqueEntityId()).getBytes());
         switch (packet.getAction()){
             case CREATE:{
-                client.javaSession.send(new ServerBossBarPacket(uuid, BossBarAction.ADD,new TextMessage(packet.getTitle()),packet.getHealthPercentage(), BossBarColor.PURPLE, BossBarDivision.NONE,false,false));
+                client.sendPacket(new ServerBossBarPacket(uuid, BossBarAction.ADD,new TextMessage(packet.getTitle()),packet.getHealthPercentage(), BossBarColor.PURPLE, BossBarDivision.NONE,false,false));
                 break;
             }
             case REMOVE:{
-                client.javaSession.send(new ServerBossBarPacket(uuid));
+                client.sendPacket(new ServerBossBarPacket(uuid));
                 break;
             }
             case UPDATE_PERCENTAGE:{
-                client.javaSession.send(new ServerBossBarPacket(uuid, BossBarAction.UPDATE_HEALTH,packet.getHealthPercentage()));
+                client.sendPacket(new ServerBossBarPacket(uuid, BossBarAction.UPDATE_HEALTH,packet.getHealthPercentage()));
                 break;
             }
             case UPDATE_NAME:{
-                client.javaSession.send(new ServerBossBarPacket(uuid, BossBarAction.UPDATE_TITLE,new TextMessage(packet.getTitle())));
+                client.sendPacket(new ServerBossBarPacket(uuid, BossBarAction.UPDATE_TITLE,new TextMessage(packet.getTitle())));
                 break;
             }
         }

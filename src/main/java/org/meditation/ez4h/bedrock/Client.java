@@ -5,22 +5,27 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
+import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.BedrockClient;
 import com.nukkitx.protocol.bedrock.BedrockClientSession;
+import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import io.netty.util.AsciiString;
 import org.meditation.ez4h.Main;
 import org.meditation.ez4h.Variables;
+import org.meditation.ez4h.bedrock.auth.AuthUtils;
+import org.meditation.ez4h.bedrock.auth.Xbox;
 import org.meditation.ez4h.mcjava.ClientStat;
 import org.meditation.ez4h.utils.OtherUtils;
 import org.meditation.ez4h.utils.RandUtils;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Random;
@@ -32,11 +37,13 @@ public class Client {
     public Session javaSession;
     public String playerName;
     public String xuid;
+    public String authtoken=null;
+    public ECPublicKey publicKey;
+    public ECPrivateKey privateKey;
     public UUID playerUUID;
     public ClientStat clientStat;
-    public Client(PacketReceivedEvent event, String playerName, UUID playerUUID){
+    public Client(PacketReceivedEvent event, String playerName){
         this.playerName=playerName;
-        this.playerUUID=playerUUID;
         Client clientM=this;
         try {
             javaSession=event.getSession();
@@ -56,10 +63,19 @@ public class Client {
                 });
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
-                if(Variables.config.getBoolean("xbox-auth")){
-                    //TODO:ONLINE LOGIN
-                }else {
-                    this.offlineLogin(session);
+                try {
+                    //thanks TunnelMC:https://github.com/THEREALWWEFAN231/TunnelMC/blob/master/src/main/java/me/THEREALWWEFAN231/tunnelmc/auth/Auth.java
+                    if (Variables.config.getBoolean("xbox-auth")) {
+                        this.authtoken = Variables.accessTokens.remove(playerName);
+                        this.onlineLogin();
+                    } else {
+                        this.xuid = "";
+                        this.playerUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + this.playerName).getBytes(StandardCharsets.UTF_8));
+                        this.offlineLogin();
+                    }
+                }catch (Throwable t){
+                    javaSession.disconnect("LOGIN ERROR\n"+t.toString());
+                    t.printStackTrace();
                 }
             }).join();
         } catch (Exception e) {
@@ -70,51 +86,130 @@ public class Client {
             e.printStackTrace();
         }
     }
-    public void offlineLogin(BedrockClientSession session){
-        //TODO:MAKE JWT WORKS
+    public void onlineLogin() throws Exception {
         LoginPacket loginPacket=new LoginPacket();
 
-        KeyPair keyPair = EncryptionUtils.createKeyPair();
-        PublicKey publicKey = keyPair.getPublic();
+        KeyPair ecdsa256KeyPair = AuthUtils.createKeyPair();//for xbox live, xbox live requests use, ES256, ECDSA256
+        this.publicKey = (ECPublicKey) ecdsa256KeyPair.getPublic();
+        this.privateKey = (ECPrivateKey) ecdsa256KeyPair.getPrivate();
 
-        String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        Xbox xbox = new Xbox(this.authtoken);
+        String userToken = xbox.getUserToken(this.publicKey, this.privateKey);
+        System.out.println("usertoken");
+        String deviceToken = xbox.getDeviceToken(this.publicKey, this.privateKey);
+        System.out.println("devicetoken");
+        String titleToken = xbox.getTitleToken(this.publicKey, this.privateKey, deviceToken);
+        String xsts = xbox.getXstsToken(userToken, deviceToken, titleToken, this.publicKey, this.privateKey);
 
-        JSONObject jwtHeader = new JSONObject();
-        jwtHeader.put("x5u", publicKeyBase64);
-        jwtHeader.put("alg", "ES384");
+        KeyPair ecdsa384KeyPair = EncryptionUtils.createKeyPair();//use ES384, ECDSA384
+        this.publicKey = (ECPublicKey) ecdsa384KeyPair.getPublic();
+        this.privateKey = (ECPrivateKey) ecdsa384KeyPair.getPrivate();
 
-        JSONObject chainDataKeyJsonObject = new JSONObject();
-        JSONObject extraData = new JSONObject();
-        extraData.put("displayName",this.playerName);
-        extraData.put("identity",this.playerUUID.toString());
+        /*
+         * So we get a "chain"(json array with info(that has 2 objects)) from minecraft.net using our xsts token
+         * from there we have to add our own chain at the beginning of the chain(json array that minecraft.net sent us),
+         * When is all said and done, we have 3 chains(they are jwt objects, header.payload.signature)
+         * which we send to the server to check
+         */
+        String chainData = xbox.requestMinecraftChain(xsts, this.publicKey);
+        JSONObject chainDataObject = JSONObject.parseObject(chainData);
+        JSONArray minecraftNetChain = chainDataObject.getJSONArray("chain");
+        String firstChainHeader = minecraftNetChain.getString(0);
+        firstChainHeader = firstChainHeader.split("\\.")[0];//get the jwt header(base64)
+        firstChainHeader = new String(Base64.getDecoder().decode(firstChainHeader.getBytes()));//decode the jwt base64 header
+        String firstKeyx5u = JSONObject.parseObject(firstChainHeader).getString("x5u");
 
-        chainDataKeyJsonObject.put("exp", Instant.now().getEpochSecond() + TimeUnit.HOURS.toSeconds(6));
-        chainDataKeyJsonObject.put("identityPublicKey", publicKeyBase64);
-        chainDataKeyJsonObject.put("nbf", Instant.now().getEpochSecond() + -TimeUnit.HOURS.toSeconds(6));
-        chainDataKeyJsonObject.put("extraData", extraData);
+        JSONObject newFirstChain = new JSONObject();
+        newFirstChain.put("certificateAuthority", true);
+        newFirstChain.put("exp", Instant.now().getEpochSecond() + TimeUnit.HOURS.toSeconds(6));
+        newFirstChain.put("identityPublicKey", firstKeyx5u);
+        newFirstChain.put("nbf", Instant.now().getEpochSecond() - TimeUnit.HOURS.toSeconds(6));
 
-        String chainDataKeyString = chainDataKeyJsonObject.toJSONString();
+        {
+            String publicKeyBase64 = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
+            JSONObject jwtHeader = new JSONObject();
+            jwtHeader.put("alg", "ES384");
+            jwtHeader.put("x5u", publicKeyBase64);
 
-        String jwt = OtherUtils.fixBase64(OtherUtils.base64Encode(jwtHeader.toJSONString())) + "." + OtherUtils.base64Encode(chainDataKeyString);
-        String jwtSign=OtherUtils.JWSSigner((ECPrivateKey) keyPair.getPrivate(),jwt);
-        jwt=jwt+"."+jwtSign;
-        JSONObject chainDataJsonObject = new JSONObject();
-        JSONArray chainDataJsonArray = new JSONArray();
-        chainDataJsonObject.put("chain", chainDataJsonArray);
-        chainDataJsonArray.add(jwt);
-        loginPacket.setChainData(new AsciiString(chainDataJsonObject.toJSONString()));
-        loginPacket.setProtocolVersion(Main.BEDROCK_PROTOCOL_VERSION);
+            String header = Base64.getUrlEncoder().withoutPadding().encodeToString(jwtHeader.toJSONString().getBytes());
+            String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(newFirstChain.toJSONString().getBytes());
+
+            byte[] dataToSign = (header + "." + payload).getBytes();
+            String signatureString = AuthUtils.signBytes(dataToSign,privateKey);
+
+            String jwt = header + "." + payload + "." + signatureString;
+
+            chainDataObject.put("chain", AuthUtils.addChainToBeginning(jwt, minecraftNetChain));//replace the chain with our new chain
+        }
+        {
+            //we are now going to get some data from a chain minecraft sent us(the last chain)
+            String lastChain = minecraftNetChain.getString(minecraftNetChain.size() - 1);
+            String lastChainPayload = lastChain.split("\\.")[1];//get the middle(payload) jwt thing
+            lastChainPayload = new String(Base64.getDecoder().decode(lastChainPayload.getBytes()));//decode the base64
+
+            JSONObject payloadObject = JSONObject.parseObject(lastChainPayload);
+            JSONObject extraData = payloadObject.getJSONObject("extraData");
+            this.xuid = extraData.getString("XUID");
+            this.playerUUID = UUID.fromString(extraData.getString("identity"));
+            this.playerName = extraData.getString("displayName");
+        }
+
+        loginPacket.setChainData(new AsciiString(chainDataObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
-        session.sendPacket(loginPacket);
+        loginPacket.setProtocolVersion(Main.BEDROCK_PROTOCOL_VERSION);
+        bedrockSession.sendPacket(loginPacket);
     }
-    public String getSkinData(){
-        KeyPair keyPair = EncryptionUtils.createKeyPair();
-        PublicKey publicKey = keyPair.getPublic();
+    public void offlineLogin() throws Exception {
+        LoginPacket loginPacket=new LoginPacket();
 
-        String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        KeyPair ecdsa384KeyPair = EncryptionUtils.createKeyPair();//use ES384, ECDSA384
+        this.publicKey = (ECPublicKey) ecdsa384KeyPair.getPublic();
+        this.privateKey = (ECPrivateKey) ecdsa384KeyPair.getPrivate();
+
+        String publicKeyBase64 = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
+
+        JSONObject chain = new JSONObject();//jwtPayload
+        //chain.addProperty("certificateAuthority", true);
+        chain.put("exp", Instant.now().getEpochSecond() + TimeUnit.HOURS.toSeconds(6));
+        chain.put("identityPublicKey", publicKeyBase64);
+        chain.put("nbf", Instant.now().getEpochSecond() - TimeUnit.HOURS.toSeconds(6));
+
+        JSONObject extraData = new JSONObject();
+        extraData.put("identity", playerUUID.toString());
+        extraData.put("displayName", playerName);
+        chain.put("extraData", extraData);
+
         JSONObject jwtHeader = new JSONObject();
-        jwtHeader.put("x5u", publicKeyBase64);
         jwtHeader.put("alg", "ES384");
+        jwtHeader.put("x5u", publicKeyBase64);
+
+        String header = Base64.getUrlEncoder().withoutPadding().encodeToString(jwtHeader.toJSONString().getBytes());
+        String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(chain.toJSONString().getBytes());
+
+        byte[] dataToSign = (header + "." + payload).getBytes();
+        String signatureString = AuthUtils.signBytes(dataToSign,this.privateKey);
+
+        String jwt = header + "." + payload + "." + signatureString;
+
+        //create a json object with our 1 chain array
+        JSONArray chainDataJsonArray = new JSONArray();
+        chainDataJsonArray.add(jwt);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("chain", chainDataJsonArray);
+
+        loginPacket.setChainData(new AsciiString(jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
+        loginPacket.setSkinData(new AsciiString(this.getSkinData()));
+        loginPacket.setProtocolVersion(Main.BEDROCK_PROTOCOL_VERSION);
+        bedrockSession.sendPacket(loginPacket);
+    }
+
+    public String getSkinData() throws Exception{
+        String publicKeyBase64 = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
+
+        JSONObject jwtHeader = new JSONObject();
+        jwtHeader.put("alg", "ES384");
+        jwtHeader.put("x5u", publicKeyBase64);
 
         JSONObject skinData = new JSONObject();
 
@@ -131,7 +226,7 @@ public class Client {
         skinData.put("DeviceId", UUID.randomUUID().toString());
         skinData.put("DeviceModel", "");
         skinData.put("DeviceOS", 7);//windows 10?
-        skinData.put("GameVersion", "1.16.100");
+        skinData.put("GameVersion", Main.BEDROCK_CODEC.getMinecraftVersion());
         skinData.put("GuiScale", 0);
         skinData.put("LanguageCode", "en_US");
         skinData.put("PersonaPieces", new JSONArray());
@@ -154,12 +249,24 @@ public class Client {
         skinData.put("ThirdPartyNameOnly", false);
         skinData.put("UIProfile", 0);
 
-        return OtherUtils.base64Encode(jwtHeader.toJSONString()) + "." + OtherUtils.base64Encode(skinData.toJSONString()) + "." + OtherUtils.base64Encode(new String(publicKey.getEncoded()));
+        String header = Base64.getUrlEncoder().withoutPadding().encodeToString(jwtHeader.toJSONString().getBytes());
+        String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(skinData.toJSONString().getBytes());
+
+        byte[] dataToSign = (header + "." + payload).getBytes();
+        String signatureString = AuthUtils.signBytes(dataToSign,privateKey);
+
+        return header + "." + payload + "." + signatureString;
     }
     public void sendMessage(String msg){
-        this.javaSession.send(new ServerChatPacket(msg));
+        this.sendPacket(new ServerChatPacket(msg));
     }
     public void sendAlert(String msg){
-        this.javaSession.send(new ServerChatPacket("§f[§l§bEZ§a4§bH§f§r]"+msg));
+        this.sendPacket(new ServerChatPacket("§f[§l§bEZ§a4§bH§f§r]"+msg));
+    }
+    public void sendPacket(BedrockPacket packet){
+        this.bedrockSession.sendPacket(packet);
+    }
+    public void sendPacket(Packet packet){
+        this.javaSession.send(packet);
     }
 }

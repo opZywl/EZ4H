@@ -18,7 +18,7 @@ public class FormConverter {
         JSONObject formJ=new JSONObject();
         formJ.put("type","form");
         formJ.put("data", OtherUtils.base64Encode(formJSON.toJSONString()));
-        client.javaSession.send(new ServerPluginMessagePacket("EZ4H",formJ.toJSONString().getBytes()));
+        client.sendPacket(new ServerPluginMessagePacket("EZ4H",formJ.toJSONString().getBytes()));
         if(formJSON.getString("type").equals("form")){
             showSimpleForm(client,formJSON);
         }else if(formJSON.getString("type").equals("custom_form")){

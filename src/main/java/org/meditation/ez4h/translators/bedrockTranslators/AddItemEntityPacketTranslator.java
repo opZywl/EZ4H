@@ -23,7 +23,7 @@ public class AddItemEntityPacketTranslator implements BedrockTranslator {
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), (float) (position.getY()-1.62), position.getZ(), (int) packet.getRuntimeEntityId(),"item_entity"));
         EntityMetadata[] metadata=new EntityMetadata[1];
         metadata[0]=new EntityMetadata(6, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
-        client.javaSession.send(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
-        client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+        client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
+        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
     }
 }

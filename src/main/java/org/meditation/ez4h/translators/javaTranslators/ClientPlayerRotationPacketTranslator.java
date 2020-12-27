@@ -20,6 +20,6 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
         client.clientStat.yaw= (float) packet.getYaw();
         client.clientStat.pitch= (float) packet.getPitch();
-        client.bedrockSession.sendPacket(movePlayerPacket);
+        client.sendPacket(movePlayerPacket);
     }
 }

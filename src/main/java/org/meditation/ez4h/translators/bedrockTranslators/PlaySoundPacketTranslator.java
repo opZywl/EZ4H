@@ -14,6 +14,6 @@ public class PlaySoundPacketTranslator implements BedrockTranslator {
     public void translate(BedrockPacket inPacket, Client client) {
         PlaySoundPacket packet=(PlaySoundPacket)inPacket;
         Vector3f pos=packet.getPosition();
-        client.javaSession.send(new ServerPlayBuiltinSoundPacket(SoundConverter.convert(packet.getSound()), SoundCategory.VOICE, pos.getX(), pos.getY(), pos.getZ(), packet.getVolume(), packet.getPitch()));
+        client.sendPacket(new ServerPlayBuiltinSoundPacket(SoundConverter.convert(packet.getSound()), SoundCategory.VOICE, pos.getX(), pos.getY(), pos.getZ(), packet.getVolume(), packet.getPitch()));
     }
 }

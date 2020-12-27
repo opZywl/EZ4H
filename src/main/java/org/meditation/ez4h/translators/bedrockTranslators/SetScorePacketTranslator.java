@@ -18,7 +18,7 @@ public class SetScorePacketTranslator implements BedrockTranslator {
             switch (scoreInfo.getType()){
                 case INVALID:{
                     ScoreInfo scoreInfo1=client.clientStat.scoreboardBars.get(scoreInfo.getScoreboardId());
-                    client.javaSession.send(new ServerUpdateScorePacket(scoreInfo1.getName(),scoreInfo1.getObjectiveId()));
+                    client.sendPacket(new ServerUpdateScorePacket(scoreInfo1.getName(),scoreInfo1.getObjectiveId()));
                     break;
                 }
                 default:{
@@ -29,7 +29,7 @@ public class SetScorePacketTranslator implements BedrockTranslator {
                     }else{
                         score=(int) scoreInfo.getScoreboardId();
                     }
-                    client.javaSession.send(new ServerUpdateScorePacket(scoreInfo.getName(),scoreInfo.getObjectiveId(), score));
+                    client.sendPacket(new ServerUpdateScorePacket(scoreInfo.getName(),scoreInfo.getObjectiveId(), score));
                     break;
                 }
             }

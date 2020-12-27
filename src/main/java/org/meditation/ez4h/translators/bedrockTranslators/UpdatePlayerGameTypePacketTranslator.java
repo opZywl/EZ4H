@@ -12,6 +12,6 @@ public class UpdatePlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         UpdatePlayerGameTypePacket packet=(UpdatePlayerGameTypePacket)inPacket;
-        client.javaSession.send(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, BedrockUtils.convertGameModeToJE(packet.getGameType())));
+        client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, BedrockUtils.convertGameModeToJE(packet.getGameType())));
     }
 }

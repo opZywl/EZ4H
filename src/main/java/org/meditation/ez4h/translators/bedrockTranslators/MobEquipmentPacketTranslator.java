@@ -17,11 +17,11 @@ public class MobEquipmentPacketTranslator implements BedrockTranslator {
         }
         switch (packet.getContainerId()){
             case 0:{
-                client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getItem())));
+                client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getItem())));
                 break;
             }
             case 119:{
-                client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.OFF_HAND,ItemConverter.convertToJE(packet.getItem())));
+                client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.OFF_HAND,ItemConverter.convertToJE(packet.getItem())));
                 break;
             }
         }

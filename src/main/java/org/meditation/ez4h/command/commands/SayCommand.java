@@ -33,6 +33,6 @@ public class SayCommand implements CommandBase {
         List<String> para = new ArrayList<>();
         textPacket.setParameters(para);
         textPacket.setSourceName(client.playerName);
-        client.bedrockSession.sendPacket(textPacket);
+        client.sendPacket(textPacket);
     }
 }

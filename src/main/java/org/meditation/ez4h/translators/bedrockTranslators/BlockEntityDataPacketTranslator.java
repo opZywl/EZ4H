@@ -19,23 +19,23 @@ public class BlockEntityDataPacketTranslator implements BedrockTranslator {
         NbtMap data=packet.getData();
         switch (data.getString("id")){
             case "Chest":{
-                client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(54,3))));
+                client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(54,3))));
                 break;
             }
             case "Furnace":{
-                client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(61,4))));
+                client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(61,4))));
                 break;
             }
             case "ShulkerBox":{
-                client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(219,1))));
+                client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(219,1))));
                 break;
             }
             case "EnderChest":{
-                client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(130,2))));
+                client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(130,2))));
                 break;
             }
             case "Sign":{
-                client.javaSession.send(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(63,0))));
+                client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),new BlockState(63,0))));
                 break;
             }
         }

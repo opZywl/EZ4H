@@ -20,7 +20,7 @@ public class ClientPlayerInteractEntityPacketTranslator implements JavaTranslato
                 interactPacket.setAction(InteractPacket.Action.INTERACT);
                 interactPacket.setRuntimeEntityId(packet.getEntityId());
                 interactPacket.setMousePosition(Vector3f.ZERO);
-                client.bedrockSession.sendPacket(interactPacket);
+                client.sendPacket(interactPacket);
                 break;
             }
             case ATTACK:{
@@ -32,7 +32,7 @@ public class ClientPlayerInteractEntityPacketTranslator implements JavaTranslato
                 inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
                 inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
-                client.bedrockSession.sendPacket(inventoryTransactionPacket);
+                client.sendPacket(inventoryTransactionPacket);
                 break;
             }
         }

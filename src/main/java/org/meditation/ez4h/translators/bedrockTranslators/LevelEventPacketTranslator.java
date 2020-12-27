@@ -18,12 +18,12 @@ public class LevelEventPacketTranslator implements BedrockTranslator {
         switch (packet.getType()){
             case BLOCK_START_BREAK:{
                 Vector3f pos=packet.getPosition();
-                client.javaSession.send(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.STAGE_1));
+                client.sendPacket(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.STAGE_1));
                 break;
             }
             case BLOCK_STOP_BREAK:{
                 Vector3f pos=packet.getPosition();
-                client.javaSession.send(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.RESET));
+                client.sendPacket(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.RESET));
             }
             case STOP_RAINING:{
                 if(client.clientStat.rain){

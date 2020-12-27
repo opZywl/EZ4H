@@ -20,11 +20,11 @@ public class TextPacketTranslator implements BedrockTranslator {
         switch (packet.getType()){
             case TIP:
             case POPUP: {
-                client.javaSession.send(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
+                client.sendPacket(new ServerChatPacket(packet.getMessage(), MessageType.NOTIFICATION));
                 break;
             }
             case SYSTEM:{
-                client.javaSession.send(new ServerChatPacket(packet.getMessage(), MessageType.SYSTEM));
+                client.sendPacket(new ServerChatPacket(packet.getMessage(), MessageType.SYSTEM));
                 break;
             }
             default:{

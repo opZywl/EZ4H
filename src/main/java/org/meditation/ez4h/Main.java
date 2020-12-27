@@ -30,6 +30,8 @@ import com.nukkitx.protocol.bedrock.packet.*;
 import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
+import org.meditation.ez4h.bedrock.auth.AuthUtils;
+import org.meditation.ez4h.bedrock.auth.Xbox;
 import org.meditation.ez4h.translators.converters.BlockConverter;
 import org.meditation.ez4h.command.CommandManager;
 import org.meditation.ez4h.command.commands.*;
@@ -136,6 +138,7 @@ public class Main {
         BedrockTranslatorManager.addTranslator(new UpdateAttributesPacketTranslator(),UpdateAttributesPacket.class);
         BedrockTranslatorManager.addTranslator(new UpdateBlockPacketTranslator(),UpdateBlockPacket.class);
         BedrockTranslatorManager.addTranslator(new UpdatePlayerGameTypePacketTranslator(),UpdatePlayerGameTypePacket.class);
+        BedrockTranslatorManager.addTranslator(new ServerToClientHandshakePacketTranslator(),ServerToClientHandshakePacket.class);
 
         //load block data
         BlockConverter.load(JSONArray.parseArray(FileUtils.readFile("./resources/blocks.json")),JSONObject.parseObject(FileUtils.readFile("./resources/block_runtime.json")));
@@ -145,6 +148,9 @@ public class Main {
 
         //load item data
         ItemConverter.load(JSONObject.parseObject(FileUtils.readFile("./resources/bedrock_items.json")),JSONObject.parseObject(FileUtils.readFile("./resources/java_items.json")));
+
+        //load key pair
+        AuthUtils.load();
 
         //start ping thread
         Variables.pingThread=new Ping();

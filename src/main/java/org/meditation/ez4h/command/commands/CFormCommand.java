@@ -109,7 +109,7 @@ public class CFormCommand implements CommandBase {
                 ModalFormResponsePacket reqPacket=new ModalFormResponsePacket();
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(formData.data.getJSONArray("values").toJSONString());
-                client.bedrockSession.sendPacket(reqPacket);
+                client.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Submitted.");
                 break;
@@ -123,7 +123,7 @@ public class CFormCommand implements CommandBase {
                 ModalFormResponsePacket reqPacket=new ModalFormResponsePacket();
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
-                client.bedrockSession.sendPacket(reqPacket);
+                client.sendPacket(reqPacket);
                 client.clientStat.formData=null;
                 client.sendAlert("Form Closed.");
                 break;

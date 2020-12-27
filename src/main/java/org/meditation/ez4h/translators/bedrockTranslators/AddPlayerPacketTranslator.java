@@ -31,12 +31,12 @@ public class AddPlayerPacketTranslator implements BedrockTranslator {
         ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
         playerListEntries.add(new PlayerListEntry(new GameProfile(packet.getUuid(), BedrockUtils.lengthCutter(packet.getMetadata().getString(EntityData.NAMETAG),16)), GameMode.SURVIVAL,0,new TextMessage(packet.getMetadata().getString(EntityData.NAMETAG))));
         PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
-        client.javaSession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
+        client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"player"));
-        client.javaSession.send(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
-        client.javaSession.send(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getHand())));
-        client.javaSession.send(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata())));
+        client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
+        client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getHand())));
+        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata())));
     }
 }

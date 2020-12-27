@@ -24,11 +24,11 @@ public class PlayerListPacketTranslator implements BedrockTranslator {
         PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
         switch (packet.getAction()){
             case ADD:{
-                client.javaSession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
+                client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
                 break;
             }
             case REMOVE:{
-                client.javaSession.send(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
+                client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
                 break;
             }
         }

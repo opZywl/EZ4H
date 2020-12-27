@@ -13,19 +13,19 @@ public class AnimatePacketTranslator implements BedrockTranslator {
         AnimatePacket packet=(AnimatePacket)inPacket;
         switch (packet.getAction()){
             case SWING_ARM:{
-                client.javaSession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(), Animation.SWING_ARM));
+                client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(), Animation.SWING_ARM));
                 break;
             }
             case WAKE_UP:{
-                client.javaSession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.LEAVE_BED));
+                client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.LEAVE_BED));
                 break;
             }
             case CRITICAL_HIT:{
-                client.javaSession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.CRITICAL_HIT));
+                client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.CRITICAL_HIT));
                 break;
             }
             case MAGIC_CRITICAL_HIT:{
-                client.javaSession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.ENCHANTMENT_CRITICAL_HIT));
+                client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(),Animation.ENCHANTMENT_CRITICAL_HIT));
                 break;
             }
         }

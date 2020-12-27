@@ -18,7 +18,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
                 break;
             }
             case STOP_SNEAKING:{
@@ -27,7 +27,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
                 break;
             }
             case START_SPRINTING:{
@@ -36,7 +36,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
             }
             case STOP_SPRINTING:{
                 PlayerActionPacket playerActionPacket=new PlayerActionPacket();
@@ -44,7 +44,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
-                client.bedrockSession.sendPacket(playerActionPacket);
+                client.sendPacket(playerActionPacket);
             }
         }
     }

@@ -26,6 +26,6 @@ public class ClientPlayerPlaceBlockPacketTranslator implements JavaTranslator {
         useInventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
         useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
         useInventoryTransactionPacket.setBlockRuntimeId(0);
-        client.bedrockSession.sendPacket(useInventoryTransactionPacket);
+        client.sendPacket(useInventoryTransactionPacket);
     }
 }

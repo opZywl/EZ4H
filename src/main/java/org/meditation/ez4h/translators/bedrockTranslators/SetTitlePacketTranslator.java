@@ -12,15 +12,15 @@ public class SetTitlePacketTranslator implements BedrockTranslator {
         SetTitlePacket packet=(SetTitlePacket)inPacket;
         switch (packet.getType()){
             case TITLE:{
-                client.javaSession.send(new ServerTitlePacket(packet.getText(),false));
+                client.sendPacket(new ServerTitlePacket(packet.getText(),false));
                 break;
             }
             case SUBTITLE:{
-                client.javaSession.send(new ServerTitlePacket(packet.getText(),true));
+                client.sendPacket(new ServerTitlePacket(packet.getText(),true));
             }
             case RESET:{
-                client.javaSession.send(new ServerTitlePacket("",true));
-                client.javaSession.send(new ServerTitlePacket("",false));
+                client.sendPacket(new ServerTitlePacket("",true));
+                client.sendPacket(new ServerTitlePacket("",false));
             }
         }
     }

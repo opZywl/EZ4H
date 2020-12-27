@@ -13,9 +13,9 @@ public class ResourcePacksInfoPacketTranslator implements BedrockTranslator {
         ResourcePacksInfoPacket packet=(ResourcePacksInfoPacket)inPacket;
         ResourcePackClientResponsePacket resourcePackClientResponsePacket=new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket.setStatus(ResourcePackClientResponsePacket.Status.HAVE_ALL_PACKS);
-        client.bedrockSession.sendPacket(resourcePackClientResponsePacket);
+        client.sendPacket(resourcePackClientResponsePacket);
         ResourcePackClientResponsePacket resourcePackClientResponsePacket2=new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket2.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
-        client.bedrockSession.sendPacket(resourcePackClientResponsePacket2);
+        client.sendPacket(resourcePackClientResponsePacket2);
     }
 }

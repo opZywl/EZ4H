@@ -13,7 +13,7 @@ public class EntityEventPacketTranslator implements BedrockTranslator {
         EntityEventPacket packet=(EntityEventPacket)inPacket;
         switch (packet.getType()){
             case HURT:{
-                client.javaSession.send(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(), Animation.DAMAGE));
+                client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(), Animation.DAMAGE));
                 break;
             }
         }
