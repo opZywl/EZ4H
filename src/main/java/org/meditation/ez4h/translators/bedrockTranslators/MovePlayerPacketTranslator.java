@@ -18,17 +18,21 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
         MovePlayerPacket packet=(MovePlayerPacket)inPacket;
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         if(packet.getRuntimeEntityId()==client.clientStat.entityId){
-            if(client.clientStat.x!=position.getX()&&client.clientStat.y!=position.getY()&&client.clientStat.z!=position.getZ()) {
-                ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), client.clientStat.yaw, client.clientStat.pitch, 1);
-                client.sendPacket(serverPlayerPositionRotationPacket);
+            switch (packet.getMode()){
+                case HEAD_ROTATION:
+                case TELEPORT:{
+                    ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(),rotation.getY(),rotation.getX(), 1);
+                    client.sendPacket(serverPlayerPositionRotationPacket);
+                    client.clientStat.x=position.getX();
+                    client.clientStat.y=position.getY();
+                    client.clientStat.z=position.getZ();
+                    break;
+                }
             }
-            client.clientStat.x=position.getX();
-            client.clientStat.y=position.getY();
-            client.clientStat.z=position.getZ();
         }else{
             EntityInfo entityInfo=client.clientStat.entityInfoMap.get((int)packet.getRuntimeEntityId());
             double moveX=position.getX()-entityInfo.x,moveY=(position.getY()-1.62)-entityInfo.y,moveZ=position.getZ()-entityInfo.z;
-            if(BedrockUtils.calcDistance(moveX,moveY,moveZ)<8){
+            if(!packet.getMode().equals(MovePlayerPacket.Mode.TELEPORT)){
                 client.sendPacket(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX,moveY,moveZ,rotation.getY(),rotation.getX(), packet.isOnGround()));
             }else{
                 client.sendPacket(new ServerEntityTeleportPacket((int) packet.getRuntimeEntityId(), position.getX(),position.getY()-1.62, position.getZ(),rotation.getY(),rotation.getX(), packet.isOnGround()));

@@ -32,6 +32,7 @@ import org.meditation.ez4h.bedrock.Client;
 import org.meditation.ez4h.bedrock.Ping;
 import org.meditation.ez4h.bedrock.auth.AuthUtils;
 import org.meditation.ez4h.bedrock.auth.Xbox;
+import org.meditation.ez4h.bedrock.auth.XboxAuthtoken;
 import org.meditation.ez4h.translators.converters.BlockConverter;
 import org.meditation.ez4h.command.CommandManager;
 import org.meditation.ez4h.command.commands.*;
@@ -66,11 +67,11 @@ public class Main {
         registerCommands();
         Variables.logger.info("Done!("+(new Date().getTime()-InitLibs.launchTime)+" ms)");
     }
-    private static void registerCommands(){
-        CommandManager.registerCommand("say",new SayCommand());
-        CommandManager.registerCommand("form",new FormCommand());
-        CommandManager.registerCommand("mform",new MFormCommand());
-        CommandManager.registerCommand("cform",new CFormCommand());
+    private static void registerCommands() {
+        CommandManager.registerCommand("say", new SayCommand());
+        CommandManager.registerCommand("form", new FormCommand());
+        CommandManager.registerCommand("mform", new MFormCommand());
+        CommandManager.registerCommand("cform", new CFormCommand());
     }
     private static void init(){
         if(!new File("./config.json").exists()){
