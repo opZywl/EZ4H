@@ -6,8 +6,8 @@ import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.data.ScoreInfo;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
-import me.liuli.ez4h.mcjava.cache.EntityInfo;
-import me.liuli.ez4h.mcjava.cache.Form;
+import me.liuli.ez4h.translators.cache.EntityInfo;
+import me.liuli.ez4h.translators.cache.Form;
 
 import java.util.HashMap;
 import java.util.Map;

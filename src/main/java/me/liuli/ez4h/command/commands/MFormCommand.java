@@ -3,7 +3,7 @@ package me.liuli.ez4h.command.commands;
 import com.nukkitx.protocol.bedrock.packet.ModalFormResponsePacket;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.command.CommandBase;
-import me.liuli.ez4h.mcjava.cache.Form;
+import me.liuli.ez4h.translators.cache.Form;
 
 public class MFormCommand implements CommandBase {
     @Override

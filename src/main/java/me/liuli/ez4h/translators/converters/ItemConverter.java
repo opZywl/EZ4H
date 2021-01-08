@@ -6,13 +6,13 @@ import com.github.steveice10.opennbt.tag.builtin.*;
 import com.nukkitx.nbt.NbtList;
 import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemConverter {
-    private static JSONObject BEDROCK_ID2NAME;
-    private static JSONObject JAVA_NAME2ID;
+    private static JSONObject BEDROCK_ID2NAME,JAVA_NAME2ID,JAVA_ENCH,BEDROCK_ENCH;
     public static int inventoryIndex(int index,boolean isToBedrock){
         if(isToBedrock){
             if(index>35){
@@ -30,7 +30,7 @@ public class ItemConverter {
     }
     public static Tag nbtTagTranslator(String name,Object value){
         if (value instanceof NbtMap) {
-            return nbtMapTranslator(name,(NbtMap) value);
+            return nbtMapTranslator(name,(NbtMap) value,false);
         }else if(value instanceof NbtList) {
             try {
                 return nbtListTranslator(name,(NbtList)value);
@@ -65,10 +65,28 @@ public class ItemConverter {
             return null;
         }
     }
-    public static CompoundTag nbtMapTranslator(String name,NbtMap nbtMap){
+    public static CompoundTag nbtMapTranslator(String name,NbtMap nbtMap,boolean isFirst){
         CompoundTag compoundTag=new CompoundTag(name);
         if(nbtMap!=null) {
             for (Map.Entry<String, Object> e : nbtMap.entrySet()) {
+                if(isFirst){
+                    if(e.getKey().equals("ench")&&e.getValue() instanceof NbtList){
+                        try {
+                            ArrayList<Tag> tags=new ArrayList<>();
+                            for (Object o : (NbtList)e.getValue()) {
+                                NbtMap enchMap=(NbtMap)o;
+                                CompoundTag tag=new CompoundTag("");
+                                tag.put(new ShortTag("id",getJavaEnchant(enchMap.getShort("id"))));
+                                tag.put(new ShortTag("lvl",enchMap.getShort("lvl")));
+                                tags.add(tag);
+                            }
+                            compoundTag.put(new ListTag("ench",tags));
+                            continue;
+                        } catch (IllegalArgumentException illegalArgumentException) {
+                            illegalArgumentException.printStackTrace();
+                        }
+                    }
+                }
                 Tag tag = nbtTagTranslator(e.getKey(), e.getValue());
                 if (tag != null) {
                     compoundTag.put(tag);
@@ -89,14 +107,27 @@ public class ItemConverter {
                 data=itemData.getDamage();
             }
         }
-        CompoundTag tag=nbtMapTranslator("",itemData.getTag());
+        CompoundTag tag=nbtMapTranslator("",itemData.getTag(),true);
         if(tag.contains("Damage")&&tag.size()==1){
             tag=null;
         }
         return new ItemStack(id,itemData.getCount(), data,tag);
     }
-    public static void load(JSONObject bedrock,JSONObject java){
+    public static short getJavaEnchant(short id){
+        String result=BEDROCK_ENCH.getString(id+"");
+        if(result==null){
+            return id;
+        }
+        Short javaResult=JAVA_ENCH.getShort(result);
+        if(javaResult==null){
+            return id;
+        }
+        return javaResult;
+    }
+    public static void load(JSONObject bedrock,JSONObject java,JSONObject enchant){
         BEDROCK_ID2NAME=bedrock;
         JAVA_NAME2ID=java;
+        BEDROCK_ENCH=enchant.getJSONObject("bedrock");
+        JAVA_ENCH=enchant.getJSONObject("java");
     }
 }

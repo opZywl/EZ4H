@@ -8,7 +8,7 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.mcjava.cache.EntityInfo;
+import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {

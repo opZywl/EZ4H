@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.mcjava.cache.Form;
+import me.liuli.ez4h.translators.cache.Form;
 import me.liuli.ez4h.utils.OtherUtils;
 
 //simple form:{"type":"form","title":"LSSW","content":"Choose Kits","buttons":[{"text":"Empty(NOW)"}],"closed":false}

@@ -21,6 +21,7 @@ public class Config {
         BE_HOST=json.getString("be_host");
         BE_PORT=json.getInteger("be_port");
         XBOX_AUTH=json.getBoolean("xbox-auth");
+        PLAYER_LIST=json.getString("player-list");
 
         JSONObject advanced=json.getJSONObject("advanced");
         DEBUG_LEVEL=advanced.getInteger("debug");

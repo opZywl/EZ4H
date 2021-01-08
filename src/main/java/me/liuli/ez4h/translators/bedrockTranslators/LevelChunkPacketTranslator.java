@@ -14,8 +14,8 @@ import io.netty.buffer.Unpooled;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.BlockConverter;
-import org.meditation.ez4h.bedrock.tunnel.nukkit.BitArray;
-import org.meditation.ez4h.bedrock.tunnel.nukkit.BitArrayVersion;
+import me.liuli.ez4h.utils.nukkit.BitArray;
+import me.liuli.ez4h.utils.nukkit.BitArrayVersion;
 
 import java.util.Arrays;
 
@@ -62,9 +62,9 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                             String mcbeBlockName = BlockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
                             if (!mcbeBlockName.equals("air")) {
                                 blockStorage.set(x,y,z, BlockConverter.getBlockByName(mcbeBlockName));
-                                int light= BlockConverter.getBlockLightByName(mcbeBlockName);
+                                int light=BlockConverter.getBlockLightByName(mcbeBlockName);
                                 if(light>0) {
-                                    BlockConverter.addLight(lightArray,light, x, y, z);
+                                    lightArray.set(x,y,z,light);
                                 }
                             }
                             index++;
@@ -72,7 +72,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                     }
                 }
             }
-            chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, BlockConverter.lightArray);
+            chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, BlockConverter.FULL_LIGHT);
         }
         byte[] biomeArray = new byte[256];
         Arrays.fill(biomeArray, (byte) 1);

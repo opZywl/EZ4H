@@ -1,4 +1,4 @@
-package me.liuli.ez4h.mcjava.cache;
+package me.liuli.ez4h.translators.cache;
 
 public class EntityInfo {
     public float x,y,z;

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BlockConverter {
-    public static NibbleArray3d lightArray;
+    public static NibbleArray3d FULL_LIGHT,NO_LIGHT;
     private static Map<String,BlockState> BLOCK_STATE_MAP=new HashMap<>();
     private static Map<String,Integer> BLOCK_LIGHT_MAP=new HashMap<>();
     private static JSONObject RUNTIME_MAP;
@@ -22,15 +22,18 @@ public class BlockConverter {
             BLOCK_STATE_MAP.put(json.getString("name"),new BlockState(json.getInteger("id"),json.getInteger("meta")));
         }
         RUNTIME_MAP=blockRuntimeData;
-        lightArray=new NibbleArray3d(4096);
+        FULL_LIGHT=new NibbleArray3d(4096);
+        NO_LIGHT=new NibbleArray3d(4096);
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
-                    lightArray.set(x,y,z,15);
+                    FULL_LIGHT.set(x,y,z,15);
+                    NO_LIGHT.set(x,y,z,0);
                 }
             }
         }
     }
+    //Process time TOO LONG :(
     public static void addLight(NibbleArray3d lightArray,int light,int X,int Y,int Z){
         int posX=Math.max((X - light), 0),posXend=Math.min(X + light, 15),
             posY=Math.max((Y - light), 0),posYend=Math.min(Y + light, 15),

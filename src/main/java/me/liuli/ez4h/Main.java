@@ -26,6 +26,7 @@ import com.github.steveice10.packetlib.event.server.ServerAdapter;
 import com.github.steveice10.packetlib.event.server.SessionAddedEvent;
 import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
+import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.packet.*;
@@ -51,6 +52,7 @@ import me.liuli.ez4h.utils.OtherUtils;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class Main {
@@ -59,7 +61,7 @@ public class Main {
     public static int BEDROCK_PROTOCOL_VERSION=422;
     public static BedrockPacketCodec BEDROCK_CODEC=Bedrock_v422.V422_CODEC;
     public static void main(String[] args) {
-        Variables.logger= Logger.getLogger("EZ4H");
+        Variables.logger=Logger.getLogger("EZ4H");
         Variables.logger.info("Init files...");
         init();
         Variables.logger.info("Init PE Protocol...");
@@ -95,6 +97,9 @@ public class Main {
         }
         if(!new File("./resources/lang.json").exists()){
             FileUtils.ReadJar("resources/resources/lang.json",JarDir,"./resources/lang.json");
+        }
+        if(!new File("./resources/enchant.json").exists()){
+            FileUtils.ReadJar("resources/resources/enchant.json",JarDir,"./resources/enchant.json");
         }
         if(!new File("./resources/skin.png").exists()){
             FileUtils.ReadJar("resources/resources/skin.png",JarDir,"./resources/skin.png");
@@ -150,7 +155,7 @@ public class Main {
         TextPacketTranslator.load(JSONObject.parseObject(FileUtils.readFile("./resources/lang.json")));
 
         //load item data
-        ItemConverter.load(JSONObject.parseObject(FileUtils.readFile("./resources/bedrock_items.json")),JSONObject.parseObject(FileUtils.readFile("./resources/java_items.json")));
+        ItemConverter.load(JSONObject.parseObject(FileUtils.readFile("./resources/bedrock_items.json")),JSONObject.parseObject(FileUtils.readFile("./resources/java_items.json")),JSONObject.parseObject(FileUtils.readFile("./resources/enchant.json")));
 
         //load key pair
         AuthUtils.load();
@@ -190,8 +195,10 @@ public class Main {
                 if(client!=null) {
                     client.clientStat.jLogined = true;
                     if (client.clientStat.jPacketMap.get("ServerJoinGame") != null) {
-                        session.send(client.clientStat.jPacketMap.remove("ServerJoinGame"));
-                        session.send(client.clientStat.jPacketMap.remove("ServerPlayerPositionRotation"));
+                        for(Map.Entry<String, Packet> entry:client.clientStat.jPacketMap.entrySet()){
+                            client.sendPacket(entry.getValue());
+                        }
+                        client.clientStat.jPacketMap.clear();
                     }
                     session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(Config.cfg.toJSONString()) +"\"}").getBytes()));
                 }else{

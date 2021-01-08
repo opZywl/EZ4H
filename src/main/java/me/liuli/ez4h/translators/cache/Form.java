@@ -1,4 +1,4 @@
-package me.liuli.ez4h.mcjava.cache;
+package me.liuli.ez4h.translators.cache;
 
 import com.alibaba.fastjson.JSONObject;
 
