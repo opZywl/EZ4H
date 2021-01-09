@@ -10,6 +10,7 @@ import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {
     @Override
@@ -18,6 +19,12 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         if(packet.getRuntimeEntityId()==client.clientStat.entityId){
             switch (packet.getMode()){
+                case RESPAWN:
+                case NORMAL:{
+                    if(!(BedrockUtils.calcDistance(client.clientStat.x,client.clientStat.y,client.clientStat.z,position.getX(),position.getY(),position.getZ())>8)){
+                        break;
+                    }
+                }
                 case HEAD_ROTATION:
                 case TELEPORT:{
                     ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(),rotation.getY(),rotation.getX(), 1);

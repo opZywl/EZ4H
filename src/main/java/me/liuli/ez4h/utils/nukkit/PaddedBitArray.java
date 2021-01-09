@@ -1,7 +1,5 @@
 package me.liuli.ez4h.utils.nukkit;
 
-import com.google.common.base.Preconditions;
-
 import java.util.Arrays;
 
 public class PaddedBitArray implements BitArray {
@@ -37,8 +35,6 @@ public class PaddedBitArray implements BitArray {
 
 	@Override
 	public void set(int index, int value) {
-		Preconditions.checkElementIndex(index, this.size);
-		Preconditions.checkArgument(value >= 0 && value <= this.version.maxEntryValue, "Max value: %s. Received value", this.version.maxEntryValue, value);
 		int arrayIndex = index / this.version.entriesPerWord;
 		int offset = (index % this.version.entriesPerWord) * this.version.bits;
 
@@ -47,7 +43,6 @@ public class PaddedBitArray implements BitArray {
 
 	@Override
 	public int get(int index) {
-		Preconditions.checkElementIndex(index, this.size);
 		int arrayIndex = index / this.version.entriesPerWord;
 		int offset = (index % this.version.entriesPerWord) * this.version.bits;
 

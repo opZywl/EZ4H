@@ -17,7 +17,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.*;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.AddEntityPacket;
 import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.bedrock.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.cache.EntityInfo;
 

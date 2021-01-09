@@ -1,15 +1,21 @@
 package me.liuli.ez4h.translators.javaTranslators;
 
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.protocol.bedrock.data.inventory.InventoryActionData;
+import com.nukkitx.protocol.bedrock.data.inventory.InventorySource;
+import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.InventoryTransactionPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
+import me.liuli.ez4h.translators.converters.ItemConverter;
 
 public class ClientPlayerActionPacketTranslator implements JavaTranslator {
     @Override
@@ -57,17 +63,47 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 break;
             }
             case DROP_ITEM:{
-                //18:38:34 [TRACE] Inbound RicoPlayz: InventoryTransactionPacket(transactionType=0, actions=[NetworkInventoryAction(sourceType=0, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Dirt (3:0)x1, newItem=Item Air (0:0)x0, stackNetworkId=0), NetworkInventoryAction(sourceType=2, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Air (0:0)x0, newItem=Item Dirt (3:0)x1, stackNetworkId=0)], transactionData=null, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
-
-                //transactionType=0, actions=[NetworkInventoryAction(sourceType=0, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Dirt (3:0)x1, newItem=Item Air (0:0)x0, stackNetworkId=0), NetworkInventoryAction(sourceType=2, windowId=0, unknown=0, inventorySlot=0, oldItem=Item Air (0:0)x0, newItem=Item Dirt (3:0)x1, stackNetworkId=0)]
-                // transactionData=null, hasNetworkIds=false, legacyRequestId=0, isCraftingPart=false, isEnchantingPart=false)
-                InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
-                inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
-                inventoryTransactionPacket.setHasNetworkIds(false);
-                inventoryTransactionPacket.setLegacyRequestId(0);
-                client.sendPacket(inventoryTransactionPacket);
+                dropItem(client,1);
+                break;
+            }
+            case DROP_ITEM_STACK:{
+                dropItem(client,client.clientStat.bedrockInventory[36+client.clientStat.slot].getCount());
                 break;
             }
         }
+    }
+    private void dropItem(Client client,int itemCount){
+        ItemData oldItem=client.clientStat.bedrockInventory[36+client.clientStat.slot];
+        if(oldItem.getCount()==0){
+            return;
+        }
+
+        ItemData itemData=ItemData.of(oldItem.getId(),oldItem.getDamage(),itemCount,oldItem.getTag(),oldItem.getCanPlace(),oldItem.getCanBreak(),oldItem.getBlockingTicks()),
+                newItem=ItemData.of(oldItem.getId(),oldItem.getDamage(),oldItem.getCount()-itemCount,oldItem.getTag(),oldItem.getCanPlace(),oldItem.getCanBreak(),oldItem.getBlockingTicks());
+        if(newItem.getCount()==0){
+            newItem=ItemData.AIR;
+        }
+
+        InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+        inventoryTransactionPacket.setLegacyRequestId(0);
+        inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
+        inventoryTransactionPacket.setActionType(0);
+        inventoryTransactionPacket.setRuntimeEntityId(0);
+        inventoryTransactionPacket.setBlockFace(0);
+        inventoryTransactionPacket.setHotbarSlot(0);
+        inventoryTransactionPacket.setBlockRuntimeId(0);
+        inventoryTransactionPacket.setHasNetworkIds(false);
+        InventorySource inventorySource=InventorySource.fromWorldInteraction(InventorySource.Flag.DROP_ITEM);
+        InventoryActionData inventoryActionData=new InventoryActionData(inventorySource,0,ItemData.AIR,itemData);
+        inventoryTransactionPacket.getActions().add(inventoryActionData);
+        inventorySource=InventorySource.fromContainerWindowId(0);
+        inventoryActionData=new InventoryActionData(inventorySource,client.clientStat.slot,oldItem,newItem);
+        inventoryTransactionPacket.getActions().add(inventoryActionData);
+        client.sendPacket(inventoryTransactionPacket);
+
+        ItemStack itemStack=ItemConverter.convertToJE(newItem);
+        client.clientStat.inventory[client.clientStat.slot+36]=itemStack;
+        client.clientStat.bedrockInventory[client.clientStat.slot+36]=newItem;
+        client.sendPacket(new ServerSetSlotPacket(0, client.clientStat.slot+36,itemStack));
     }
 }

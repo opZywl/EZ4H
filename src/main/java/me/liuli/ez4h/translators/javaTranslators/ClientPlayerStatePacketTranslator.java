@@ -14,7 +14,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
         switch (packet.getState()){
             case START_SNEAKING:{
                 PlayerActionPacket playerActionPacket=new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
+                playerActionPacket.setAction(PlayerActionPacket.Action.START_SNEAK);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);

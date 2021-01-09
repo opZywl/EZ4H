@@ -7,6 +7,28 @@
     <groupId>me.liuli.ez4h</groupId>
     <artifactId>EZ4H</artifactId>
     <version>1.0</version>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>http://www.opensource.org/licenses/mit-license.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>liulihaocai</id>
+            <name>Liulihaocai</name>
+            <email>liulihaocai@outlook.com</email>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Project-EZ4H/EZ4H/issues</url>
+    </issueManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -22,10 +44,6 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>nukkitx-repo-release</id>
             <url>https://repo.nukkitx.com/maven-releases/</url>
         </repository>
@@ -37,11 +55,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.Steveice10</groupId>
-            <artifactId>MCProtocolLib</artifactId>
-            <version>1.12.2-2</version>
-        </dependency>
-        <dependency>
             <groupId>com.nukkitx.protocol</groupId>
             <artifactId>bedrock-v422</artifactId>
             <version>2.6.1-SNAPSHOT</version>
@@ -51,11 +64,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>[24.1.1,)</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

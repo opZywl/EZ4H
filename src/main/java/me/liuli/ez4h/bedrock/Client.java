@@ -18,6 +18,7 @@ import me.liuli.ez4h.Variables;
 import me.liuli.ez4h.bedrock.auth.AuthUtils;
 import me.liuli.ez4h.bedrock.auth.Xbox;
 import me.liuli.ez4h.mcjava.ClientStat;
+import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.utils.OtherUtils;
 import me.liuli.ez4h.utils.RandUtils;
 

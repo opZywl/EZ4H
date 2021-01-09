@@ -1,7 +1,5 @@
 package me.liuli.ez4h.utils.nukkit;
 
-import com.google.common.base.Preconditions;
-
 import java.util.Arrays;
 
 public class Pow2BitArray implements BitArray {
@@ -35,8 +33,6 @@ public class Pow2BitArray implements BitArray {
 	 * Sets the entry at the given location to the given value
 	 */
 	public void set(int index, int value) {
-		Preconditions.checkElementIndex(index, this.size);
-		Preconditions.checkArgument(value >= 0 && value <= this.version.maxEntryValue, "Max value: %s. Received value", this.version.maxEntryValue, value);
 		int bitIndex = index * this.version.bits;
 		int arrayIndex = bitIndex >> 5;
 		int offset = bitIndex & 31;
@@ -47,7 +43,6 @@ public class Pow2BitArray implements BitArray {
 	 * Gets the entry at the given index
 	 */
 	public int get(int index) {
-		Preconditions.checkElementIndex(index, this.size);
 		int bitIndex = index * this.version.bits;
 		int arrayIndex = bitIndex >> 5;
 		int wordOffset = bitIndex & 31;

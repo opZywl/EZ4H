@@ -1,4 +1,4 @@
-package me.liuli.ez4h.bedrock;
+package me.liuli.ez4h.utils;
 
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;

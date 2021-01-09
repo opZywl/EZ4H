@@ -13,7 +13,7 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
-import me.liuli.ez4h.bedrock.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.bedrock.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
@@ -46,7 +46,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
                 gamemode,
                 packet.getDimensionId(),
                 BedrockUtils.convertDifficultyToJE(packet.getDifficulty()),
-                Ping.ping.getPlayerInfo().getMaxPlayers(),
+                Ping.maxPlayer,
                 WorldType.CUSTOMIZED,
                 true
         );

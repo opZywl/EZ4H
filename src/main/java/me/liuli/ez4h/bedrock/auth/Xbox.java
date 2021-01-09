@@ -2,9 +2,9 @@ package me.liuli.ez4h.bedrock.auth;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.primitives.Longs;
 import me.liuli.ez4h.Main;
 import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.OtherUtils;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
@@ -236,7 +236,7 @@ public class Xbox {
 		ByteArrayOutputStream bytesToSign = new ByteArrayOutputStream();
 
 		bytesToSign.write(new byte[] { 0, 0, 0, 1, 0 });
-		bytesToSign.write(Longs.toByteArray(currentTime));
+		bytesToSign.write(OtherUtils.toByteArray(currentTime));
 		bytesToSign.write(new byte[] { 0 });
 
 		bytesToSign.write("POST".getBytes());
@@ -263,7 +263,7 @@ public class Xbox {
 
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		byteArrayOutputStream.write(new byte[] { 0, 0, 0, 1 });
-		byteArrayOutputStream.write(Longs.toByteArray(currentTime));
+		byteArrayOutputStream.write(OtherUtils.toByteArray(currentTime));
 		byteArrayOutputStream.write(signatureBytes);
 		httpsURLConnection.addRequestProperty("Signature", Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
 	}

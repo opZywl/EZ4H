@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.game.chunk.NibbleArray3d;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
-import me.liuli.ez4h.bedrock.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.HashMap;
 import java.util.Map;

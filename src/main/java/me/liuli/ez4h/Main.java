@@ -159,9 +159,6 @@ public class Main {
 
         //load key pair
         AuthUtils.load();
-
-        //start ping thread
-        Variables.pingThread=new Ping();
     }
     private static void initJEProtocol() {
         //register translators
@@ -185,7 +182,6 @@ public class Main {
         server = new Server(Config.JE_HOST, Config.JE_PORT, MinecraftProtocol.class, new TcpSessionFactory());
         server.setGlobalFlag("session-service", sessionService);
         server.setGlobalFlag(MinecraftConstants.VERIFY_USERS_KEY, false);
-        server.setGlobalFlag(MinecraftConstants.SERVER_INFO_BUILDER_KEY, (ServerInfoBuilder) session -> Ping.ping);
 
         server.setGlobalFlag(MinecraftConstants.SERVER_LOGIN_HANDLER_KEY, new ServerLoginHandler() {
             @Override
