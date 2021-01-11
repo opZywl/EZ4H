@@ -36,4 +36,9 @@ public class BossEventPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return BossEventPacket.class;
+    }
 }

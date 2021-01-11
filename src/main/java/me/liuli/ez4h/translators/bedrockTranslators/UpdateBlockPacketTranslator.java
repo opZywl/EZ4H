@@ -17,4 +17,9 @@ public class UpdateBlockPacketTranslator implements BedrockTranslator {
         Vector3i pos=packet.getBlockPosition();
         client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()), BlockConverter.getBlockByName(BlockConverter.getBedrockNameByRuntime(packet.getRuntimeId())))));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return UpdateBlockPacket.class;
+    }
 }

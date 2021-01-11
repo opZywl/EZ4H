@@ -38,4 +38,9 @@ public class InventorySlotPacketTranslator implements BedrockTranslator {
         }
         client.sendPacket(serverSetSlotPacket);
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return InventorySlotPacket.class;
+    }
 }

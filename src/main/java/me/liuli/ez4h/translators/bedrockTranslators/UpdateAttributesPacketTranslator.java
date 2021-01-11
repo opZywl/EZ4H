@@ -2,6 +2,9 @@ package me.liuli.ez4h.translators.bedrockTranslators;
 
 import com.github.steveice10.mc.protocol.data.game.entity.attribute.Attribute;
 import com.github.steveice10.mc.protocol.data.game.entity.attribute.AttributeType;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityMetadataPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityPropertiesPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerHealthPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerSetExperiencePacket;
@@ -46,8 +49,21 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                         updateEXP=true;
                         break;
                     }
+                    case "minecraft:movement":{
+                        List<Attribute> attributes1=new ArrayList<>();
+                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,attribute.getValue()));
+                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
+                        break;
+                    }
+                    //ServerEntityMetadataPacket(entityId=2, metadata=[EntityMetadata(id=11, type=FLOAT, value=1024.0)])
+                    //AttributeData(name=minecraft:absorption, minimum=0.0, maximum=3.4028235E38, value=4.0, defaultValue=0.0)
+                    case "minecraft:absorption":{
+                        client.sendPacket(new ServerEntityMetadataPacket((int) client.clientStat.entityId,new EntityMetadata[]{new EntityMetadata(11, MetadataType.FLOAT,attribute.getValue())}));
+                        break;
+                    }
                 }
             }
+            //
             if(updateHP) {
                 client.sendPacket(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
             }
@@ -55,5 +71,10 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                 client.sendPacket(new ServerPlayerSetExperiencePacket(client.clientStat.exp, (int) client.clientStat.expLevel, 0));
             }
         }
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return UpdateAttributesPacket.class;
     }
 }

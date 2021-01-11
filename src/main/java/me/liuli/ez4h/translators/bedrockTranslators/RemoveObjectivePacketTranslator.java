@@ -15,4 +15,9 @@ public class RemoveObjectivePacketTranslator implements BedrockTranslator {
             client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return RemoveObjectivePacket.class;
+    }
 }

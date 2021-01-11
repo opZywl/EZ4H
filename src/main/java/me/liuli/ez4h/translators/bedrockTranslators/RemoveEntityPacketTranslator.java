@@ -15,4 +15,9 @@ public class RemoveEntityPacketTranslator implements BedrockTranslator {
         client.clientStat.entityInfoMap.remove( (int) packet.getUniqueEntityId());
         client.sendPacket(new ServerEntityDestroyPacket(entityIds));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return RemoveEntityPacket.class;
+    }
 }

@@ -33,4 +33,10 @@ public class PlayerListPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return PlayerListPacket.class;
+    }
 }

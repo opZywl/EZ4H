@@ -24,4 +24,9 @@ public class ClientPlayerUseItemPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
         client.sendPacket(inventoryTransactionPacket);
     }
+
+    @Override
+    public Class<ClientPlayerUseItemPacket> getPacketClass() {
+        return ClientPlayerUseItemPacket.class;
+    }
 }

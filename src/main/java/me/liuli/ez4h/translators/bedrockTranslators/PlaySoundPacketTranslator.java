@@ -9,11 +9,24 @@ import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.SoundConverter;
 
+import java.util.Locale;
+
 public class PlaySoundPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         PlaySoundPacket packet=(PlaySoundPacket)inPacket;
         Vector3f pos=packet.getPosition();
-        client.sendPacket(new ServerPlayBuiltinSoundPacket(SoundConverter.convert(packet.getSound()), SoundCategory.VOICE, pos.getX(), pos.getY(), pos.getZ(), packet.getVolume(), packet.getPitch()));
+        SoundCategory category;
+        try {
+            category=SoundCategory.valueOf(packet.getSound().split("\\.")[0].toUpperCase());
+        } catch (Exception e) {
+            category=SoundCategory.AMBIENT;
+        }
+        client.sendPacket(new ServerPlayBuiltinSoundPacket(SoundConverter.convert(packet.getSound()), category, pos.getX(), pos.getY(), pos.getZ(), packet.getVolume(), packet.getPitch()));
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return PlaySoundPacket.class;
     }
 }

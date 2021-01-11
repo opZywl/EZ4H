@@ -14,4 +14,9 @@ public class SetEntityMotionPacketTranslator implements BedrockTranslator {
         Vector3f motion=packet.getMotion();
         client.sendPacket(new ServerEntityVelocityPacket((int) packet.getRuntimeEntityId(), motion.getX(), motion.getY(), motion.getZ()));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return SetEntityMotionPacket.class;
+    }
 }

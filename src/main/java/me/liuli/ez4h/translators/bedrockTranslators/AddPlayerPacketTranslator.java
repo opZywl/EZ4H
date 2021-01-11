@@ -15,12 +15,12 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.data.entity.EntityData;
 import com.nukkitx.protocol.bedrock.packet.AddPlayerPacket;
-import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 import me.liuli.ez4h.translators.converters.MetadataConverter;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.ArrayList;
 
@@ -37,6 +37,13 @@ public class AddPlayerPacketTranslator implements BedrockTranslator {
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"player"));
         client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, ItemConverter.convertToJE(packet.getHand())));
-        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId())));
+        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), new EntityMetadata[0]));
+        MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
+    }
+
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return AddPlayerPacket.class;
     }
 }

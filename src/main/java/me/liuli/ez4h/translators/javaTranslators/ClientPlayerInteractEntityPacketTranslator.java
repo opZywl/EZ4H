@@ -37,4 +37,9 @@ public class ClientPlayerInteractEntityPacketTranslator implements JavaTranslato
             }
         }
     }
+
+    @Override
+    public Class<ClientPlayerInteractEntityPacket> getPacketClass() {
+        return ClientPlayerInteractEntityPacket.class;
+    }
 }

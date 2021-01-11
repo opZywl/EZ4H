@@ -38,4 +38,10 @@ public class InventoryContentPacketTranslator implements BedrockTranslator {
         }
         client.sendPacket(new ServerWindowItemsPacket(0,client.clientStat.inventory));
     }
+
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return InventoryContentPacket.class;
+    }
 }

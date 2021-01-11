@@ -28,4 +28,9 @@ public class ClientPlayerPlaceBlockPacketTranslator implements JavaTranslator {
         useInventoryTransactionPacket.setBlockRuntimeId(0);
         client.sendPacket(useInventoryTransactionPacket);
     }
+
+    @Override
+    public Class<ClientPlayerPlaceBlockPacket> getPacketClass() {
+        return ClientPlayerPlaceBlockPacket.class;
+    }
 }

@@ -17,4 +17,9 @@ public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslato
         client.sendPacket(playerHotbarPacket);
         client.clientStat.slot=packet.getSlot();
     }
+
+    @Override
+    public Class<ClientPlayerChangeHeldItemPacket> getPacketClass() {
+        return ClientPlayerChangeHeldItemPacket.class;
+    }
 }

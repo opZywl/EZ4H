@@ -33,6 +33,7 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         client.sendPacket(movePlayerPacket);
         playerGround(client,packet.isOnGround(), packet.getY());
     }
+
     public static void playerGround(Client client, boolean onGround, double y){
         if(!onGround&&onGroundMap.get(client.playerName)&&playerYMap.get(client.playerName)<y){
             PlayerActionPacket playerActionPacket=new PlayerActionPacket();
@@ -44,5 +45,10 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         }
         onGroundMap.put(client.playerName,onGround);
         playerYMap.put(client.playerName,y);
+    }
+
+    @Override
+    public Class<ClientPlayerPositionRotationPacket> getPacketClass() {
+        return ClientPlayerPositionRotationPacket.class;
     }
 }

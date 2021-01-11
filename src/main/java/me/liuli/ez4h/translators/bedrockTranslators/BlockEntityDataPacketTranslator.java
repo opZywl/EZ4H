@@ -40,4 +40,9 @@ public class BlockEntityDataPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return BlockEntityDataPacket.class;
+    }
 }

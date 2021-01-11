@@ -59,4 +59,10 @@ public class LevelEventPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return LevelEventPacket.class;
+    }
 }

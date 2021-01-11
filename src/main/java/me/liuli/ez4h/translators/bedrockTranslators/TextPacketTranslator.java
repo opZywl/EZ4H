@@ -85,4 +85,9 @@ public class TextPacketTranslator implements BedrockTranslator {
     public static void load(JSONObject json){
         textJson=json;
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return TextPacket.class;
+    }
 }

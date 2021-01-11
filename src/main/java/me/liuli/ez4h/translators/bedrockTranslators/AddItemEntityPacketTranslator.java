@@ -9,8 +9,8 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.AddItemEntityPacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 
 import java.util.UUID;
@@ -25,5 +25,10 @@ public class AddItemEntityPacketTranslator implements BedrockTranslator {
         metadata[0]=new EntityMetadata(6, MetadataType.ITEM, ItemConverter.convertToJE(packet.getItemInHand()));
         client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
         client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return AddItemEntityPacket.class;
     }
 }

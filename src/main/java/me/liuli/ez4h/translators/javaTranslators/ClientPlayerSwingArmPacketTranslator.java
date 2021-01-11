@@ -15,4 +15,9 @@ public class ClientPlayerSwingArmPacketTranslator implements JavaTranslator {
         animatePacket.setRuntimeEntityId(client.clientStat.entityId);
         client.sendPacket(animatePacket);
     }
+
+    @Override
+    public Class<ClientPlayerSwingArmPacket> getPacketClass() {
+        return ClientPlayerSwingArmPacket.class;
+    }
 }

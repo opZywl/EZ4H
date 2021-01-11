@@ -1,7 +1,6 @@
 package me.liuli.ez4h;
 
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.bedrock.Ping;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -24,4 +24,9 @@ public class SetTitlePacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return SetTitlePacket.class;
+    }
 }

@@ -4,8 +4,10 @@ import com.github.steveice10.mc.protocol.data.game.entity.EntityStatus;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.github.steveice10.mc.protocol.data.game.world.WorldType;
+import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerDifficultyPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPlayerListDataPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityStatusPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
@@ -13,12 +15,20 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.Config;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.bedrock.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 public class StartGamePacketTranslator implements BedrockTranslator {
+    public static TextMessage player_list;
+    public StartGamePacketTranslator(){
+        player_list=Config.PLAYER_LIST;
+        if(player_list==null){
+            player_list=new TextMessage("null");
+        }
+    }
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         StartGamePacket packet=(StartGamePacket)inPacket;
@@ -26,6 +36,9 @@ public class StartGamePacketTranslator implements BedrockTranslator {
             return;
         }
         client.clientStat.onLogin=true;
+        //player list
+        ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.description,player_list);
+
         //packet what Sponge send to client
         ServerPluginMessagePacket pluginMessage1=new ServerPluginMessagePacket("REGISTER",new byte[]{83, 112, 111, 110, 103, 101});
         ServerPluginMessagePacket pluginMessage2=new ServerPluginMessagePacket("MC|Brand",new byte[]{13, 83, 112, 111, 110, 103, 101, 86, 97, 110, 105, 108, 108, 97});
@@ -59,6 +72,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
             client.sendPacket(serverJoinGamePacket);
             client.sendPacket(serverPlayerPositionRotationPacket);
             client.sendPacket(serverEntityStatusPacket);
+            client.sendPacket(serverPlayerListDataPacket);
         }else {
             client.clientStat.jPacketMap.put("PluginMessage1",pluginMessage1);
             client.clientStat.jPacketMap.put("PluginMessage2",pluginMessage2);
@@ -74,5 +88,10 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         RequestChunkRadiusPacket requestChunkRadiusPacket=new RequestChunkRadiusPacket();
         requestChunkRadiusPacket.setRadius(11);
         client.bedrockSession.sendPacket(requestChunkRadiusPacket);
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return StartGamePacket.class;
     }
 }

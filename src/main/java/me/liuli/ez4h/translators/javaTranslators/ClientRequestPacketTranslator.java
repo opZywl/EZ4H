@@ -22,4 +22,9 @@ public class ClientRequestPacketTranslator implements JavaTranslator {
             }
         }
     }
+
+    @Override
+    public Class<ClientRequestPacket> getPacketClass() {
+        return ClientRequestPacket.class;
+    }
 }

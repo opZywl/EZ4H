@@ -26,4 +26,9 @@ public class MobEquipmentPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return MobEquipmentPacket.class;
+    }
 }

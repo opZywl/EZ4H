@@ -7,9 +7,9 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.scoreboard.ServerD
 import com.github.steveice10.mc.protocol.packet.ingame.server.scoreboard.ServerScoreboardObjectivePacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.SetDisplayObjectivePacket;
-import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
     @Override
@@ -25,5 +25,10 @@ public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
                 break;
             }
         }
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return SetDisplayObjectivePacket.class;
     }
 }

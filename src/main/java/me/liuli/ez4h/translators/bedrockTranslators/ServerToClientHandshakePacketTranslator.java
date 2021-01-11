@@ -34,5 +34,10 @@ public class ServerToClientHandshakePacketTranslator  implements BedrockTranslat
         ClientToServerHandshakePacket clientToServerHandshake = new ClientToServerHandshakePacket();
         client.sendPacket(clientToServerHandshake);
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return ServerToClientHandshakePacket.class;
+    }
 }
 

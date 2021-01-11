@@ -47,4 +47,9 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             client.sendPacket(textPacket);
         }
     }
+
+    @Override
+    public Class<ClientChatPacket> getPacketClass() {
+        return ClientChatPacket.class;
+    }
 }

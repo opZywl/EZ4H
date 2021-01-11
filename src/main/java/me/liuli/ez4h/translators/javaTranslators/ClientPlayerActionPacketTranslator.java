@@ -72,6 +72,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             }
         }
     }
+
     private void dropItem(Client client,int itemCount){
         ItemData oldItem=client.clientStat.bedrockInventory[36+client.clientStat.slot];
         if(oldItem.getCount()==0){
@@ -105,5 +106,9 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         client.clientStat.inventory[client.clientStat.slot+36]=itemStack;
         client.clientStat.bedrockInventory[client.clientStat.slot+36]=newItem;
         client.sendPacket(new ServerSetSlotPacket(0, client.clientStat.slot+36,itemStack));
+    }
+    @Override
+    public Class<ClientPlayerActionPacket> getPacketClass() {
+        return ClientPlayerActionPacket.class;
     }
 }

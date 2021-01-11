@@ -17,4 +17,9 @@ public class MobArmorEquipmentPacketTranslator implements BedrockTranslator {
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.LEGGINGS, ItemConverter.convertToJE(packet.getLeggings())));
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.BOOTS, ItemConverter.convertToJE(packet.getBoots())));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return MobArmorEquipmentPacket.class;
+    }
 }

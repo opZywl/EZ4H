@@ -17,4 +17,9 @@ public class TakeItemEntityPacketTranslator implements BedrockTranslator {
         client.sendPacket(new ServerEntityDestroyPacket(entityIds));
         client.sendPacket(new ServerEntityCollectItemPacket((int)packet.getItemRuntimeEntityId(),(int)packet.getRuntimeEntityId(),1));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return TakeItemEntityPacket.class;
+    }
 }

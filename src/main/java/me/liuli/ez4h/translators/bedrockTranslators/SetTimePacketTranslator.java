@@ -12,4 +12,9 @@ public class SetTimePacketTranslator implements BedrockTranslator {
         SetTimePacket packet=(SetTimePacket)inPacket;
         client.sendPacket(new ServerUpdateTimePacket(0,packet.getTime()));
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return SetTimePacket.class;
+    }
 }

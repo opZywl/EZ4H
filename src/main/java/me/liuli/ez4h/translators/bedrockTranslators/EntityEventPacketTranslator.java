@@ -18,4 +18,9 @@ public class EntityEventPacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return EntityEventPacket.class;
+    }
 }

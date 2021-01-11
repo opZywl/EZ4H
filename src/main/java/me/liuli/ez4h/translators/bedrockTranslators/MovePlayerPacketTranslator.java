@@ -8,8 +8,8 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.utils.BedrockUtils;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {
@@ -48,5 +48,10 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
             entityInfo.z=position.getZ();
             client.sendPacket(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
         }
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return MovePlayerPacket.class;
     }
 }

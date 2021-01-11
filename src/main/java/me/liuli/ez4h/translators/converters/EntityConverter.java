@@ -3,6 +3,7 @@ package me.liuli.ez4h.translators.converters;
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntry;
 import com.github.steveice10.mc.protocol.data.game.PlayerListEntryAction;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.entity.type.GlobalEntityType;
@@ -17,9 +18,9 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.*;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.packet.AddEntityPacket;
 import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.cache.EntityInfo;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -34,11 +35,13 @@ public class EntityConverter {
         }
         if(entityType instanceof MobType){
             Vector3f position=packet.getPosition(),rotation=packet.getRotation(),motion=packet.getMotion();
-            client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()),(MobType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(),rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId())));
+            client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()),(MobType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(),rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
+            MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
         }else if(entityType instanceof ObjectType){
             Vector3f position=packet.getPosition(),rotation=packet.getRotation(),motion=packet.getMotion();
             client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()),(ObjectType)entityType, position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
-            client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId())));
+            client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),new EntityMetadata[0]));
+            MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
         }else if(entityType instanceof GlobalEntityType){
             Vector3f position=packet.getPosition();
             client.sendPacket(new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(),(GlobalEntityType)entityType, position.getX(), position.getY()+1.62, position.getZ()));
@@ -53,7 +56,8 @@ public class EntityConverter {
 
         Vector3f position=packet.getPosition(),rotation=packet.getRotation();
         client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(),"player"));
-        client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),uuid, position.getX(), position.getY()+1.62, position.getZ(),rotation.getY(),rotation.getX(), MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId())));
+        client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),uuid, position.getX(), position.getY()+1.62, position.getZ(),rotation.getY(),rotation.getX(), new EntityMetadata[0]));
+        MetadataConverter.convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
 
         client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
     }

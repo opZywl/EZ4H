@@ -11,4 +11,9 @@ public class DisconnectPacketTranslator implements BedrockTranslator {
         DisconnectPacket packet=(DisconnectPacket)inPacket;
         client.javaSession.disconnect(packet.getKickMessage());
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return DisconnectPacket.class;
+    }
 }

@@ -79,4 +79,9 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
         ServerChunkDataPacket serverChunkDataPacket=new ServerChunkDataPacket(new Column(chunkX,chunkZ,chunkSections,biomeArray,new CompoundTag[0]));
         client.sendPacket(serverChunkDataPacket);
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return LevelChunkPacket.class;
+    }
 }

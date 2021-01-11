@@ -24,4 +24,9 @@ public class ClientPlayerPositionPacketTranslator implements JavaTranslator {
         client.sendPacket(movePlayerPacket);
         ClientPlayerPositionRotationPacketTranslator.playerGround(client,packet.isOnGround(),packet.getY());
     }
+
+    @Override
+    public Class<ClientPlayerPositionPacket> getPacketClass() {
+        return ClientPlayerPositionPacket.class;
+    }
 }

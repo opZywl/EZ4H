@@ -70,6 +70,11 @@
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.12</version>
+        </dependency>
     </dependencies>
 
 </project>

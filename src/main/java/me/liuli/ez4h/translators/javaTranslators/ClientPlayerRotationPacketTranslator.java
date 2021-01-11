@@ -22,4 +22,9 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
         client.clientStat.pitch= (float) packet.getPitch();
         client.sendPacket(movePlayerPacket);
     }
+
+    @Override
+    public Class<ClientPlayerRotationPacket> getPacketClass() {
+        return ClientPlayerRotationPacket.class;
+    }
 }

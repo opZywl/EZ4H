@@ -26,13 +26,6 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
         switch (packet.getEvent()){
             case ADD:
             case MODIFY: {
-                switch (effect){
-                    case SPEED:{
-                        List<Attribute> attributes1=new ArrayList<>();
-                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1+packet.getAmplifier()*0.02));
-                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
-                    }
-                }
                 EntityMetadata[] metadata=new EntityMetadata[1];
                 metadata[0]=new EntityMetadata(8, MetadataType.INT, packet.getEffectId());
                 client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
@@ -40,13 +33,6 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
                 break;
             }
             case REMOVE:{
-                switch (effect){
-                    case SPEED:{
-                        List<Attribute> attributes1=new ArrayList<>();
-                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,0.1));
-                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));
-                    }
-                }
                 EntityMetadata[] metadata=new EntityMetadata[1];
                 metadata[0]=new EntityMetadata(8, MetadataType.INT, 0);
                 client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
@@ -54,5 +40,10 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
                 break;
             }
         }
+    }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return MobEffectPacket.class;
     }
 }

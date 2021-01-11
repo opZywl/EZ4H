@@ -35,4 +35,9 @@ public class SetScorePacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return SetScorePacket.class;
+    }
 }

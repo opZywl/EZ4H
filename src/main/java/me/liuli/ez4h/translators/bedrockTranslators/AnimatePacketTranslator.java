@@ -30,4 +30,9 @@ public class AnimatePacketTranslator implements BedrockTranslator {
             }
         }
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return AnimatePacket.class;
+    }
 }

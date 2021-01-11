@@ -48,4 +48,9 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
             }
         }
     }
+
+    @Override
+    public Class<ClientPlayerStatePacket> getPacketClass() {
+        return ClientPlayerStatePacket.class;
+    }
 }

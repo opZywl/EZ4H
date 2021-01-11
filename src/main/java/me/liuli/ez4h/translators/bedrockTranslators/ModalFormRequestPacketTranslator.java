@@ -12,4 +12,9 @@ public class ModalFormRequestPacketTranslator implements BedrockTranslator {
         ModalFormRequestPacket packet=(ModalFormRequestPacket)inPacket;
         FormConverter.showForm(client,packet.getFormData(),packet.getFormId());
     }
+
+    @Override
+    public Class<? extends BedrockPacket> getPacketClass() {
+        return ModalFormRequestPacket.class;
+    }
 }

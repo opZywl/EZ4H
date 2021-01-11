@@ -1,6 +1,7 @@
 package me.liuli.ez4h;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.steveice10.mc.protocol.data.message.TextMessage;
 
 public class Config {
     public static JSONObject cfg;
@@ -10,7 +11,7 @@ public class Config {
     public static String BE_HOST;
     public static int BE_PORT;
     public static boolean XBOX_AUTH;
-    public static String PLAYER_LIST;
+    public static TextMessage PLAYER_LIST;
     public static int DEBUG_LEVEL;
 
     public static void load(JSONObject json){
@@ -21,7 +22,7 @@ public class Config {
         BE_HOST=json.getString("be_host");
         BE_PORT=json.getInteger("be_port");
         XBOX_AUTH=json.getBoolean("xbox-auth");
-        PLAYER_LIST=json.getString("player-list");
+        PLAYER_LIST=new TextMessage(json.getString("player-list"));
 
         JSONObject advanced=json.getJSONObject("advanced");
         DEBUG_LEVEL=advanced.getInteger("debug");
