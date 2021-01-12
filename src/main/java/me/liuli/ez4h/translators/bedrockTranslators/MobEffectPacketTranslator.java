@@ -1,22 +1,16 @@
 package me.liuli.ez4h.translators.bedrockTranslators;
 
 import com.github.steveice10.mc.protocol.data.game.entity.Effect;
-import com.github.steveice10.mc.protocol.data.game.entity.attribute.Attribute;
-import com.github.steveice10.mc.protocol.data.game.entity.attribute.AttributeType;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityEffectPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityMetadataPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityPropertiesPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityRemoveEffectPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.MobEffectPacket;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.EffectConverter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MobEffectPacketTranslator implements BedrockTranslator {
     @Override

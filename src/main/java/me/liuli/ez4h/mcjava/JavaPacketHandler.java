@@ -27,9 +27,9 @@ public class JavaPacketHandler extends SessionAdapter {
                 Variables.logger.warning("Java > "+packet.toString());
             }
             if(((MinecraftProtocol) event.getSession().getPacketProtocol()).getSubProtocol() == SubProtocol.STATUS) {
-                if(event.getPacket() instanceof StatusQueryPacket) {
+                if(packet instanceof StatusQueryPacket) {
                     Ping.doPing(event.getSession());
-                } else if(event.getPacket() instanceof StatusPingPacket) {
+                } else if(packet instanceof StatusPingPacket) {
                     event.getSession().send(new StatusPongPacket(event.<StatusPingPacket>getPacket().getPingTime()));
                 }
                 return;

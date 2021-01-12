@@ -33,6 +33,7 @@ public class BlockConverter {
             }
         }
     }
+    //TODO:Make this faster
     //Process time TOO LONG :(
     public static void addLight(NibbleArray3d lightArray,int light,int X,int Y,int Z){
         int posX=Math.max((X - light), 0),posXend=Math.min(X + light, 15),

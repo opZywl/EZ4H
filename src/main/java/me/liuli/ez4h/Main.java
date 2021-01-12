@@ -108,7 +108,7 @@ public class Main {
         for(Class<? extends BedrockTranslator> translatorClass:subTypes){
             try {
                 BedrockTranslator bedrockTranslator=translatorClass.newInstance();
-                BedrockTranslatorManager.addTranslator(bedrockTranslator,bedrockTranslator.getPacketClass());
+                BedrockTranslatorManager.addTranslator(bedrockTranslator);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,7 +133,7 @@ public class Main {
         for(Class<? extends JavaTranslator> translatorClass:subTypes){
             try {
                 JavaTranslator javaTranslator=translatorClass.newInstance();
-                JavaTranslatorManager.addTranslator(javaTranslator,javaTranslator.getPacketClass());
+                JavaTranslatorManager.addTranslator(javaTranslator);
             } catch (Exception e) {
                 e.printStackTrace();
             }

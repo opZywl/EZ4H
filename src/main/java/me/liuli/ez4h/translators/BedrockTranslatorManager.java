@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class BedrockTranslatorManager {
     private static Map<Class, BedrockTranslator> packetTranslators = new HashMap<>();
-    public static void addTranslator(BedrockTranslator translator, Class clazz){
-        packetTranslators.put(clazz,translator);
+    public static void addTranslator(BedrockTranslator translator){
+        packetTranslators.put(translator.getPacketClass(),translator);
     }
     public static void translatePacket(BedrockPacket packet, Client client){
         BedrockTranslator translator=packetTranslators.get(packet.getClass());
