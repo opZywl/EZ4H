@@ -8,7 +8,7 @@ import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.bedrock.auth.XboxAuthtoken;
+import me.liuli.ez4h.bedrock.auth.XboxLogin;
 
 public class FakeServer extends SessionAdapter {
     public AuthAlertThread runnable;
@@ -45,7 +45,7 @@ public class FakeServer extends SessionAdapter {
                 return;
             }
             try {
-                Variables.accessTokens.put(playerName, XboxAuthtoken.getAccessToken(XboxAuthtoken.getPreAuthToken(),message[0],message[1]));
+                Variables.accessTokens.put(playerName,new XboxLogin(message[0],message[1]).getAccessToken());
                 runnable.session.send(new ServerTitlePacket(true));
                 runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
                 setAuthstat(3);

@@ -6,7 +6,6 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.Serv
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
-import com.nukkitx.protocol.bedrock.packet.AnimatePacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import com.nukkitx.protocol.bedrock.packet.RespawnPacket;
@@ -46,6 +45,6 @@ public class RespawnPacketTranslator implements BedrockTranslator {
 
     @Override
     public Class<? extends BedrockPacket> getPacketClass() {
-        return AnimatePacket.class;
+        return RespawnPacket.class;
     }
 }

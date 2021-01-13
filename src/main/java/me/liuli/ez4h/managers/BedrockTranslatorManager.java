@@ -1,9 +1,10 @@
-package me.liuli.ez4h.translators;
+package me.liuli.ez4h.managers;
 
 import com.nukkitx.protocol.bedrock.BedrockPacket;
-import me.liuli.ez4h.Config;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.Variables;
 import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.translators.BedrockTranslator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,8 @@ public class BedrockTranslatorManager {
         if(translator!=null){
             translator.translate(packet,client);
         }else{
-            if(Config.DEBUG_LEVEL ==1){
-                Variables.logger.warning("Bedrock > "+packet.toString());
+            if(EZ4H.getConfigManager().getDebugLevel()==1){
+                Variables.logger.debug("Bedrock > "+packet.toString());
             }
         }
     }

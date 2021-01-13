@@ -1,6 +1,7 @@
 package me.liuli.ez4h.bedrock.auth;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Getter;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -13,9 +14,16 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 //Translate to java from https://github.com/XboxReplay/xboxlive-auth
-public class XboxAuthtoken {
+public class XboxLogin {
     private static String XBOX_PRE_AUTH_URL="https://login.live.com/oauth20_authorize.srf?client_id=000000004C12AE6F&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&display=touch&response_type=token&locale=en";
-    public static JSONObject getPreAuthToken() throws Exception{
+
+    @Getter
+    private String accessToken="";
+
+    public XboxLogin(String username,String password) throws Exception {
+        accessToken=doLogin(getPreAuthToken(),username,password);
+    }
+    private JSONObject getPreAuthToken() throws Exception{
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
         connection.setRequestMethod("GET");
         setBaseHeaders(connection);
@@ -34,7 +42,7 @@ public class XboxAuthtoken {
         resJson.put("cookie",allCookie);
         return resJson;
     }
-    public static String getAccessToken(JSONObject authToken,String username,String password)throws Exception{
+    private String doLogin(JSONObject authToken,String username,String password) throws Exception{
         HttpsURLConnection connection = (HttpsURLConnection) new URL(authToken.getString("urlPost")).openConnection();
         connection.setRequestMethod("POST");
         setBaseHeaders(connection);
@@ -71,7 +79,7 @@ public class XboxAuthtoken {
         is.close();
         return access_token;
     }
-    private static String findArgs(String str,String args){
+    private String findArgs(String str,String args){
         if(str.contains(args)){
             int pos=str.indexOf(args);
             String result=str.substring(pos+args.length());
@@ -82,12 +90,12 @@ public class XboxAuthtoken {
             throw new IllegalArgumentException("CANNOT FIND ARGUMENT");
         }
     }
-    private static void setBaseHeaders(HttpsURLConnection connection){
+    private void setBaseHeaders(HttpsURLConnection connection){
         connection.setRequestProperty("Accept-encoding","gzip");
         connection.setRequestProperty("Accept-Language","en-US");
         connection.setRequestProperty("User-Agent","Mozilla/5.0 (XboxReplay; XboxLiveAuth/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
     }
-    private static String uncompressGzip(InputStream inputStream) throws IOException {
+    private String uncompressGzip(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         GZIPInputStream gZIPInputStream = new GZIPInputStream(inputStream);
         byte[] buffer = new byte[1024];

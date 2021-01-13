@@ -12,19 +12,20 @@ public class InitLibs {
     public static void main(String[] args){
         launchTime=new Date().getTime();
         new File("./libs").mkdir();
-        System.out.println("Loading libs...");
         loadLib();
         System.out.println("Starting EZ4H v"+VERSION);
-        Main.main(args);
+        EZ4H.main(args);
     }
     public static void loadLib(){
+        int libCount=0;
         File[] files=new File("./libs").listFiles();
         for(File file:files){
             if(getSuffix(file.getName()).equals("jar")) {
-                System.out.println("Loading " + file.getName() + " as a lib!");
                 injectClass(file);
+                libCount++;
             }
         }
+        System.out.println(libCount+" Libs Loaded!");
     }
     private static void injectClass(File file) {
         try {

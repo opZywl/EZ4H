@@ -2,7 +2,7 @@ package me.liuli.ez4h.bedrock.auth;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import me.liuli.ez4h.Main;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.utils.FileUtils;
 import me.liuli.ez4h.utils.OtherUtils;
 
@@ -208,7 +208,7 @@ public class Xbox {
 		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setRequestProperty("Authorization", "XBL3.0 x=" + xstsObject.getJSONObject("DisplayClaims").getJSONArray("xui").getJSONObject(0).getString("uhs") + ";" + xstsObject.getString("Token"));
 		connection.setRequestProperty("User-Agent", "MCPE/UWP");
-		connection.setRequestProperty("Client-Version", Main.BEDROCK_CODEC.getMinecraftVersion());
+		connection.setRequestProperty("Client-Version", EZ4H.getCommonManager().getBedrockCodec().getMinecraftVersion());
 
 		this.writeJsonObjectToPost(connection, jsonObject);
 

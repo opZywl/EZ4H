@@ -1,8 +1,8 @@
-package me.liuli.ez4h.command.commands;
+package me.liuli.ez4h.managers.command.commands;
 
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.command.CommandBase;
+import me.liuli.ez4h.managers.command.CommandBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public class SayCommand implements CommandBase {
     @Override
     public String getHelpMessage(){
-        return "Say Messages To Server.";
+        return "Send Messages To Server.";
     }
     @Override
     public void exec(String[] args, Client client){

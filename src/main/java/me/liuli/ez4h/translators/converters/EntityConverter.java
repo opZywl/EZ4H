@@ -29,7 +29,7 @@ public class EntityConverter {
     public static void convert(AddEntityPacket packet, Client client, EntityInfo entityInfo){
         Object entityType=convertEntityType(packet,client);
         if(entityType==null){
-            Variables.logger.warning("FAILED TO CONVERT ENTITY:"+packet.getIdentifier());
+            Variables.logger.warn("FAILED TO CONVERT ENTITY:"+packet.getIdentifier());
             entityInfo.type="unknown_entity";
             addUnknownEntity(packet,client);
         }

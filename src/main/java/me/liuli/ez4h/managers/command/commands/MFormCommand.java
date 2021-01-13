@@ -1,8 +1,8 @@
-package me.liuli.ez4h.command.commands;
+package me.liuli.ez4h.managers.command.commands;
 
 import com.nukkitx.protocol.bedrock.packet.ModalFormResponsePacket;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.command.CommandBase;
+import me.liuli.ez4h.managers.command.CommandBase;
 import me.liuli.ez4h.translators.cache.Form;
 
 public class MFormCommand implements CommandBase {

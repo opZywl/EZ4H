@@ -6,8 +6,8 @@ import com.nukkitx.protocol.bedrock.data.command.CommandOriginData;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginType;
 import com.nukkitx.protocol.bedrock.packet.CommandRequestPacket;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.command.CommandManager;
 import me.liuli.ez4h.translators.JavaTranslator;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
                         argsList[i-1]=commandList[i];
                     }
                 }
-                CommandManager.runCommand(commandList[0],argsList,client);
+                EZ4H.getCommandManager().runCommand(commandList[0],argsList,client);
             }
         }else{
             TextPacket textPacket = new TextPacket();

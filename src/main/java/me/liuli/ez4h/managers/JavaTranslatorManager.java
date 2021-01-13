@@ -1,9 +1,10 @@
-package me.liuli.ez4h.translators;
+package me.liuli.ez4h.managers;
 
 import com.github.steveice10.packetlib.packet.Packet;
-import me.liuli.ez4h.Config;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.Variables;
 import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.translators.JavaTranslator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +19,8 @@ public class JavaTranslatorManager {
         if(translator!=null) {
             translator.translate(packet, client);
         }else{
-            if(Config.DEBUG_LEVEL==1){
-                Variables.logger.warning("Java > "+packet.toString());
+            if(EZ4H.getConfigManager().getDebugLevel()==1){
+                Variables.logger.debug("Java > "+packet.toString());
             }
         }
     }

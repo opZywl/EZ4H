@@ -11,11 +11,11 @@ import com.github.steveice10.mc.protocol.packet.status.server.StatusPongPacket;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.packet.Packet;
-import me.liuli.ez4h.Config;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.Variables;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.bedrock.Ping;
-import me.liuli.ez4h.translators.JavaTranslatorManager;
+import me.liuli.ez4h.managers.JavaTranslatorManager;
 import me.liuli.ez4h.utils.OtherUtils;
 
 public class JavaPacketHandler extends SessionAdapter {
@@ -23,12 +23,12 @@ public class JavaPacketHandler extends SessionAdapter {
     public void packetReceived(PacketReceivedEvent event) {
         try {
             Packet packet=event.getPacket();
-            if(Config.DEBUG_LEVEL==2){
-                Variables.logger.warning("Java > "+packet.toString());
+            if(EZ4H.getConfigManager().getDebugLevel()==2){
+                Variables.logger.debug("Java > "+packet.toString());
             }
             if(((MinecraftProtocol) event.getSession().getPacketProtocol()).getSubProtocol() == SubProtocol.STATUS) {
                 if(packet instanceof StatusQueryPacket) {
-                    Ping.doPing(event.getSession());
+                    new Ping(event.getSession());
                 } else if(packet instanceof StatusPingPacket) {
                     event.getSession().send(new StatusPongPacket(event.<StatusPingPacket>getPacket().getPingTime()));
                 }
@@ -41,7 +41,7 @@ public class JavaPacketHandler extends SessionAdapter {
             }
             if(event.getPacket().getClass().equals(LoginStartPacket.class)){
                 LoginStartPacket lpacket=event.getPacket();
-                if(!Config.XBOX_AUTH|| Variables.accessTokens.containsKey(lpacket.getUsername())) {
+                if(!EZ4H.getConfigManager().isXboxAuth()||Variables.accessTokens.containsKey(lpacket.getUsername())) {
                     Client client_n = new Client(event, lpacket.getUsername());
                     Variables.clientMap.put(lpacket.getUsername(), client_n);
                 }else{
@@ -53,7 +53,7 @@ public class JavaPacketHandler extends SessionAdapter {
                     try {
                         JavaTranslatorManager.translatePacket(packet, client);
                     }catch (Throwable t){
-                        Variables.logger.throwing("ERROR","TRANSLATE JAVA PACKET ERROR:"+packet.toString(),t);
+                        Variables.logger.throwing(t);
                     }
                 }
             }

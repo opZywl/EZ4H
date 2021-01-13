@@ -1,10 +1,10 @@
 package me.liuli.ez4h;
 
 import me.liuli.ez4h.bedrock.Client;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class Variables {
     public static Logger logger;

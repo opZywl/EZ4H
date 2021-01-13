@@ -26,6 +26,9 @@ public class MetadataConverter {
         client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[metadata.size()])));
         metadata.clear();
 
+        if(bedrockMetadata.getFlags()==null)
+            return;
+
         EntityInfo.Pose pose = EntityInfo.Pose.NONE;
         if (bedrockMetadata.getFlags().getFlag(EntityFlag.SNEAKING)) {
             pose = EntityInfo.Pose.SNEAK;

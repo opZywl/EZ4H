@@ -27,32 +27,32 @@ public class LevelEventPacketTranslator implements BedrockTranslator {
             }
             case STOP_RAINING:{
                 if(client.clientStat.rain){
-                    SmoothWeather.changeWeather(0,false,client);
+                    new SmoothWeather(0,false,client);
                     client.clientStat.rain=false;
                 }
                 break;
             }
             case START_RAINING:{
                 if(!client.clientStat.rain){
-                    SmoothWeather.changeWeather(1,false,client);
+                    new SmoothWeather(1,false,client);
                     client.clientStat.rain=true;
                 }
                 if(client.clientStat.thunder){
-                    SmoothWeather.changeWeather(0,true,client);
+                    new SmoothWeather(0,true,client);
                     client.clientStat.thunder=false;
                 }
                 break;
             }
             case START_THUNDERSTORM:{
                 if(!client.clientStat.thunder){
-                    SmoothWeather.changeWeather(1,true,client);
+                    new SmoothWeather(1,true,client);
                     client.clientStat.thunder=true;
                 }
                 break;
             }
             case STOP_THUNDERSTORM:{
                 if(client.clientStat.thunder){
-                    SmoothWeather.changeWeather(0,true,client);
+                    new SmoothWeather(0,true,client);
                     client.clientStat.thunder=false;
                 }
                 break;

@@ -8,6 +8,10 @@
     <artifactId>EZ4H</artifactId>
     <version>1.0</version>
 
+    <properties>
+        <log4j2.version>2.13.3</log4j2.version>
+    </properties>
+
     <licenses>
         <license>
             <name>MIT</name>
@@ -44,6 +48,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>nukkitx-repo-release</id>
             <url>https://repo.nukkitx.com/maven-releases/</url>
         </repository>
@@ -54,12 +62,53 @@
     </repositories>
 
     <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <!-- MCJava PacketLib -->
+        <dependency>
+            <groupId>com.github.steveice10</groupId>
+            <artifactId>opennbt</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.steveice10</groupId>
+            <artifactId>packetlib</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.steveice10</groupId>
+            <artifactId>mcauthlib</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Bedrock PacketLib -->
         <dependency>
             <groupId>com.nukkitx.protocol</groupId>
             <artifactId>bedrock-v422</artifactId>
             <version>2.6.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Other Depends -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -74,6 +123,12 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.14</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

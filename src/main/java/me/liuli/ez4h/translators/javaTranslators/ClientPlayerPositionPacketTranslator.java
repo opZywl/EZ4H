@@ -22,7 +22,7 @@ public class ClientPlayerPositionPacketTranslator implements JavaTranslator {
         movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
         movePlayerPacket.setRotation(Vector3f.from(client.clientStat.pitch,client.clientStat.yaw,0));
         client.sendPacket(movePlayerPacket);
-        ClientPlayerPositionRotationPacketTranslator.playerGround(client,packet.isOnGround(),packet.getY());
+        ClientPlayerPositionRotationPacketTranslator.playerGround(client,packet.isOnGround());
     }
 
     @Override

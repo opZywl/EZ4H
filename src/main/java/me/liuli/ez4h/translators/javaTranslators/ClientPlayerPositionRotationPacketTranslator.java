@@ -13,8 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientPlayerPositionRotationPacketTranslator implements JavaTranslator {
-    private static Map<String, Boolean> onGroundMap=new HashMap<>();
-    private static Map<String, Double> playerYMap=new HashMap<>();
+    private static Map<String, Boolean> canJumpMap=new HashMap<>();
     @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerPositionRotationPacket packet=(ClientPlayerPositionRotationPacket)inPacket;
@@ -31,20 +30,23 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         client.clientStat.yaw= (float) packet.getYaw();
         client.clientStat.pitch= (float) packet.getPitch();
         client.sendPacket(movePlayerPacket);
-        playerGround(client,packet.isOnGround(), packet.getY());
+        playerGround(client,packet.isOnGround());
     }
 
-    public static void playerGround(Client client, boolean onGround, double y){
-        if(!onGround&&onGroundMap.get(client.playerName)&&playerYMap.get(client.playerName)<y){
+    public static void playerGround(Client client, boolean onGround){
+        canJumpMap.putIfAbsent(client.playerName, true);
+        if(!onGround&&canJumpMap.get(client.playerName)){
             PlayerActionPacket playerActionPacket=new PlayerActionPacket();
             playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
             playerActionPacket.setAction(PlayerActionPacket.Action.JUMP);
             playerActionPacket.setBlockPosition(Vector3i.ZERO);
             playerActionPacket.setFace(0);
             client.sendPacket(playerActionPacket);
+            canJumpMap.put(client.playerName,false);
         }
-        onGroundMap.put(client.playerName,onGround);
-        playerYMap.put(client.playerName,y);
+        if(onGround){
+            canJumpMap.put(client.playerName,true);
+        }
     }
 
     @Override

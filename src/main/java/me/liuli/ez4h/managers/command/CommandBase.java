@@ -1,4 +1,4 @@
-package me.liuli.ez4h.command;
+package me.liuli.ez4h.managers.command;
 
 import me.liuli.ez4h.bedrock.Client;
 

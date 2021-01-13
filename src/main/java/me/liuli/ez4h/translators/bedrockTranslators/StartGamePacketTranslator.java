@@ -15,7 +15,7 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
-import me.liuli.ez4h.Config;
+import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.bedrock.Client;
 import me.liuli.ez4h.bedrock.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
@@ -24,7 +24,7 @@ import me.liuli.ez4h.utils.BedrockUtils;
 public class StartGamePacketTranslator implements BedrockTranslator {
     public static TextMessage player_list;
     public StartGamePacketTranslator(){
-        player_list=Config.PLAYER_LIST;
+        player_list=EZ4H.getConfigManager().getPlayerList();
         if(player_list==null){
             player_list=new TextMessage("null");
         }
@@ -37,7 +37,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         }
         client.clientStat.onLogin=true;
         //player list
-        ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.description,player_list);
+        ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.getDescription(),player_list);
 
         //packet what Sponge send to client
         ServerPluginMessagePacket pluginMessage1=new ServerPluginMessagePacket("REGISTER",new byte[]{83, 112, 111, 110, 103, 101});
@@ -59,7 +59,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
                 gamemode,
                 packet.getDimensionId(),
                 BedrockUtils.convertDifficultyToJE(packet.getDifficulty()),
-                Ping.maxPlayer,
+                0,
                 WorldType.CUSTOMIZED,
                 true
         );

@@ -6,7 +6,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotify
 import me.liuli.ez4h.bedrock.Client;
 
 public class SmoothWeather {
-    public static void changeWeather(float to, boolean isThunder, Client client){
+    public SmoothWeather(float to, boolean isThunder, Client client){
         WeatherThread weatherThread=new WeatherThread();
         weatherThread.isThunder=isThunder;
         weatherThread.to=to;
