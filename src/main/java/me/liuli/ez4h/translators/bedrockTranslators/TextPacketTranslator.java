@@ -5,11 +5,11 @@ import com.github.steveice10.mc.protocol.data.game.MessageType;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class TextPacketTranslator implements BedrockTranslator {
-    private static JSONObject textJson;
+    private JSONObject textJson;
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         TextPacket packet=(TextPacket)inPacket;
@@ -29,7 +29,7 @@ public class TextPacketTranslator implements BedrockTranslator {
             }
         }
     }
-    private static String translateMessage(TextPacket packet){
+    private String translateMessage(TextPacket packet){
         String noColorMsg=colorTaker(packet.getMessage());
         boolean has5=false;
         if(noColorMsg.charAt(0) == '%'){
@@ -51,14 +51,14 @@ public class TextPacketTranslator implements BedrockTranslator {
         }
         return packet.getMessage();
     }
-    private static String convertSingle(String msg){
+    private String convertSingle(String msg){
         String tr= (String) textJson.get(msg);
         if(tr==null){
             return msg;
         }
         return tr;
     }
-    private static String colorTaker(String msg){
+    private String colorTaker(String msg){
         return msg.replaceAll("§0","")
                 .replaceAll("§1","")
                 .replaceAll("§2","")
@@ -82,7 +82,7 @@ public class TextPacketTranslator implements BedrockTranslator {
                 .replaceAll("§o","")
                 .replaceAll("§r","");
     }
-    public static void load(JSONObject json){
+    public void load(JSONObject json){
         textJson=json;
     }
 

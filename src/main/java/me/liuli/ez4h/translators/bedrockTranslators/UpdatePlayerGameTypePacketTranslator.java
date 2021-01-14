@@ -4,7 +4,7 @@ import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotificati
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotifyClientPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.UpdatePlayerGameTypePacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.utils.BedrockUtils;
 

@@ -11,7 +11,8 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.BlockConverter;
 import me.liuli.ez4h.utils.nukkit.BitArray;
@@ -24,6 +25,8 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
     public void translate(BedrockPacket inPacket, Client client) {
         LevelChunkPacket packet=(LevelChunkPacket)inPacket;
         Chunk[] chunkSections = new Chunk[16];
+
+        BlockConverter blockConverter=EZ4H.getConverterManager().getBlockConverter();
 
         int chunkX = packet.getChunkX();
         int chunkZ = packet.getChunkZ();
@@ -59,10 +62,10 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                     for (int z = 0; z < 16; z++) {
                         for (int y = 0; y < 16; y++) {
                             int paletteIndex = bitArray.get(index);
-                            String mcbeBlockName = BlockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
+                            String mcbeBlockName = blockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
                             if (!mcbeBlockName.equals("air")) {
-                                blockStorage.set(x,y,z, BlockConverter.getBlockByName(mcbeBlockName));
-                                int light=BlockConverter.getBlockLightByName(mcbeBlockName);
+                                blockStorage.set(x,y,z,blockConverter.getBlockByName(mcbeBlockName));
+                                int light=blockConverter.getBlockLightByName(mcbeBlockName);
                                 if(light>0) {
                                     lightArray.set(x,y,z,light);
                                 }
@@ -72,7 +75,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                     }
                 }
             }
-            chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, BlockConverter.FULL_LIGHT);
+            chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, blockConverter.getFullLight());
         }
         byte[] biomeArray = new byte[256];
         Arrays.fill(biomeArray, (byte) 1);

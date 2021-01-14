@@ -4,7 +4,8 @@ import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.InventorySlotPacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 
@@ -12,13 +13,16 @@ public class InventorySlotPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         InventorySlotPacket packet=(InventorySlotPacket)inPacket;
-        ItemStack itemStack= ItemConverter.convertToJE(packet.getItem());
+
+        ItemConverter itemConverter=EZ4H.getConverterManager().getItemConverter();
+
+        ItemStack itemStack=itemConverter.convertToJE(packet.getItem());
         ServerSetSlotPacket serverSetSlotPacket;
         switch (packet.getContainerId()){
             case 0:{
-                client.clientStat.inventory[ItemConverter.inventoryIndex(packet.getSlot(),false)]=itemStack;
-                client.clientStat.bedrockInventory[ItemConverter.inventoryIndex(packet.getSlot(),false)]=packet.getItem();
-                serverSetSlotPacket=new ServerSetSlotPacket(0, ItemConverter.inventoryIndex(packet.getSlot(),false),itemStack);
+                client.clientStat.inventory[itemConverter.inventoryIndex(packet.getSlot(),false)]=itemStack;
+                client.clientStat.bedrockInventory[itemConverter.inventoryIndex(packet.getSlot(),false)]=packet.getItem();
+                serverSetSlotPacket=new ServerSetSlotPacket(0, itemConverter.inventoryIndex(packet.getSlot(),false),itemStack);
                 break;
             }
             case 119:{

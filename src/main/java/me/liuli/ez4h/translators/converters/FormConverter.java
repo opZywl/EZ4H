@@ -3,7 +3,7 @@ package me.liuli.ez4h.translators.converters;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.cache.Form;
 import me.liuli.ez4h.utils.OtherUtils;
 
@@ -12,7 +12,7 @@ import me.liuli.ez4h.utils.OtherUtils;
 //advanced form:{"type":"custom_form","title":"TITLE","content":[{"type":"label","text":"This is a Label"},{"type":"input","text":"Input Title","placeholder":"A Placeholder","default":"DefaultText"},{"type":"input","text":"Input without DefaultText","placeholder":"A Placeholder","default":""},{"type":"toggle","text":"A Toggle","default":true},{"type":"toggle","text":"A Toggle without default","default":false},{"type":"dropdown","text":"Dropdown","options":["1","2","3"],"default":1},{"type":"dropdown","text":"Dropdown","options":["1","2","3"],"default":0},{"type":"slider","text":"Slider","min":0.0,"max":10.0,"step":0,"default":0.0},{"type":"slider","text":"Slider","min":0.0,"max":10.0,"step":2,"default":0.0},{"type":"slider","text":"Slider","min":0.0,"max":10.0,"step":3,"default":5.0},{"type":"step_slider","text":"StepSlider","steps":["1","2","3","4"],"default":0},{"type":"step_slider","text":"StepSlider","steps":["1","2","3","4"],"default":2}],"closed":false}
 //advanced form response:[null,"DefaultText","",true,false,1,0,0.0,4.0,6.0,3,2]
 public class FormConverter {
-    public static void showForm(Client client, String formJson, int formId){
+    public void showForm(Client client, String formJson, int formId){
         JSONObject formJSON=JSONObject.parseObject(formJson);
         formJSON.put("id",formId);
         JSONObject formJ=new JSONObject();
@@ -27,8 +27,8 @@ public class FormConverter {
             showModalForm(client,formJSON);
         }
     }
-    public static void showModalForm(Client client, JSONObject formJson){
-        client.clientStat.formData=new Form(1,0,formJson);
+    public void showModalForm(Client client, JSONObject formJson){
+        client.clientStat.formData=new Form(Form.Type.MODAL,0,formJson);
         client.sendAlert("You Received A Modal FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         client.sendMessage("Content:"+formJson.getString("content"));
@@ -37,9 +37,9 @@ public class FormConverter {
         client.sendMessage("\nUse `mform choose <1/2> to click button.");
         client.sendMessage("Use `mform close to close the window.");
     }
-    public static void showSimpleForm(Client client, JSONObject formJson){
+    public void showSimpleForm(Client client, JSONObject formJson){
         JSONArray buttons=formJson.getJSONArray("buttons");
-        client.clientStat.formData=new Form(0,buttons.size(),formJson);
+        client.clientStat.formData=new Form(Form.Type.SIMPLE,buttons.size(),formJson);
         client.sendAlert("You Received A Simple FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         client.sendMessage("Content:"+formJson.getString("content"));
@@ -50,9 +50,9 @@ public class FormConverter {
         client.sendMessage("\nUse `form choose <index> to click button.");
         client.sendMessage("Use `form close to close the window.");
     }
-    public static void showCustomForm(Client client, JSONObject formJson){
+    public void showCustomForm(Client client, JSONObject formJson){
         JSONArray contents=formJson.getJSONArray("content"),defaults=new JSONArray(),types=new JSONArray();
-        client.clientStat.formData=new Form(2,contents.size(),formJson);
+        client.clientStat.formData=new Form(Form.Type.CUSTOM,contents.size(),formJson);
         client.sendAlert("You Received A Custom FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         for(int i=0;i<contents.size();i++){

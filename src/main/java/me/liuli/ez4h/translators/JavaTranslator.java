@@ -2,7 +2,7 @@ package me.liuli.ez4h.translators;
 
 import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.packetlib.packet.Packet;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 
 public interface JavaTranslator {
     void translate(Packet inPacket, Client client);

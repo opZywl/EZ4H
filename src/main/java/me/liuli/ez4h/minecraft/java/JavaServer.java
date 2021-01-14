@@ -1,4 +1,4 @@
-package me.liuli.ez4h.mcjava;
+package me.liuli.ez4h.minecraft.java;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.service.SessionService;
@@ -21,9 +21,8 @@ import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.mcjava.fakeAuthServer.FakeServer;
+import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.fakeAuthServer.FakeServer;
 import me.liuli.ez4h.utils.OtherUtils;
 
 import java.util.Map;
@@ -41,7 +40,7 @@ public class JavaServer {
             @Override
             public void loggedIn(Session session) {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                Client client= Variables.clientMap.get(profile.getName());
+                Client client=EZ4H.getCommonManager().getClientMap().get(profile.getName());
                 if(client!=null) {
                     client.clientStat.jLogined = true;
                     if (client.clientStat.jPacketMap.get("ServerJoinGame") != null) {
@@ -84,8 +83,8 @@ public class JavaServer {
                 if(protocol.getSubProtocol() == SubProtocol.GAME) {
                     Session session=event.getSession();
                     GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                    Client client= Variables.clientMap.remove(profile.getName());
-                    Variables.logger.info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
+                    Client client=EZ4H.getCommonManager().getClientMap().remove(profile.getName());
+                    EZ4H.getLogger().info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
                     if(client!=null) {
                         client.bedrockSession.disconnect();
                     }else{

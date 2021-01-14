@@ -16,8 +16,8 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
 import com.nukkitx.protocol.bedrock.packet.StartGamePacket;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.bedrock.Ping;
+import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.java.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.utils.BedrockUtils;
 

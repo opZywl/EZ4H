@@ -6,13 +6,13 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntit
 import com.nukkitx.protocol.bedrock.data.entity.EntityData;
 import com.nukkitx.protocol.bedrock.data.entity.EntityDataMap;
 import com.nukkitx.protocol.bedrock.data.entity.EntityFlag;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.cache.EntityInfo;
 
 import java.util.ArrayList;
 
 public class MetadataConverter {
-    public static void convert(EntityDataMap bedrockMetadata,Client client,int entityId){
+    public void convert(EntityDataMap bedrockMetadata,Client client,int entityId){
         ArrayList<EntityMetadata> metadata=new ArrayList<>();
         if(bedrockMetadata.containsKey(EntityData.AIR_SUPPLY)) {
             metadata.add(new EntityMetadata(1, MetadataType.INT, (int) bedrockMetadata.getShort(EntityData.AIR_SUPPLY)));

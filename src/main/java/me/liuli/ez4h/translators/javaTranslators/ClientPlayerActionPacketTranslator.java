@@ -13,7 +13,8 @@ import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.InventoryTransactionPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 
@@ -102,7 +103,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         client.sendPacket(inventoryTransactionPacket);
 
-        ItemStack itemStack=ItemConverter.convertToJE(newItem);
+        ItemStack itemStack=EZ4H.getConverterManager().getItemConverter().convertToJE(newItem);
         client.clientStat.inventory[client.clientStat.slot+36]=itemStack;
         client.clientStat.bedrockInventory[client.clientStat.slot+36]=newItem;
         client.sendPacket(new ServerSetSlotPacket(0, client.clientStat.slot+36,itemStack));

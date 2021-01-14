@@ -1,12 +1,10 @@
-package me.liuli.ez4h.bedrock;
+package me.liuli.ez4h.minecraft.bedrock;
 
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.BedrockSession;
 import com.nukkitx.protocol.bedrock.handler.BatchHandler;
 import io.netty.buffer.ByteBuf;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.managers.BedrockTranslatorManager;
 
 import java.util.Collection;
 
@@ -19,12 +17,12 @@ public class BedrockBatchHandler implements BatchHandler {
     public void handle(BedrockSession bedrockSession, ByteBuf byteBuf, Collection<BedrockPacket> collection) {
         for (BedrockPacket packet : collection) {
             if(EZ4H.getConfigManager().getDebugLevel()==2){
-                Variables.logger.debug("Bedrock > "+packet.toString());
+                EZ4H.getLogger().debug("Bedrock > "+packet.toString());
             }
             try {
-                BedrockTranslatorManager.translatePacket(packet,client);
+                EZ4H.getTranslatorManager().translateBedrockPacket(packet,client);
             }catch (Throwable t){
-                Variables.logger.throwing(t);
+                EZ4H.getLogger().throwing(t);
             }
         }
     }

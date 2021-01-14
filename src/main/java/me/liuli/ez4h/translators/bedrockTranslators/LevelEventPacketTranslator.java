@@ -6,8 +6,8 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerBlockB
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.LevelEventPacket;
-import me.liuli.ez4h.bedrock.Client;
-import me.liuli.ez4h.mcjava.SmoothWeather;
+import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.java.SmoothWeather;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class LevelEventPacketTranslator implements BedrockTranslator {

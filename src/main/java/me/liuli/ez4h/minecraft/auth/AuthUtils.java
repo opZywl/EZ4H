@@ -1,4 +1,4 @@
-package me.liuli.ez4h.bedrock.auth;
+package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONArray;
 

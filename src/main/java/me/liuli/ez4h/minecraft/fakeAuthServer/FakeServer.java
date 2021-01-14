@@ -1,4 +1,4 @@
-package me.liuli.ez4h.mcjava.fakeAuthServer;
+package me.liuli.ez4h.minecraft.fakeAuthServer;
 
 import com.github.steveice10.mc.protocol.data.game.TitleAction;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
@@ -7,8 +7,8 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.ServerTitlePacket;
 import com.github.steveice10.packetlib.Session;
 import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
-import me.liuli.ez4h.Variables;
-import me.liuli.ez4h.bedrock.auth.XboxLogin;
+import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.minecraft.auth.XboxLogin;
 
 public class FakeServer extends SessionAdapter {
     public AuthAlertThread runnable;
@@ -39,13 +39,13 @@ public class FakeServer extends SessionAdapter {
                 return;
             }
             if(message[0].equalsIgnoreCase("at")){
-                Variables.accessTokens.put(playerName,message[1]);
+                EZ4H.getCommonManager().getAccessTokens().put(playerName,message[1]);
                 runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
                 runnable.session.send(new ServerTitlePacket(true));
                 return;
             }
             try {
-                Variables.accessTokens.put(playerName,new XboxLogin(message[0],message[1]).getAccessToken());
+                EZ4H.getCommonManager().getAccessTokens().put(playerName,new XboxLogin(message[0],message[1]).getAccessToken());
                 runnable.session.send(new ServerTitlePacket(true));
                 runnable.session.disconnect("§aLogin Successful!\n§fPlease RECONNECT To The Server!");
                 setAuthstat(3);

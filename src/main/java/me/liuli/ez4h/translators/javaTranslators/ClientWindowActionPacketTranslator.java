@@ -2,7 +2,7 @@ package me.liuli.ez4h.translators.javaTranslators;
 
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.packetlib.packet.Packet;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientWindowActionPacketTranslator implements JavaTranslator {

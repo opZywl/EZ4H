@@ -1,4 +1,4 @@
-package me.liuli.ez4h.bedrock;
+package me.liuli.ez4h.minecraft.java;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.MinecraftConstants;

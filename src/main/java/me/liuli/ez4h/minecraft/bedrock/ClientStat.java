@@ -1,4 +1,4 @@
-package me.liuli.ez4h.mcjava;
+package me.liuli.ez4h.minecraft.bedrock;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;

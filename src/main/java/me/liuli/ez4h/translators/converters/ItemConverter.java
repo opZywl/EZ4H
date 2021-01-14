@@ -11,8 +11,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemConverter {
-    private static JSONObject BEDROCK_ID2NAME,JAVA_NAME2ID,JAVA_ENCH,BEDROCK_ENCH;
-    public static int inventoryIndex(int index,boolean isToBedrock){
+    private JSONObject BEDROCK_ID2NAME,JAVA_NAME2ID,JAVA_ENCH,BEDROCK_ENCH;
+
+    public ItemConverter(JSONObject bedrock,JSONObject java,JSONObject enchant){
+        BEDROCK_ID2NAME=bedrock;
+        JAVA_NAME2ID=java;
+        BEDROCK_ENCH=enchant.getJSONObject("bedrock");
+        JAVA_ENCH=enchant.getJSONObject("java");
+    }
+
+    public int inventoryIndex(int index,boolean isToBedrock){
         if(isToBedrock){
             if(index>35){
                 return index-36;
@@ -27,7 +35,7 @@ public class ItemConverter {
             }
         }
     }
-    public static Tag nbtTagTranslator(String name,Object value){
+    public Tag nbtTagTranslator(String name,Object value){
         if (value instanceof NbtMap) {
             return nbtMapTranslator(name,(NbtMap) value,false);
         }else if(value instanceof NbtList) {
@@ -53,7 +61,7 @@ public class ItemConverter {
         }
         return null;
     }
-    public static ListTag nbtListTranslator(String name,NbtList nbtList){
+    public ListTag nbtListTranslator(String name,NbtList nbtList){
         ArrayList<Tag> tags=new ArrayList<>();
         for (Object o : nbtList) {
             tags.add(nbtTagTranslator("", o));
@@ -64,7 +72,7 @@ public class ItemConverter {
             return null;
         }
     }
-    public static CompoundTag nbtMapTranslator(String name,NbtMap nbtMap,boolean isFirst){
+    public CompoundTag nbtMapTranslator(String name,NbtMap nbtMap,boolean isFirst){
         CompoundTag compoundTag=new CompoundTag(name);
         if(nbtMap!=null) {
             for (Map.Entry<String, Object> e : nbtMap.entrySet()) {
@@ -94,7 +102,7 @@ public class ItemConverter {
         }
         return compoundTag;
     }
-    public static ItemStack convertToJE(ItemData itemData){
+    public ItemStack convertToJE(ItemData itemData){
         int id=1,data=0;
         String item=(String)JAVA_NAME2ID.get((String) BEDROCK_ID2NAME.get(itemData.getId()+":"+itemData.getDamage()));
         if(item!=null){
@@ -112,7 +120,7 @@ public class ItemConverter {
         }
         return new ItemStack(id,itemData.getCount(), data,tag);
     }
-    public static short getJavaEnchant(short id){
+    public short getJavaEnchant(short id){
         String result=BEDROCK_ENCH.getString(id+"");
         if(result==null){
             return id;
@@ -122,11 +130,5 @@ public class ItemConverter {
             return id;
         }
         return javaResult;
-    }
-    public static void load(JSONObject bedrock,JSONObject java,JSONObject enchant){
-        BEDROCK_ID2NAME=bedrock;
-        JAVA_NAME2ID=java;
-        BEDROCK_ENCH=enchant.getJSONObject("bedrock");
-        JAVA_ENCH=enchant.getJSONObject("java");
     }
 }

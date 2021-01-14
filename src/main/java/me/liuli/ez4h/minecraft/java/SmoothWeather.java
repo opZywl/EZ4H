@@ -1,9 +1,9 @@
-package me.liuli.ez4h.mcjava;
+package me.liuli.ez4h.minecraft.java;
 
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
 import com.github.steveice10.mc.protocol.data.game.world.notify.RainStrengthValue;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotifyClientPacket;
-import me.liuli.ez4h.bedrock.Client;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 
 public class SmoothWeather {
     public SmoothWeather(float to, boolean isThunder, Client client){
