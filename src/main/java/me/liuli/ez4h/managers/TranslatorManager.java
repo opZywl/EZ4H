@@ -43,10 +43,10 @@ public class TranslatorManager {
         }
     }
 
-    public BedrockTranslator getBedrockTranslator(Class<TextPacket> clazz){
+    public BedrockTranslator getBedrockTranslator(Class<? extends BedrockPacket> clazz){
         return bedrockTranslators.get(clazz);
     }
-    public JavaTranslator getJavaTranslator(Class<Packet> clazz){
+    public JavaTranslator getJavaTranslator(Class<? extends Packet> clazz){
         return javaTranslators.get(clazz);
     }
 }

@@ -1,21 +1,22 @@
 package me.liuli.ez4h;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import lombok.Getter;
-import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.managers.*;
-import me.liuli.ez4h.managers.command.commands.*;
+import me.liuli.ez4h.managers.command.commands.FormCommand;
+import me.liuli.ez4h.managers.command.commands.SayCommand;
+import me.liuli.ez4h.managers.command.commands.VersionCommand;
+import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.java.JavaServer;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
-import me.liuli.ez4h.translators.bedrockTranslators.TextPacketTranslator;
-import me.liuli.ez4h.translators.converters.BlockConverter;
-import me.liuli.ez4h.translators.converters.ItemConverter;
+import me.liuli.ez4h.translators.bedrockTranslators.play.TextPacketTranslator;
 import me.liuli.ez4h.utils.FileUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.reflections.Reflections;
 
 import java.io.File;
@@ -39,9 +40,12 @@ public class EZ4H {
     private static TranslatorManager translatorManager;
     @Getter
     private static ConverterManager converterManager;
+    @Getter
+    private static LoginManager loginManager;
 
     public static void main(String[] args) {
         logger=LogManager.getLogger(EZ4H.class);
+
         logger.info("Init files...");
         initFile();
         logger.info("Init Protocol...");
@@ -61,6 +65,11 @@ public class EZ4H {
             FileUtils.readJar("resources/config.json",jarDir,"./config.json");
         }
         configManager=new ConfigManager(JSONObject.parseObject(FileUtils.readFile("./config.json")));
+
+        if(configManager.getDebugLevel()!=0){
+            logger.warn("Debug Mode Enabled in Config.json!");
+            Configurator.setRootLevel(Level.DEBUG);
+        }
     }
     private static void initProtocol() {
         //register translators
@@ -100,6 +109,7 @@ public class EZ4H {
         AuthUtils.load();
 
         commonManager=new CommonManager();
+        loginManager=new LoginManager();
 
         //opening server
         javaServer=new JavaServer();

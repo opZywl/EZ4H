@@ -2,6 +2,7 @@ package me.liuli.ez4h.translators.javaTranslators;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
+import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.packetlib.packet.Packet;
@@ -31,6 +32,29 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
+
+                if(client.clientStat.gameMode.equals(GameMode.CREATIVE)){
+                    //creative block break only send START_DIGGING
+                    Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
+                    playerActionPacket = new PlayerActionPacket();
+                    playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                    playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
+                    playerActionPacket.setBlockPosition(blockPosition);
+                    playerActionPacket.setFace(packet.getFace().ordinal());
+                    client.sendPacket(playerActionPacket);
+
+                    InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
+                    inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
+                    inventoryTransactionPacket.setActionType(2);
+                    inventoryTransactionPacket.setBlockPosition(blockPosition);
+                    inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
+                    inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
+                    inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
+                    inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
+                    inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
+                    client.sendPacket(inventoryTransactionPacket);
+                }
+
                 break;
             }
             case CANCEL_DIGGING:{
@@ -64,18 +88,17 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 break;
             }
             case DROP_ITEM:{
-                dropItem(client,1);
+                dropItem(client,1,client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 break;
             }
             case DROP_ITEM_STACK:{
-                dropItem(client,client.clientStat.bedrockInventory[36+client.clientStat.slot].getCount());
+                dropItem(client,client.clientStat.bedrockInventory[36+client.clientStat.slot].getCount(),client.clientStat.bedrockInventory[36+client.clientStat.slot]);
                 break;
             }
         }
     }
 
-    private void dropItem(Client client,int itemCount){
-        ItemData oldItem=client.clientStat.bedrockInventory[36+client.clientStat.slot];
+    public void dropItem(Client client,int itemCount,ItemData oldItem){
         if(oldItem.getCount()==0){
             return;
         }
@@ -103,10 +126,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         client.sendPacket(inventoryTransactionPacket);
 
-        ItemStack itemStack=EZ4H.getConverterManager().getItemConverter().convertToJE(newItem);
-        client.clientStat.inventory[client.clientStat.slot+36]=itemStack;
-        client.clientStat.bedrockInventory[client.clientStat.slot+36]=newItem;
-        client.sendPacket(new ServerSetSlotPacket(0, client.clientStat.slot+36,itemStack));
+        client.updateItem(newItem,client.clientStat.slot+36);
     }
     @Override
     public Class<ClientPlayerActionPacket> getPacketClass() {

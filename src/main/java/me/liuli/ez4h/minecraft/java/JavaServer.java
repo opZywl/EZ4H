@@ -42,13 +42,6 @@ public class JavaServer {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
                 Client client=EZ4H.getCommonManager().getClientMap().get(profile.getName());
                 if(client!=null) {
-                    client.clientStat.jLogined = true;
-                    if (client.clientStat.jPacketMap.get("ServerJoinGame") != null) {
-                        for(Map.Entry<String, Packet> entry:client.clientStat.jPacketMap.entrySet()){
-                            client.sendPacket(entry.getValue());
-                        }
-                        client.clientStat.jPacketMap.clear();
-                    }
                     session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) +"\"}").getBytes()));
                 }else{
                     ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(

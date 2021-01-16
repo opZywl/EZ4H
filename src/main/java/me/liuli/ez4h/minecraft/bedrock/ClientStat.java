@@ -3,7 +3,6 @@ package me.liuli.ez4h.minecraft.bedrock;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
-import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.data.ScoreInfo;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import me.liuli.ez4h.translators.cache.EntityInfo;
@@ -20,9 +19,7 @@ public class ClientStat {
     public Difficulty difficulty;
     public GameMode gameMode;
     public boolean onLogin=false;
-    public boolean jLogined=false;
     public boolean rain=false,thunder=false;
-    public Map<String, Packet> jPacketMap=new HashMap<>();
     public Map<String, String> scoreboards=new HashMap<>();
     public Map<Long, ScoreInfo> scoreboardBars=new HashMap<>();
     public int scoreboardOrder;
@@ -34,4 +31,6 @@ public class ClientStat {
     public ItemData[] bedrockInventory=new ItemData[46];
     public Map<Integer, EntityInfo> entityInfoMap=new HashMap<>();
     public Form formData=null;
+    public int itemInHand=0;
+    public boolean invOpen=false;
 }

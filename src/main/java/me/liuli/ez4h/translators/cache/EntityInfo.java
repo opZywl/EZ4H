@@ -15,13 +15,17 @@ public class EntityInfo {
         }
     }
 
+    public enum Type{
+        ITEM_ENTITY,ENTITY,PLAYER
+    }
+
     public float x,y,z;
     public int id;
-    public String type;
+    public Type type;
     public Map<EntityFlag,Boolean> metadata;
     public Pose pose;
 
-    public EntityInfo(float x,float y,float z,int id,String type){
+    public EntityInfo(float x,float y,float z,int id,Type type){
         this.x=x;
         this.y=y;
         this.z=z;
