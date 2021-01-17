@@ -12,7 +12,6 @@ import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.cache.EntityInfo;
-import me.liuli.ez4h.translators.converters.ItemConverter;
 
 import java.util.UUID;
 

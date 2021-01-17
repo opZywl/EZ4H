@@ -1,10 +1,8 @@
-package me.liuli.ez4h.translators.javaTranslators;
+package me.liuli.ez4h.translators.javaTranslators.play;
 
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerSetSlotPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
@@ -14,10 +12,8 @@ import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
 import com.nukkitx.protocol.bedrock.packet.InventoryTransactionPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
-import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
-import me.liuli.ez4h.translators.converters.ItemConverter;
 
 public class ClientPlayerActionPacketTranslator implements JavaTranslator {
     @Override

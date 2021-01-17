@@ -7,7 +7,6 @@ import com.nukkitx.protocol.bedrock.packet.MobEquipmentPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.translators.converters.ItemConverter;
 
 public class MobEquipmentPacketTranslator implements BedrockTranslator {
     @Override

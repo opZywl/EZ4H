@@ -1,4 +1,4 @@
-package me.liuli.ez4h.translators.javaTranslators;
+package me.liuli.ez4h.translators.javaTranslators.play;
 
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerRotationPacket;
 import com.github.steveice10.packetlib.packet.Packet;

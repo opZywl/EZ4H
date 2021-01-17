@@ -3,20 +3,18 @@ package me.liuli.ez4h.translators.javaTranslators.window;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.packetlib.packet.Packet;
+import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.data.inventory.InventoryActionData;
 import com.nukkitx.protocol.bedrock.data.inventory.InventorySource;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.data.inventory.TransactionType;
-import com.nukkitx.protocol.bedrock.packet.ContainerOpenPacket;
+import com.nukkitx.protocol.bedrock.packet.InteractPacket;
 import com.nukkitx.protocol.bedrock.packet.InventoryTransactionPacket;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.managers.TranslatorManager;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.converters.ItemConverter;
-import me.liuli.ez4h.translators.javaTranslators.ClientPlayerActionPacketTranslator;
-
-import java.util.Arrays;
+import me.liuli.ez4h.translators.javaTranslators.play.ClientPlayerActionPacketTranslator;
 
 //Creative Item
 //InventoryTransactionPacket(legacyRequestId=0, legacySlots=[], actions=[InventoryActionData(source=InventorySource(type=CONTAINER, containerId=0, flag=NONE), slot=0, fromItem=ItemData(id=0, damage=0, count=0, tag=null, canPlace=[], canBreak=[], blockingTicks=0, netId=0), toItem=ItemData(id=339, damage=0, count=1, tag={
@@ -62,7 +60,11 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
 
     public void moveItem(int fromSlot,int toSlot,Client client){
         if(!client.clientStat.invOpen){
-            //TODO:Open Inventory
+            InteractPacket interactPacket=new InteractPacket();
+            interactPacket.setAction(InteractPacket.Action.OPEN_INVENTORY);
+            interactPacket.setRuntimeEntityId(client.clientStat.entityId);
+            interactPacket.setMousePosition(Vector3f.ZERO);
+            client.sendPacket(interactPacket);
         }
         ItemConverter itemConverter=EZ4H.getConverterManager().getItemConverter();
         ItemData fromItem=client.clientStat.bedrockInventory[fromSlot],

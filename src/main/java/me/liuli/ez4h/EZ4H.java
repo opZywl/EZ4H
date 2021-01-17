@@ -67,7 +67,7 @@ public class EZ4H {
         configManager=new ConfigManager(JSONObject.parseObject(FileUtils.readFile("./config.json")));
 
         if(configManager.getDebugLevel()!=0){
-            logger.warn("Debug Mode Enabled in Config.json!");
+            logger.warn("Debug Mode Enabled in Config");
             Configurator.setRootLevel(Level.DEBUG);
         }
     }

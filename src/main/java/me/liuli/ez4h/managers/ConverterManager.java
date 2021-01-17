@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.translators.converters.*;
+import me.liuli.ez4h.translators.converters.BlockConverter;
+import me.liuli.ez4h.translators.converters.FormConverter;
+import me.liuli.ez4h.translators.converters.ItemConverter;
+import me.liuli.ez4h.translators.converters.MetadataConverter;
 import me.liuli.ez4h.utils.FileUtils;
 
 public class ConverterManager {

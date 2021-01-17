@@ -2,8 +2,8 @@ package me.liuli.ez4h.managers.command.commands;
 
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.InitLibs;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.managers.command.CommandBase;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 
 public class VersionCommand implements CommandBase {
     @Override

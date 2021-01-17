@@ -1,8 +1,8 @@
 package me.liuli.ez4h.managers.command.commands;
 
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.managers.command.CommandBase;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 
 import java.util.ArrayList;
 import java.util.List;

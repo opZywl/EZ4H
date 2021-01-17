@@ -85,7 +85,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
 
         SetLocalPlayerAsInitializedPacket setLocalPlayerAsInitializedPacket=new SetLocalPlayerAsInitializedPacket();
         setLocalPlayerAsInitializedPacket.setRuntimeEntityId(packet.getRuntimeEntityId());
-        client.sendPacket(serverDifficultyPacket);
+        client.sendPacket(setLocalPlayerAsInitializedPacket);
     }
 
     @Override

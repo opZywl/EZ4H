@@ -1,4 +1,6 @@
 # EZ4H
+[![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
+[![discord](https://img.shields.io/discord/799644723328974868?style=for-the-badge)](https://discord.gg/s3H67gYe7Z)
 Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.200) servers!  
 ## Features
 - [x] Login  

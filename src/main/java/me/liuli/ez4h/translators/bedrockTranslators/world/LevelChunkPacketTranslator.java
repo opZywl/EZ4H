@@ -18,8 +18,6 @@ import me.liuli.ez4h.translators.converters.BlockConverter;
 import me.liuli.ez4h.utils.nukkit.BitArray;
 import me.liuli.ez4h.utils.nukkit.BitArrayVersion;
 
-import java.util.Arrays;
-
 public class LevelChunkPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {

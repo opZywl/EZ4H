@@ -21,7 +21,14 @@ public class MetadataConverter {
             metadata.add(new EntityMetadata(2, MetadataType.STRING, bedrockMetadata.getString(EntityData.NAMETAG)));
         }
         if(bedrockMetadata.containsKey(EntityData.HEALTH)) {
-            metadata.add(new EntityMetadata(7, MetadataType.FLOAT, (float)bedrockMetadata.getInt(EntityData.HEALTH)));
+            Object value=bedrockMetadata.get(EntityData.HEALTH);
+            float hp=20;
+            if(value instanceof Integer){
+                hp=bedrockMetadata.getInt(EntityData.HEALTH);
+            }else if(value instanceof Float){
+                hp=bedrockMetadata.getFloat(EntityData.HEALTH);
+            }
+            metadata.add(new EntityMetadata(7, MetadataType.FLOAT, hp));
         }
         client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[metadata.size()])));
         metadata.clear();

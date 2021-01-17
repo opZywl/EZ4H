@@ -5,6 +5,7 @@ import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.setting.Difficulty;
 import com.nukkitx.protocol.bedrock.data.ScoreInfo;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
+import me.liuli.ez4h.translators.cache.ChestData;
 import me.liuli.ez4h.translators.cache.EntityInfo;
 import me.liuli.ez4h.translators.cache.Form;
 
@@ -33,4 +34,5 @@ public class ClientStat {
     public Form formData=null;
     public int itemInHand=0;
     public boolean invOpen=false;
+    public ChestData queueChest=null;
 }

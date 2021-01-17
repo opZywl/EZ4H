@@ -2,8 +2,8 @@ package me.liuli.ez4h.managers.command.commands;
 
 import com.alibaba.fastjson.JSONArray;
 import com.nukkitx.protocol.bedrock.packet.ModalFormResponsePacket;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.managers.command.CommandBase;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.cache.Form;
 
 public class FormCommand implements CommandBase {

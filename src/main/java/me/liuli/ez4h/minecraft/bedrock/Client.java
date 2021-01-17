@@ -81,9 +81,11 @@ public class Client {
         this.sendPacket(new ServerChatPacket("§f[§l§bEZ§94§bH§f§r] "+msg));
     }
     public void sendPacket(BedrockPacket packet){
+        if(packet==null) return;
         this.bedrockSession.sendPacket(packet);
     }
     public void sendPacket(Packet packet){
+        if(packet==null) return;
         this.javaSession.send(packet);
     }
     public void updateItem(ItemData itemData, int slot){
