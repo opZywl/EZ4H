@@ -16,7 +16,7 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
         movePlayerPacket.setOnGround(packet.isOnGround());
         movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
         movePlayerPacket.setRidingRuntimeEntityId(0);
-        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
         client.clientStat.yaw= (float) packet.getYaw();
         client.clientStat.pitch= (float) packet.getPitch();
