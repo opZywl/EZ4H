@@ -2,7 +2,6 @@ package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
-import org.apache.commons.text.StringEscapeUtils;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
@@ -17,12 +16,6 @@ import java.util.zip.GZIPInputStream;
 public class XboxLogin {
     private static String XBOX_PRE_AUTH_URL="https://login.live.com/oauth20_authorize.srf?client_id=000000004C12AE6F&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&display=touch&response_type=token&locale=en";
 
-    @Getter
-    private String accessToken="";
-
-    public XboxLogin(String username,String password) throws Exception {
-        accessToken=doLogin(getPreAuthToken(),username,password);
-    }
     private JSONObject getPreAuthToken() throws Exception{
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
         connection.setRequestMethod("GET");
@@ -42,22 +35,23 @@ public class XboxLogin {
         resJson.put("cookie",allCookie);
         return resJson;
     }
-    private String doLogin(JSONObject authToken,String username,String password) throws Exception{
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(authToken.getString("urlPost")).openConnection();
+    public String getAccessToken(String username,String password) throws Exception{
+        JSONObject preAuthToken=getPreAuthToken();
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(preAuthToken.getString("urlPost")).openConnection();
         connection.setRequestMethod("POST");
         setBaseHeaders(connection);
         connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-        connection.setRequestProperty("Cookie",authToken.getString("cookie"));
+        connection.setRequestProperty("Cookie",preAuthToken.getString("cookie"));
 
         StringBuilder postStr=new StringBuilder();
         postStr.append("login=");
-        postStr.append(StringEscapeUtils.escapeHtml3(username));
+        postStr.append(username);
         postStr.append("&loginfmt=");
-        postStr.append(StringEscapeUtils.escapeHtml3(username));
+        postStr.append(username);
         postStr.append("&passwd=");
-        postStr.append(StringEscapeUtils.escapeHtml3(password));
+        postStr.append(password);
         postStr.append("&PPFT=");
-        postStr.append(StringEscapeUtils.escapeHtml3(authToken.getString("PPFT")));
+        postStr.append(preAuthToken.getString("PPFT"));
         connection.setDoOutput(true);
         connection.setInstanceFollowRedirects(true);
 
@@ -72,7 +66,7 @@ public class XboxLogin {
         String[] hashes=hash.split("&");
         for(String partHash:hashes){
             if(partHash.split("=")[0].equals("access_token")){
-                access_token=StringEscapeUtils.unescapeHtml4(partHash.split("=")[1]).replaceAll("%2b","+");
+                access_token=partHash.split("=")[1];
                 break;
             }
         }

@@ -6,12 +6,12 @@ Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.200) servers!
 - [x] Login  
 - [x] Chat  
 - [x] Command  
-- [ ] Xbox Auth  
+- [X] Xbox Auth  
 - [X] Chunks  
 - [X] Move  
 - [X] Players  
 - [X] Entitys  
-- [ ] Block Entitys  
+- [X] Block Entitys  
 - [X] Item Entitys  
 - [X] Entity Metadata  
 - [X] Entity Interact  

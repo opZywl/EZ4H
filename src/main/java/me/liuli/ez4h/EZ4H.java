@@ -8,6 +8,7 @@ import me.liuli.ez4h.managers.command.commands.FormCommand;
 import me.liuli.ez4h.managers.command.commands.SayCommand;
 import me.liuli.ez4h.managers.command.commands.VersionCommand;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
+import me.liuli.ez4h.minecraft.auth.XboxLogin;
 import me.liuli.ez4h.minecraft.java.JavaServer;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
@@ -42,6 +43,8 @@ public class EZ4H {
     private static ConverterManager converterManager;
     @Getter
     private static LoginManager loginManager;
+    @Getter
+    private static AuthManager authManager;
 
     public static void main(String[] args) {
         logger=LogManager.getLogger(EZ4H.class);
@@ -110,6 +113,7 @@ public class EZ4H {
 
         commonManager=new CommonManager();
         loginManager=new LoginManager();
+        authManager=new AuthManager();
 
         //opening server
         javaServer=new JavaServer();

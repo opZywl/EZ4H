@@ -25,6 +25,7 @@ public class MovePlayerPacketTranslator implements BedrockTranslator {
             client.clientStat.z=position.getZ();
         }else{
             EntityInfo entityInfo=client.clientStat.entityInfoMap.get((int)packet.getRuntimeEntityId());
+            if(entityInfo==null) return;
             double moveX=position.getX()-entityInfo.x,moveY=(position.getY()-1.62)-entityInfo.y,moveZ=position.getZ()-entityInfo.z;
             if(!(packet.getMode().equals(MovePlayerPacket.Mode.TELEPORT)||BedrockUtils.calcDistance(position.getX(),position.getY(),position.getZ(),entityInfo.x,entityInfo.y,entityInfo.z)>8)){
                 client.sendPacket(new ServerEntityPositionRotationPacket((int) packet.getRuntimeEntityId(), moveX,moveY,moveZ,rotation.getY(),rotation.getX(), packet.isOnGround()));

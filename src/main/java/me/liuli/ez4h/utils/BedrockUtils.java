@@ -34,7 +34,13 @@ public class BedrockUtils {
         if(BEGameType.contains("VIEWER")){
             BEGameType=GameMode.SPECTATOR.name();
         }
-        return GameMode.valueOf(BEGameType);
+        GameMode gameMode=GameMode.SURVIVAL;
+        try {
+            gameMode=GameMode.valueOf(BEGameType);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return gameMode;
     }
     public static double calcDistance(double fromX,double fromY,double fromZ,double toX,double toY,double toZ){
         return Math.sqrt(Math.pow(fromX - toX, 2.0D) + Math.pow(fromY - toY, 2.0D) + Math.pow(fromZ - toZ, 2.0D));

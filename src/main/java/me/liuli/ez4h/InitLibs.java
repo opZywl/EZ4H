@@ -12,6 +12,7 @@ public class InitLibs {
     public static void main(String[] args){
         launchTime=new Date().getTime();
         new File("./libs").mkdir();
+        new File("./data").mkdir();
         loadLib();
         System.out.println("Starting EZ4H v"+VERSION);
         EZ4H.main(args);

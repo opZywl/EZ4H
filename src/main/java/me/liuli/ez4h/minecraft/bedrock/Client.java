@@ -54,7 +54,7 @@ public class Client {
                 try {
                     //thanks TunnelMC:https://github.com/THEREALWWEFAN231/TunnelMC/blob/master/src/main/java/me/THEREALWWEFAN231/tunnelmc/auth/Auth.java
                     if (EZ4H.getConfigManager().isXboxAuth()) {
-                        this.authtoken = EZ4H.getCommonManager().getAccessTokens().remove(playerName);
+                        this.authtoken = EZ4H.getAuthManager().getAccessTokens().remove(playerName);
                         EZ4H.getLoginManager().onlineLogin(this);
                     } else {
                         this.xuid = "";

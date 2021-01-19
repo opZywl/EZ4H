@@ -38,7 +38,7 @@ public class JavaPacketHandler extends SessionAdapter {
             }
             if(event.getPacket().getClass().equals(LoginStartPacket.class)){
                 LoginStartPacket lpacket=event.getPacket();
-                if(!EZ4H.getConfigManager().isXboxAuth()||EZ4H.getCommonManager().getAccessTokens().containsKey(lpacket.getUsername())) {
+                if(!EZ4H.getConfigManager().isXboxAuth()||EZ4H.getAuthManager().getAccessTokens().containsKey(lpacket.getUsername())) {
                     Client client_n = new Client(event, lpacket.getUsername());
                     EZ4H.getCommonManager().getClientMap().put(lpacket.getUsername(), client_n);
                 }else{

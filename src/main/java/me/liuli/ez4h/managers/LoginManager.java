@@ -31,9 +31,7 @@ public class LoginManager {
 
         Xbox xbox = new Xbox(client.authtoken);
         String userToken = xbox.getUserToken(client.publicKey, client.privateKey);
-        System.out.println("usertoken");
         String deviceToken = xbox.getDeviceToken(client.publicKey, client.privateKey);
-        System.out.println("devicetoken");
         String titleToken = xbox.getTitleToken(client.publicKey, client.privateKey, deviceToken);
         String xsts = xbox.getXstsToken(userToken, deviceToken, titleToken, client.publicKey, client.privateKey);
 

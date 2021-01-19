@@ -15,6 +15,4 @@ public class CommonManager {
     private final BedrockPacketCodec bedrockCodec=Bedrock_v422.V422_CODEC;
     @Getter
     private final Map<String, Client> clientMap=new HashMap<>();
-    @Getter
-    private final Map<String, String> accessTokens=new HashMap<>();
 }
