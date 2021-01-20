@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.play;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerInteractEntityPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
@@ -39,7 +40,7 @@ public class ClientPlayerInteractEntityPacketTranslator implements JavaTranslato
     }
 
     @Override
-    public Class<ClientPlayerInteractEntityPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerInteractEntityPacket.class;
     }
 }

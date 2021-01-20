@@ -1,7 +1,6 @@
 package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONObject;
-import lombok.Getter;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;

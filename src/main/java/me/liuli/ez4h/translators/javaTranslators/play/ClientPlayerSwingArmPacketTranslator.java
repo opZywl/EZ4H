@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.play;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerSwingArmPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.packet.AnimatePacket;
@@ -17,7 +18,7 @@ public class ClientPlayerSwingArmPacketTranslator implements JavaTranslator {
     }
 
     @Override
-    public Class<ClientPlayerSwingArmPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerSwingArmPacket.class;
     }
 }

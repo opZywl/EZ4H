@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.window;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import com.github.steveice10.packetlib.packet.Packet;
@@ -97,7 +98,7 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
     }
 
     @Override
-    public Class<ClientWindowActionPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientWindowActionPacket.class;
     }
 }

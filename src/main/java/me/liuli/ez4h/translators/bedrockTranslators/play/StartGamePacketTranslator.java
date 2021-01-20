@@ -77,11 +77,8 @@ public class StartGamePacketTranslator implements BedrockTranslator {
 
         client.clientStat.entityId=packet.getRuntimeEntityId();
         client.clientStat.dimension=packet.getDimensionId();
-        client.clientStat.difficulty= BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
+        client.clientStat.difficulty=BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
         client.clientStat.gameMode=gamemode;
-        RequestChunkRadiusPacket requestChunkRadiusPacket=new RequestChunkRadiusPacket();
-        requestChunkRadiusPacket.setRadius(11);
-        client.bedrockSession.sendPacket(requestChunkRadiusPacket);
 
         SetLocalPlayerAsInitializedPacket setLocalPlayerAsInitializedPacket=new SetLocalPlayerAsInitializedPacket();
         setLocalPlayerAsInitializedPacket.setRuntimeEntityId(packet.getRuntimeEntityId());

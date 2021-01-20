@@ -20,7 +20,7 @@ public class AuthManager {
 
     public AuthManager(){
         xboxLogin=new XboxLogin();
-        if(EZ4H.getConfigManager().isSaveAuthData()){
+        if(EZ4H.getConfigManager().isAutoLogin()){
             if(!new File("./data/accounts.json").exists()){
                 FileUtils.writeFile("./data/accounts.json","{}");
             }
@@ -29,13 +29,13 @@ public class AuthManager {
     }
 
     public JSONObject getAccount(String mcUsername){
-        if(EZ4H.getConfigManager().isSaveAuthData()&&accounts.containsKey(mcUsername)) {
+        if(EZ4H.getConfigManager().isAutoLogin()&&accounts.containsKey(mcUsername)) {
             return JSONObject.parseObject(OtherUtils.base64Decode((String) accounts.get(mcUsername)));
         }
         return null;
     }
     public void saveAccount(String mcUsername,String username,String password){
-        if(EZ4H.getConfigManager().isSaveAuthData()) {
+        if(EZ4H.getConfigManager().isAutoLogin()) {
             JSONObject account = new JSONObject();
             account.put("username", username);
             account.put("password", password);
@@ -44,7 +44,7 @@ public class AuthManager {
         }
     }
     public void removeAccount(String mcUsername){
-        if(EZ4H.getConfigManager().isSaveAuthData()) {
+        if(EZ4H.getConfigManager().isAutoLogin()) {
             accounts.remove(mcUsername);
             saveAccountsToFile();
         }

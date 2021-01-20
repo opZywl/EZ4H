@@ -6,6 +6,7 @@ import com.nukkitx.protocol.bedrock.data.ScoreInfo;
 import com.nukkitx.protocol.bedrock.packet.SetScorePacket;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class SetScorePacketTranslator implements BedrockTranslator {
             switch (scoreInfo.getType()){
                 case INVALID:{
                     ScoreInfo scoreInfo1=client.clientStat.scoreboardBars.get(scoreInfo.getScoreboardId());
-                    client.sendPacket(new ServerUpdateScorePacket(scoreInfo1.getName(),scoreInfo1.getObjectiveId()));
+                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo1.getName(),40),scoreInfo1.getObjectiveId()));
                     break;
                 }
                 default:{
@@ -29,7 +30,7 @@ public class SetScorePacketTranslator implements BedrockTranslator {
                     }else{
                         score=(int) scoreInfo.getScoreboardId();
                     }
-                    client.sendPacket(new ServerUpdateScorePacket(scoreInfo.getName(),scoreInfo.getObjectiveId(), score));
+                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo.getName(),40),scoreInfo.getObjectiveId(), score));
                     break;
                 }
             }

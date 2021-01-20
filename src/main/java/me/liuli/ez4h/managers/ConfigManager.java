@@ -18,7 +18,7 @@ public class ConfigManager {
     @Getter
     private final int bedrockPort;
     @Getter
-    private final boolean xboxAuth,saveAuthData;
+    private final boolean xboxAuth,autoLogin;
     @Getter
     private final TextMessage playerList;
     @Getter
@@ -35,7 +35,7 @@ public class ConfigManager {
 
         JSONObject advanced=json.getJSONObject("advanced");
         debugLevel=advanced.getInteger("debug");
-        saveAuthData=advanced.getBoolean("save-authdata");
+        autoLogin=advanced.getBoolean("autologin");
         xboxAuth=advanced.getBoolean("xbox-auth");
     }
 }

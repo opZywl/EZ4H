@@ -10,6 +10,7 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerListPacket;
 import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class PlayerListPacketTranslator implements BedrockTranslator {
         PlayerListPacket packet=(PlayerListPacket)inPacket;
         ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
         for(PlayerListPacket.Entry entry:packet.getEntries()){
-            playerListEntries.add(new PlayerListEntry(new GameProfile(entry.getUuid(),entry.getName()), GameMode.SURVIVAL,0,new TextMessage(entry.getName())));
+            playerListEntries.add(new PlayerListEntry(new GameProfile(entry.getUuid(), BedrockUtils.lengthCutter(entry.getName(),16)), GameMode.SURVIVAL,0,new TextMessage(BedrockUtils.lengthCutter(entry.getName(),16))));
         }
         PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
         switch (packet.getAction()){

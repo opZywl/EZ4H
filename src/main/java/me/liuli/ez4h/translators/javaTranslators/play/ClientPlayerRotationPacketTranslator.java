@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.play;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerRotationPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
@@ -24,7 +25,7 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
     }
 
     @Override
-    public Class<ClientPlayerRotationPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerRotationPacket.class;
     }
 }

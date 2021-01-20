@@ -50,6 +50,7 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                         break;
                     }
                     case "minecraft:movement":{
+                        client.clientStat.walkSpeed=attribute.getValue();
                         List<Attribute> attributes1=new ArrayList<>();
                         attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,attribute.getValue()));
                         client.sendPacket(new ServerEntityPropertiesPacket((int) client.clientStat.entityId,attributes1));

@@ -2,6 +2,7 @@ package me.liuli.ez4h.translators.javaTranslators.play;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
 import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerActionPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
@@ -125,7 +126,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         client.updateItem(newItem,client.clientStat.slot+36);
     }
     @Override
-    public Class<ClientPlayerActionPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerActionPacket.class;
     }
 }

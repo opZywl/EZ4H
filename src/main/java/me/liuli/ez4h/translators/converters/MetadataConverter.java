@@ -17,9 +17,6 @@ public class MetadataConverter {
         if(bedrockMetadata.containsKey(EntityData.AIR_SUPPLY)) {
             metadata.add(new EntityMetadata(1, MetadataType.INT, (int) bedrockMetadata.getShort(EntityData.AIR_SUPPLY)));
         }
-        if(bedrockMetadata.containsKey(EntityData.NAMETAG)) {
-            metadata.add(new EntityMetadata(2, MetadataType.STRING, bedrockMetadata.getString(EntityData.NAMETAG)));
-        }
         if(bedrockMetadata.containsKey(EntityData.HEALTH)) {
             Object value=bedrockMetadata.get(EntityData.HEALTH);
             float hp=20;

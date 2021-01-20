@@ -35,4 +35,6 @@ public class ClientStat {
     public int itemInHand=0;
     public boolean invOpen=false;
     public ChestData queueChest=null;
+    public boolean canFly=false;
+    public float walkSpeed=0.1F;
 }

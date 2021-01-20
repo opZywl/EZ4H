@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.play;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.data.command.CommandOriginData;
@@ -49,7 +50,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
     }
 
     @Override
-    public Class<ClientChatPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientChatPacket.class;
     }
 }

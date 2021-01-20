@@ -46,6 +46,9 @@ public class BedrockUtils {
         return Math.sqrt(Math.pow(fromX - toX, 2.0D) + Math.pow(fromY - toY, 2.0D) + Math.pow(fromZ - toZ, 2.0D));
     }
     public static String lengthCutter(String bedrockName,int leng){
+        if(bedrockName==null){
+            return "null";
+        }
         if(bedrockName.length()>leng){
             return bedrockName.substring(0,leng);
         }else{

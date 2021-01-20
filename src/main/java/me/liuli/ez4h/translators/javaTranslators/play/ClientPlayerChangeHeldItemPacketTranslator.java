@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.javaTranslators.play;
 
+import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerChangeHeldItemPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.packet.PlayerHotbarPacket;
@@ -19,7 +20,7 @@ public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslato
     }
 
     @Override
-    public Class<ClientPlayerChangeHeldItemPacket> getPacketClass() {
+    public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerChangeHeldItemPacket.class;
     }
 }
