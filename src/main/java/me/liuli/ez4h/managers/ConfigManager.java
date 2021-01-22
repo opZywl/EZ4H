@@ -16,7 +16,7 @@ public class ConfigManager {
     @Getter
     private final int bedrockPort;
     @Getter
-    private final boolean xboxAuth,autoLogin;
+    private final boolean xboxAuth,autoLogin/*,mojangSkin*/;
     @Getter
     private final TextMessage playerList;
     @Getter
@@ -35,5 +35,6 @@ public class ConfigManager {
         debugLevel=advanced.getInteger("debug");
         autoLogin=advanced.getBoolean("autologin");
         xboxAuth=advanced.getBoolean("xbox-auth");
+//        mojangSkin=advanced.getBoolean("mojang-skin");
     }
 }

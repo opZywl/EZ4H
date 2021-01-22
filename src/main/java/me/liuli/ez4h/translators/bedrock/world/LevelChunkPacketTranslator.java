@@ -12,7 +12,7 @@ import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.BlockConverter;
 import me.liuli.ez4h.utils.nukkit.BitArray;

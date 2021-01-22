@@ -3,7 +3,7 @@ package me.liuli.ez4h.translators.bedrock.play;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ModalFormRequestPacketTranslator implements BedrockTranslator {

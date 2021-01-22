@@ -1,4 +1,4 @@
-package me.liuli.ez4h.minecraft.bedrock;
+package me.liuli.ez4h.minecraft;
 
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.BedrockSession;

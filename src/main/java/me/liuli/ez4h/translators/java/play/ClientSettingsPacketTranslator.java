@@ -4,7 +4,7 @@ import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientSettingsPacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.protocol.bedrock.packet.RequestChunkRadiusPacket;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientSettingsPacketTranslator implements JavaTranslator {

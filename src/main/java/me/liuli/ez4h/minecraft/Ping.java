@@ -1,4 +1,4 @@
-package me.liuli.ez4h.minecraft.java;
+package me.liuli.ez4h.minecraft;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.MinecraftConstants;

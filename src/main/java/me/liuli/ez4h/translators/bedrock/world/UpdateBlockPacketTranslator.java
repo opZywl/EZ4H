@@ -7,7 +7,7 @@ import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.UpdateBlockPacket;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.BlockConverter;
 

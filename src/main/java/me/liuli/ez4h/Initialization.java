@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Date;
 
-public class InitLibs {
+public class Initialization {
     public static String VERSION="0.1";
     public static long launchTime=0;
     public static void main(String[] args){

@@ -1,4 +1,4 @@
-package me.liuli.ez4h.minecraft.java;
+package me.liuli.ez4h.minecraft;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.service.SessionService;
@@ -21,7 +21,6 @@ import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.auth.fakeAuthServer.FakeServer;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.utils.OtherUtils;
 
 public class JavaServer {

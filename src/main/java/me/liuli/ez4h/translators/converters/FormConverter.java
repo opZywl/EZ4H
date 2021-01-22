@@ -3,7 +3,7 @@ package me.liuli.ez4h.translators.converters;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.cache.Form;
 import me.liuli.ez4h.utils.OtherUtils;
 

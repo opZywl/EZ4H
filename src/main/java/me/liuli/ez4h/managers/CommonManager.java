@@ -3,7 +3,7 @@ package me.liuli.ez4h.managers;
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import lombok.Getter;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONObject;
+import me.liuli.ez4h.utils.OtherUtils;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +19,7 @@ public class XboxLogin {
     private JSONObject getPreAuthToken() throws Exception{
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
         connection.setRequestMethod("GET");
-        setBaseHeaders(connection);
+        OtherUtils.setBaseHeaders(connection);
         String responce = uncompressGzip(connection.getInputStream());
         JSONObject resJson=new JSONObject();
         resJson.put("urlPost",findArgs(responce,"urlPost:'"));
@@ -38,7 +39,7 @@ public class XboxLogin {
         JSONObject preAuthToken=getPreAuthToken();
         HttpsURLConnection connection = (HttpsURLConnection) new URL(preAuthToken.getString("urlPost")).openConnection();
         connection.setRequestMethod("POST");
-        setBaseHeaders(connection);
+        OtherUtils.setBaseHeaders(connection);
         connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
         connection.setRequestProperty("Cookie",preAuthToken.getString("cookie"));
 
@@ -61,6 +62,7 @@ public class XboxLogin {
         connection.connect();
         InputStream is = connection.getInputStream();
         String url=connection.getURL().toString(),hash,access_token="";
+        System.out.println(url);
         hash=url.split("#")[1];
         String[] hashes=hash.split("&");
         for(String partHash:hashes){
@@ -70,7 +72,7 @@ public class XboxLogin {
             }
         }
         is.close();
-        return access_token;
+        return access_token.replaceAll("%2b","+");
     }
     private String findArgs(String str,String args){
         if(str.contains(args)){
@@ -82,11 +84,6 @@ public class XboxLogin {
         }else {
             throw new IllegalArgumentException("CANNOT FIND ARGUMENT");
         }
-    }
-    private void setBaseHeaders(HttpsURLConnection connection){
-        connection.setRequestProperty("Accept-encoding","gzip");
-        connection.setRequestProperty("Accept-Language","en-US");
-        connection.setRequestProperty("User-Agent","Mozilla/5.0 (XboxReplay; XboxLiveAuth/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
     }
     private String uncompressGzip(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

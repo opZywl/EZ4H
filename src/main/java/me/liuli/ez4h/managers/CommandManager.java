@@ -3,7 +3,7 @@ package me.liuli.ez4h.managers;
 import lombok.Getter;
 import me.liuli.ez4h.managers.command.CommandBase;
 import me.liuli.ez4h.managers.command.commands.HelpCommand;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 
 import java.util.HashMap;
 import java.util.Map;

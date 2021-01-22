@@ -7,7 +7,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerBlockV
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.BlockEventPacket;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class BlockEventPacketTranslator implements BedrockTranslator {

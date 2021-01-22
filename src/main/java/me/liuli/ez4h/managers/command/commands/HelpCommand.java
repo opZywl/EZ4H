@@ -2,7 +2,7 @@ package me.liuli.ez4h.managers.command.commands;
 
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.managers.command.CommandBase;
-import me.liuli.ez4h.minecraft.bedrock.Client;
+import me.liuli.ez4h.minecraft.Client;
 
 import java.util.Map;
 import java.util.Set;

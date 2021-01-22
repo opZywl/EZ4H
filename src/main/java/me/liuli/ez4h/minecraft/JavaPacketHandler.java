@@ -1,4 +1,4 @@
-package me.liuli.ez4h.minecraft.java;
+package me.liuli.ez4h.minecraft;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.protocol.MinecraftConstants;
@@ -12,7 +12,6 @@ import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.packet.Packet;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.utils.OtherUtils;
 
 public class JavaPacketHandler extends SessionAdapter {

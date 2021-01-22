@@ -8,11 +8,12 @@ import me.liuli.ez4h.managers.command.commands.FormCommand;
 import me.liuli.ez4h.managers.command.commands.SayCommand;
 import me.liuli.ez4h.managers.command.commands.VersionCommand;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
-import me.liuli.ez4h.minecraft.java.JavaServer;
+import me.liuli.ez4h.minecraft.JavaServer;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.bedrock.play.TextPacketTranslator;
 import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.OtherUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public class EZ4H {
         initProtocol();
         logger.info("Loading things...");
         registerCommands();
-        logger.info("Done!("+(new Date().getTime()-InitLibs.launchTime)+" ms)");
+        logger.info("Done!("+(new Date().getTime()- Initialization.launchTime)+" ms)");
     }
     private static void registerCommands() {
         commandManager=new CommandManager();
@@ -77,7 +78,7 @@ public class EZ4H {
         //register translators
         translatorManager=new TranslatorManager();
         {
-            Reflections reflections = new Reflections("me.liuli.ez4h.translators.bedrockTranslators");
+            Reflections reflections = new Reflections("me.liuli.ez4h.translators.bedrock");
             Set<Class<? extends BedrockTranslator>> subTypes = reflections.getSubTypesOf(BedrockTranslator.class);
             for (Class<? extends BedrockTranslator> translatorClass : subTypes) {
                 try {
@@ -89,7 +90,7 @@ public class EZ4H {
             }
         }
         {
-            Reflections reflections = new Reflections("me.liuli.ez4h.translators.javaTranslators");
+            Reflections reflections = new Reflections("me.liuli.ez4h.translators.java");
             Set<Class<? extends JavaTranslator>> subTypes = reflections.getSubTypesOf(JavaTranslator.class);
             for (Class<? extends JavaTranslator> translatorClass : subTypes) {
                 try {

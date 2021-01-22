@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemConverter {
-    private JSONObject BEDROCK_ID2NAME,JAVA_NAME2ID,JAVA_ENCH,BEDROCK_ENCH;
+    private final JSONObject BedrockItemMap;
+    private final JSONObject JavaItemMap;
+    private final JSONObject BedrockEnchantMap;
+    private final JSONObject JavaEnchantMap;
 
     public ItemConverter(JSONObject bedrock,JSONObject java,JSONObject enchant){
-        BEDROCK_ID2NAME=bedrock;
-        JAVA_NAME2ID=java;
-        BEDROCK_ENCH=enchant.getJSONObject("bedrock");
-        JAVA_ENCH=enchant.getJSONObject("java");
+        BedrockItemMap=bedrock;
+        JavaItemMap=java;
+        BedrockEnchantMap=enchant.getJSONObject("bedrock");
+        JavaEnchantMap=enchant.getJSONObject("java");
     }
 
     public int inventoryIndex(int index,boolean isToBedrock){
@@ -104,7 +107,7 @@ public class ItemConverter {
     }
     public ItemStack convertToJE(ItemData itemData){
         int id=1,data=0;
-        String item=(String)JAVA_NAME2ID.get((String) BEDROCK_ID2NAME.get(itemData.getId()+":"+itemData.getDamage()));
+        String item=(String)JavaItemMap.get((String) BedrockItemMap.get(itemData.getId()+":"+itemData.getDamage()));
         if(item!=null){
             String[] splitData=item.split(":");
             id=new Integer(splitData[0]);
@@ -121,11 +124,11 @@ public class ItemConverter {
         return new ItemStack(id,itemData.getCount(), data,tag);
     }
     public short getJavaEnchant(short id){
-        String result=BEDROCK_ENCH.getString(id+"");
+        String result=BedrockEnchantMap.getString(id+"");
         if(result==null){
             return id;
         }
-        Short javaResult=JAVA_ENCH.getShort(result);
+        Short javaResult=JavaEnchantMap.getShort(result);
         if(javaResult==null){
             return id;
         }
