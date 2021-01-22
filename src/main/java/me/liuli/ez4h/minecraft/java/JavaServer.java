@@ -20,8 +20,8 @@ import com.github.steveice10.packetlib.event.server.SessionRemovedEvent;
 import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.minecraft.auth.fakeAuthServer.FakeServer;
+import me.liuli.ez4h.minecraft.bedrock.Client;
 import me.liuli.ez4h.utils.OtherUtils;
 
 public class JavaServer {

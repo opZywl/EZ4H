@@ -36,5 +36,5 @@ public class ClientStat {
     public boolean invOpen=false;
     public ChestData queueChest=null;
     public boolean canFly=false;
-    public float walkSpeed=0.1F;
+    public float walkSpeed=0.7F;
 }

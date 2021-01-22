@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import lombok.Getter;
 
-import java.awt.image.BufferedImage;
-
 public class ConfigManager {
     @Getter
     private final JSONObject config;

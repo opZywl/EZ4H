@@ -34,8 +34,8 @@ public class FormConverter {
         client.sendMessage("Content:"+formJson.getString("content"));
         client.sendMessage("Button1:"+formJson.getString("button1"));
         client.sendMessage("Button2:"+formJson.getString("button2"));
-        client.sendMessage("\nUse `mform choose <1/2> to click button.");
-        client.sendMessage("Use `mform close to close the window.");
+        client.sendMessage("\nUse `form choose <1/2> to click button.");
+        client.sendMessage("Use `form close to close the window.");
     }
     public void showSimpleForm(Client client, JSONObject formJson){
         JSONArray buttons=formJson.getJSONArray("buttons");
@@ -62,36 +62,37 @@ public class FormConverter {
             switch (singleObject.getString("type")){
                 case "placeholder":{
                     message.append(" Placeholder:").append(singleObject.getString("text"));
-                    message.append("\nType `cform input ").append(i).append(" <string> to input text");
+                    message.append("\nType `form input ").append(i).append(" <string> to input text");
                     break;
                 }
                 case "toggle":{
-                    message.append("\nType `cform toggle ").append(i).append(" <true/false> to change toggle");
+                    message.append("\nType `form toggle ").append(i).append(" <true/false> to change toggle");
                     break;
                 }
                 case "step_slider":{
                     singleObject.put("options",singleObject.getJSONArray("steps"));
                     singleObject.put("steps",null);
+                    break;
                 }
                 case "dropdown":{
-                    message.append("\nType `cform view-choose ").append(i).append(" to view options");
-                    message.append("\nType `cform choose ").append(i).append(" <index> to choose options");
+                    message.append("\nType `form view-choose ").append(i).append(" to view options");
+                    message.append("\nType `form choose ").append(i).append(" <index> to choose options");
                     singleObject.put("type","choose");
                     contents.set(i,singleObject);
                     break;
                 }
                 case "slider":{
                     message.append(" Min:").append(singleObject.getDouble("min")).append(" max:").append(singleObject.getDouble("max")).append(" step:").append(singleObject.getDouble("step"));
-                    message.append("\nType `cform slider ").append(i).append(" <value> to change value");
+                    message.append("\nType `form slider ").append(i).append(" <value> to change value");
                     break;
                 }
             }
             types.add(i,singleObject.getString("type"));
             client.sendMessage(message.toString());
         }
-        client.sendMessage("\nUse `cform submit to submit the form.");
-        client.sendMessage("Use `cform value <index> view the value of the form.");
-        client.sendMessage("Use `cform close to close the window.");
+        client.sendMessage("\nUse `form submit to submit the form.");
+        client.sendMessage("Use `form value <index> view the value of the form.");
+        client.sendMessage("Use `form close to close the window.");
         formJson.put("values",defaults);
         formJson.put("types",types);
     }
