@@ -45,9 +45,13 @@ public class EZ4H {
     private static LoginManager loginManager;
     @Getter
     private static AuthManager authManager;
+    @Getter
+    private static final String version="0.2";
 
     public static void main(String[] args) {
+        long loadTime=System.currentTimeMillis();
         logger=LogManager.getLogger(EZ4H.class);
+        logger.info("Loading EZ4H v"+version);
 
         logger.info("Init files...");
         initFile();
@@ -55,7 +59,7 @@ public class EZ4H {
         initProtocol();
         logger.info("Loading things...");
         registerCommands();
-        logger.info("Done!("+(new Date().getTime()- Initialization.launchTime)+" ms)");
+        logger.info("Done!("+(new Date().getTime()-loadTime)+" ms)");
     }
     private static void registerCommands() {
         commandManager=new CommandManager();

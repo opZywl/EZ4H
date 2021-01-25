@@ -64,8 +64,8 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                     }
                 }
             }
-            //
             if(updateHP) {
+                //idk why client display hurtcam when regen
                 client.sendPacket(new ServerPlayerHealthPacket(client.clientStat.health, client.clientStat.food, 0));
             }
             if(updateEXP) {

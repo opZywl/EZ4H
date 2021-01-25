@@ -10,6 +10,9 @@
 
     <properties>
         <log4j2.version>2.13.3</log4j2.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
     </properties>
 
     <licenses>
@@ -33,24 +36,7 @@
         <url>https://github.com/Project-EZ4H/EZ4H/issues</url>
     </issueManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
         <repository>
             <id>nukkitx-repo-release</id>
             <url>https://repo.nukkitx.com/maven-releases/</url>
@@ -58,6 +44,14 @@
         <repository>
             <id>nukkitx-repo-snapshot</id>
             <url>https://repo.nukkitx.com/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>EZ4H-repo</id>
+            <url>http://repo.liulihaocai.pw/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -76,27 +70,15 @@
 
         <!-- MCJava PacketLib -->
         <dependency>
+            <groupId>me.liuli</groupId>
+            <artifactId>MCProtocolLib</artifactId>
+            <version>1.12.2-1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.steveice10</groupId>
             <artifactId>opennbt</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>packetlib</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>mcauthlib</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
         </dependency>
 
         <!-- Bedrock PacketLib -->
@@ -126,4 +108,31 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>me.liuli.ez4h.EZ4H</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
