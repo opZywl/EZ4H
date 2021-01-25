@@ -13,6 +13,7 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.bedrock.play.TextPacketTranslator;
 import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.MetricsLite;
 import me.liuli.ez4h.utils.OtherUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +47,8 @@ public class EZ4H {
     @Getter
     private static AuthManager authManager;
     @Getter
+    private static final String name="EZ4H";
+    @Getter
     private static final String version="0.2";
 
     public static void main(String[] args) {
@@ -59,6 +62,8 @@ public class EZ4H {
         initProtocol();
         logger.info("Loading things...");
         registerCommands();
+        //https://bstats.org/plugin/bukkit/EZ4H/10109
+        new MetricsLite("EZ4H",10109);
         logger.info("Done!("+(new Date().getTime()-loadTime)+" ms)");
     }
     private static void registerCommands() {
