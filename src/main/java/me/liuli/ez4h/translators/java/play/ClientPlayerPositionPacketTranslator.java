@@ -13,16 +13,18 @@ public class ClientPlayerPositionPacketTranslator implements JavaTranslator {
     public void translate(Packet inPacket, Client client) {
         ClientPlayerPositionPacket packet=(ClientPlayerPositionPacket)inPacket;
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setRotation(Vector3f.from(client.clientStat.pitch,client.clientStat.yaw,client.clientStat.yaw));
         movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
         movePlayerPacket.setOnGround(packet.isOnGround());
-        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
         movePlayerPacket.setRidingRuntimeEntityId(0);
+        movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
+        movePlayerPacket.setEntityType(0);
+        client.sendPacket(movePlayerPacket);
         client.clientStat.x= (float) packet.getX();
         client.clientStat.y= (float) packet.getY();
         client.clientStat.z= (float) packet.getZ();
-        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
-        movePlayerPacket.setRotation(Vector3f.from(client.clientStat.pitch,client.clientStat.yaw,0));
-        client.sendPacket(movePlayerPacket);
         ClientPlayerPositionRotationPacketTranslator.playerGround(client,packet.isOnGround());
     }
 

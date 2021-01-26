@@ -21,6 +21,8 @@ import me.liuli.ez4h.minecraft.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.utils.BedrockUtils;
 
+import java.nio.charset.StandardCharsets;
+
 public class StartGamePacketTranslator implements BedrockTranslator {
     public TextMessage playerList;
     public StartGamePacketTranslator(){
@@ -40,8 +42,10 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.getDescription(),playerList);
 
         //packet what Sponge send to client
-        ServerPluginMessagePacket pluginMessage1=new ServerPluginMessagePacket("REGISTER",new byte[]{83, 112, 111, 110, 103, 101});
-        ServerPluginMessagePacket pluginMessage2=new ServerPluginMessagePacket("MC|Brand",new byte[]{13, 83, 112, 111, 110, 103, 101, 86, 97, 110, 105, 108, 108, 97});
+        //original data [83, 112, 111, 110, 103, 101] => Sponge
+        ServerPluginMessagePacket pluginMessage1=new ServerPluginMessagePacket("REGISTER",EZ4H.getName().getBytes(StandardCharsets.UTF_8));
+        //original data [13, 83, 112, 111, 110, 103, 101, 86, 97, 110, 105, 108, 108, 97] => SpongeVanilla
+        ServerPluginMessagePacket pluginMessage2=new ServerPluginMessagePacket("MC|Brand",EZ4H.getName().getBytes(StandardCharsets.UTF_8));
 
         //login translate
         Difficulty difficulty;
@@ -52,7 +56,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         }
         ServerDifficultyPacket serverDifficultyPacket=new ServerDifficultyPacket(difficulty);
         ServerEntityStatusPacket serverEntityStatusPacket=new ServerEntityStatusPacket((int) packet.getRuntimeEntityId(), EntityStatus.PLAYER_OP_PERMISSION_LEVEL_0);
-        GameMode gamemode= BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
+        GameMode gamemode=BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
         ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
                 (int) packet.getRuntimeEntityId(),
                 false,

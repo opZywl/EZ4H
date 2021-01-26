@@ -23,7 +23,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             CommandRequestPacket commandRequestPacket=new CommandRequestPacket();
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
-            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"COMMAND",1));
+            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"",0));
             client.sendPacket(commandRequestPacket);
         }else if(firstChar.equals('`')) {
             if(packet.getMessage().length()>1) {

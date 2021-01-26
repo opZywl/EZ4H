@@ -10,7 +10,7 @@ public class ResourcePackStackPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ResourcePackStackPacket packet=(ResourcePackStackPacket)inPacket;
-        ResourcePackClientResponsePacket resourcePackClientResponsePacket=new ResourcePackClientResponsePacket();
+        ResourcePackClientResponsePacket resourcePackClientResponsePacket = new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
         client.sendPacket(resourcePackClientResponsePacket);
     }

@@ -37,9 +37,7 @@ public class BedrockUtils {
         GameMode gameMode=GameMode.SURVIVAL;
         try {
             gameMode=GameMode.valueOf(BEGameType);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
         return gameMode;
     }
     public static double calcDistance(double fromX,double fromY,double fromZ,double toX,double toY,double toZ){

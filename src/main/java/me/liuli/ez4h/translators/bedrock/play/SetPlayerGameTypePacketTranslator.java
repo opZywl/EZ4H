@@ -1,5 +1,6 @@
 package me.liuli.ez4h.translators.bedrock.play;
 
+import com.github.steveice10.mc.protocol.data.game.entity.player.GameMode;
 import com.github.steveice10.mc.protocol.data.game.world.notify.ClientNotification;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerNotifyClientPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
@@ -13,7 +14,10 @@ public class SetPlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetPlayerGameTypePacket packet=(SetPlayerGameTypePacket)inPacket;
-        client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()))));
+
+        GameMode gameMode=BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()));
+        client.clientStat.gameMode=gameMode;
+        client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE,gameMode));
     }
 
     @Override

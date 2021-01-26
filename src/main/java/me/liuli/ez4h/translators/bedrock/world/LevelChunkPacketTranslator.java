@@ -4,6 +4,7 @@ import com.github.steveice10.mc.protocol.data.game.chunk.BlockStorage;
 import com.github.steveice10.mc.protocol.data.game.chunk.Chunk;
 import com.github.steveice10.mc.protocol.data.game.chunk.Column;
 import com.github.steveice10.mc.protocol.data.game.chunk.NibbleArray3d;
+import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.mc.protocol.packet.ingame.server.world.ServerChunkDataPacket;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.nukkitx.network.VarInts;
@@ -18,7 +19,22 @@ import me.liuli.ez4h.translators.converters.BlockConverter;
 import me.liuli.ez4h.utils.nukkit.BitArray;
 import me.liuli.ez4h.utils.nukkit.BitArrayVersion;
 
+import java.util.Arrays;
+
 public class LevelChunkPacketTranslator implements BedrockTranslator {
+    private BlockStorage badBlockStrage;
+
+    public LevelChunkPacketTranslator(){
+        //generate blockstage for bad chunk data
+        BlockState stone=new BlockState(1,0);
+        badBlockStrage=new BlockStorage();
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                badBlockStrage.set(x,1,z,stone);
+            }
+        }
+    }
+
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         LevelChunkPacket packet=(LevelChunkPacket)inPacket;
@@ -35,53 +51,57 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
             byte storageSize = byteBuf.readByte();
             BlockStorage blockStorage=new BlockStorage();
             NibbleArray3d lightArray=new NibbleArray3d(4096);
-            for (int storageReadIndex = 0; storageReadIndex < storageSize; storageReadIndex++) {//1 appears to basically be empty, also nukkit basically says its empty
-                byte paletteHeader = byteBuf.readByte();
-                int paletteVersion = (paletteHeader | 1) >> 1;
-                BitArrayVersion bitArrayVersion = BitArrayVersion.get(paletteVersion, true);
+            try {
+                for (int storageReadIndex = 0; storageReadIndex < storageSize; storageReadIndex++) {//1 appears to basically be empty, also nukkit basically says its empty
+                    byte paletteHeader = byteBuf.readByte();
+                    int paletteVersion = (paletteHeader | 1) >> 1;
+                    BitArrayVersion bitArrayVersion = BitArrayVersion.get(paletteVersion, true);
 
-                int maxBlocksInSection = 4096;//16*16*16
-                BitArray bitArray = bitArrayVersion.createPalette(maxBlocksInSection);
-                int wordsSize = bitArrayVersion.getWordsForSize(maxBlocksInSection);
+                    int maxBlocksInSection = 4096;//16*16*16
+                    BitArray bitArray = bitArrayVersion.createPalette(maxBlocksInSection);
+                    int wordsSize = bitArrayVersion.getWordsForSize(maxBlocksInSection);
 
-                for (int wordIterationIndex = 0; wordIterationIndex < wordsSize; wordIterationIndex++) {
-                    int word = byteBuf.readIntLE();
-                    bitArray.getWords()[wordIterationIndex] = word;
-                }
+                    for (int wordIterationIndex = 0; wordIterationIndex < wordsSize; wordIterationIndex++) {
+                        int word = byteBuf.readIntLE();
+                        bitArray.getWords()[wordIterationIndex] = word;
+                    }
 
-                int paletteSize = VarInts.readInt(byteBuf);
-                int[] sectionPalette = new int[paletteSize];//so this holds all the different block types in the chunk section, first index is always air, then we have the block ids
-                for (int i = 0; i < paletteSize; i++) {
-                    int id = VarInts.readInt(byteBuf);
-                    sectionPalette[i] = id;
-                }
-                int index = 0;
-                for (int x = 0; x < 16; x++) {
-                    for (int z = 0; z < 16; z++) {
-                        for (int y = 0; y < 16; y++) {
-                            int paletteIndex = bitArray.get(index);
-                            String mcbeBlockName = blockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
-                            if (!mcbeBlockName.equals("air")) {
-                                blockStorage.set(x,y,z,blockConverter.getBlockByName(mcbeBlockName));
-                                int light=blockConverter.getBlockLightByName(mcbeBlockName);
-                                if(light>0) {
-                                    lightArray.set(x,y,z,light);
+                    int paletteSize = VarInts.readInt(byteBuf);
+                    int[] sectionPalette = new int[paletteSize];//so this holds all the different block types in the chunk section, first index is always air, then we have the block ids
+                    for (int i = 0; i < paletteSize; i++) {
+                        int id = VarInts.readInt(byteBuf);
+                        sectionPalette[i] = id;
+                    }
+                    int index = 0;
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            for (int y = 0; y < 16; y++) {
+                                int paletteIndex = bitArray.get(index);
+                                String mcbeBlockName = blockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
+                                if (!mcbeBlockName.equals("air")) {
+                                    blockStorage.set(x,y,z,blockConverter.getBlockByName(mcbeBlockName));
+                                    int light=blockConverter.getBlockLightByName(mcbeBlockName);
+                                    if(light>0) {
+                                        lightArray.set(x,y,z,light);
+                                    }
                                 }
+                                index++;
                             }
-                            index++;
                         }
                     }
                 }
+            } catch (Exception e) {
+                EZ4H.getLogger().warn("Translate Chunk("+chunkX+","+chunkZ+","+sectionIndex+") for player "+client.playerName+" failed!");
+                blockStorage=badBlockStrage;
+                lightArray=blockConverter.getNoLight();
             }
             chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, blockConverter.getFullLight());
         }
 
-        ByteBuf biomeBuf=byteBuf.readBytes(256);
-        byte[] biomeArray = new byte[biomeBuf.readableBytes()];
-        biomeBuf.getBytes(biomeBuf.readableBytes(),biomeBuf);
-
         byteBuf.release();
-        biomeBuf.release();
+
+        byte[] biomeArray = new byte[256];
+        Arrays.fill(biomeArray, (byte) 1);
 
         ServerChunkDataPacket serverChunkDataPacket=new ServerChunkDataPacket(new Column(chunkX,chunkZ,chunkSections,biomeArray,new CompoundTag[0]));
         client.sendPacket(serverChunkDataPacket);

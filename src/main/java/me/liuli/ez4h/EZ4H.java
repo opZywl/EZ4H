@@ -49,7 +49,7 @@ public class EZ4H {
     @Getter
     private static final String name="EZ4H";
     @Getter
-    private static final String version="0.2";
+    private static final String version="B20210125";
 
     public static void main(String[] args) {
         long loadTime=System.currentTimeMillis();

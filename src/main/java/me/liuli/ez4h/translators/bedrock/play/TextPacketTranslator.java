@@ -23,6 +23,10 @@ public class TextPacketTranslator implements BedrockTranslator {
                 client.sendPacket(new ServerChatPacket(packet.getMessage(), MessageType.SYSTEM));
                 break;
             }
+            case CHAT:{
+                client.sendMessage("["+packet.getSourceName()+"] "+packet.getMessage());
+                break;
+            }
             default:{
                 client.sendMessage(translateMessage(packet));
                 break;
