@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.nukkitx.protocol.bedrock.packet.ModalFormResponsePacket;
 import me.liuli.ez4h.managers.command.CommandBase;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.cache.Form;
+import me.liuli.ez4h.minecraft.data.play.Form;
 
 public class FormCommand implements CommandBase {
     @Override
@@ -13,7 +13,7 @@ public class FormCommand implements CommandBase {
     }
     @Override
     public void exec(String[] args, Client client) {
-        Form formData=client.clientStat.formData;
+        Form formData=client.getData().getForm();
         if(formData==null){
             client.sendAlert("No Any Form is opening now!");
             return;
@@ -46,7 +46,7 @@ public class FormCommand implements CommandBase {
                 }
                 reqPacket.setFormData(index+"");
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
             }
@@ -55,7 +55,7 @@ public class FormCommand implements CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Closed.");
                 break;
             }
@@ -86,7 +86,7 @@ public class FormCommand implements CommandBase {
                     client.sendAlert("[ERROR]Please input `form choose <1/2>");
                 }
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Result Bound To The Server.");
                 break;
             }
@@ -95,7 +95,7 @@ public class FormCommand implements CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Closed.");
                 break;
             }
@@ -194,7 +194,7 @@ public class FormCommand implements CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(formData.data.getJSONArray("values").toJSONString());
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Submitted.");
                 break;
             }
@@ -208,7 +208,7 @@ public class FormCommand implements CommandBase {
                 reqPacket.setFormId(formData.data.getInteger("id"));
                 reqPacket.setFormData(null);
                 client.sendPacket(reqPacket);
-                client.clientStat.formData=null;
+                client.getData().setForm(null);
                 client.sendAlert("Form Closed.");
                 break;
             }

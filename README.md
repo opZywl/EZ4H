@@ -1,4 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1cc63c381abb4db38e4f25ced750ef3f)](https://app.codacy.com/gh/Project-EZ4H/EZ4H?utm_source=github.com&utm_medium=referral&utm_content=Project-EZ4H/EZ4H&utm_campaign=Badge_Grade)
+[![HitCount](http://hits.dwyl.com/Project-EZ4H/EZ4H.svg)](http://hits.dwyl.com/Project-EZ4H/EZ4H)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
 [![discord](https://img.shields.io/discord/799644723328974868?style=for-the-badge)](https://discord.gg/s3H67gYe7Z)
 # EZ4H

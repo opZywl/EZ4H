@@ -15,14 +15,13 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
         movePlayerPacket.setMode(MovePlayerPacket.Mode.HEAD_ROTATION);
         movePlayerPacket.setOnGround(packet.isOnGround());
-        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
+        movePlayerPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
         movePlayerPacket.setRidingRuntimeEntityId(0);
-        movePlayerPacket.setPosition(Vector3f.from(client.clientStat.x,client.clientStat.y+1.62,client.clientStat.z));
+        movePlayerPacket.setPosition(client.getPlayer().getVec3Location());
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
         movePlayerPacket.setEntityType(0);
-        client.clientStat.yaw= (float) packet.getYaw();
-        client.clientStat.pitch= (float) packet.getPitch();
+        client.getPlayer().setRot(packet.getYaw(),packet.getPitch());
         client.sendPacket(movePlayerPacket);
     }
 

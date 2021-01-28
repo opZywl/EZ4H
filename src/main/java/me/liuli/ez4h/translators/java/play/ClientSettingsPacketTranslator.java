@@ -13,7 +13,7 @@ public class ClientSettingsPacketTranslator implements JavaTranslator {
         ClientSettingsPacket packet=(ClientSettingsPacket)inPacket;
         RequestChunkRadiusPacket requestChunkRadiusPacket=new RequestChunkRadiusPacket();
         requestChunkRadiusPacket.setRadius(packet.getRenderDistance());
-        client.bedrockSession.sendPacket(requestChunkRadiusPacket);
+        client.sendPacket(requestChunkRadiusPacket);
     }
 
     @Override

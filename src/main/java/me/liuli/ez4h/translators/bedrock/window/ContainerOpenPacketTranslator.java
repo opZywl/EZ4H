@@ -5,7 +5,7 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.ContainerOpenPacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.translators.cache.ChestData;
+import me.liuli.ez4h.minecraft.data.world.ChestData;
 
 public class ContainerOpenPacketTranslator implements BedrockTranslator {
     @Override
@@ -15,7 +15,7 @@ public class ContainerOpenPacketTranslator implements BedrockTranslator {
         switch (packet.getType()){
             case CONTAINER:{
                 //bedrock dont send slots data in this packet.slot count send to client in InventoryContentPacket
-                client.clientStat.queueChest=new ChestData(packet.getId(),"",WindowType.CHEST);
+                client.getData().setQueueChest(new ChestData(packet.getId(),"",WindowType.CHEST));
                 break;
             }
         }

@@ -18,7 +18,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_SNEAK);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 client.sendPacket(playerActionPacket);
                 break;
             }
@@ -27,7 +27,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SNEAK);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 client.sendPacket(playerActionPacket);
                 break;
             }
@@ -36,7 +36,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_SPRINT);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 client.sendPacket(playerActionPacket);
                 break;
             }
@@ -45,7 +45,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SPRINT);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 client.sendPacket(playerActionPacket);
                 break;
             }

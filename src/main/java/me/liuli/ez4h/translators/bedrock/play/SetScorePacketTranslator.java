@@ -17,18 +17,11 @@ public class SetScorePacketTranslator implements BedrockTranslator {
         List<ScoreInfo> infos=packet.getInfos();
         for(ScoreInfo scoreInfo:infos){
             switch (scoreInfo.getType()){
-                case INVALID:{
-                    ScoreInfo scoreInfo1=client.clientStat.scoreboardBars.get(scoreInfo.getScoreboardId());
-                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo1.getName(),40),scoreInfo1.getObjectiveId()));
-                    break;
-                }
                 default:{
-                    client.clientStat.scoreboardBars.put(scoreInfo.getScoreboardId(),scoreInfo);
-                    int score;
-                    if(client.clientStat.scoreboardOrder==0){
-                        score=(int) (infos.size()-scoreInfo.getScoreboardId());
-                    }else{
-                        score=(int) scoreInfo.getScoreboardId();
+                    int score=scoreInfo.getScore();
+                    //JE dont support sortorder :sadface:
+                    if(client.getData().getScoreSortorder()==0){
+                        score=-score;
                     }
                     client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo.getName(),40),scoreInfo.getObjectiveId(), score));
                     break;

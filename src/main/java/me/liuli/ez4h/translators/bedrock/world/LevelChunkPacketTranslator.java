@@ -55,6 +55,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                 for (int storageReadIndex = 0; storageReadIndex < storageSize; storageReadIndex++) {//1 appears to basically be empty, also nukkit basically says its empty
                     byte paletteHeader = byteBuf.readByte();
                     int paletteVersion = (paletteHeader | 1) >> 1;
+                    //paletteVersion=0 when use PocketMine
                     BitArrayVersion bitArrayVersion = BitArrayVersion.get(paletteVersion, true);
 
                     int maxBlocksInSection = 4096;//16*16*16
@@ -91,7 +92,8 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                     }
                 }
             } catch (Exception e) {
-                EZ4H.getLogger().warn("Translate Chunk("+chunkX+","+chunkZ+","+sectionIndex+") for player "+client.playerName+" failed!");
+                e.printStackTrace();
+                EZ4H.getLogger().warn("Translate Chunk("+chunkX+","+chunkZ+","+sectionIndex+") for player "+client.getPlayer().getName()+" failed!");
                 blockStorage=badBlockStrage;
                 lightArray=blockConverter.getNoLight();
             }

@@ -13,6 +13,18 @@ public class CommonManager {
     private final int bedrockProtocolVersion=422;
     @Getter
     private final BedrockPacketCodec bedrockCodec=Bedrock_v422.V422_CODEC;
-    @Getter
-    private final Map<String, Client> clientMap=new HashMap<>();
+    private final Map<String, Client> clients=new HashMap<>();
+
+    public void addClient(String name,Client client){
+        clients.put(name,client);
+    }
+    public Client getClient(String name){
+        return clients.get(name);
+    }
+    public Client removeClient(String name){
+        return clients.remove(name);
+    }
+    public int clientCount(){
+        return clients.size();
+    }
 }

@@ -16,13 +16,13 @@ public class AdventureSettingsPacketTranslator implements BedrockTranslator {
         if(packet.getSettings().contains(AdventureSetting.MAY_FLY)){
             flyable=true;
         }
-        if(client.clientStat.canFly!=flyable){
-            client.clientStat.canFly=flyable;
+        if(client.getPlayer().isFlyable()!=flyable){
+            client.getPlayer().setFlyable(flyable);
             boolean creativeMode=false;
-            if(client.clientStat.gameMode.equals(GameMode.CREATIVE)){
+            if(client.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
                 creativeMode=true;
             }
-            client.sendPacket(new ServerPlayerAbilitiesPacket(false,flyable,flyable,creativeMode,client.clientStat.walkSpeed,client.clientStat.walkSpeed));
+            client.sendPacket(new ServerPlayerAbilitiesPacket(false,flyable,flyable,creativeMode,client.getPlayer().getWalkSpeed(), client.getPlayer().getWalkSpeed()));
         }
     }
 

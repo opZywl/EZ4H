@@ -16,7 +16,7 @@ public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslato
         playerHotbarPacket.setSelectedHotbarSlot(packet.getSlot());
         playerHotbarPacket.setSelectHotbarSlot(true);
         client.sendPacket(playerHotbarPacket);
-        client.clientStat.slot=packet.getSlot();
+        client.getInventory().setHandSlot(packet.getSlot());
     }
 
     @Override

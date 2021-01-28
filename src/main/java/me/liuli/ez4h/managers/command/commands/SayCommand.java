@@ -27,11 +27,11 @@ public class SayCommand implements CommandBase {
         textPacket.setMessage(sayMessage.toString());
         textPacket.setType(TextPacket.Type.CHAT);
         textPacket.setNeedsTranslation(false);
-        textPacket.setXuid(client.playerUUID.toString());
+        textPacket.setXuid(client.getPlayer().getXuid());
         textPacket.setPlatformChatId("");
         List<String> para = new ArrayList<>();
         textPacket.setParameters(para);
-        textPacket.setSourceName(client.playerName);
+        textPacket.setSourceName(client.getPlayer().getName());
         client.sendPacket(textPacket);
     }
 }

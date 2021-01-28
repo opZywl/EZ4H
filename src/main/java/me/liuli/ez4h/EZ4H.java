@@ -7,14 +7,13 @@ import me.liuli.ez4h.managers.*;
 import me.liuli.ez4h.managers.command.commands.FormCommand;
 import me.liuli.ez4h.managers.command.commands.SayCommand;
 import me.liuli.ez4h.managers.command.commands.VersionCommand;
-import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.JavaServer;
+import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.bedrock.play.TextPacketTranslator;
 import me.liuli.ez4h.utils.FileUtils;
 import me.liuli.ez4h.utils.MetricsLite;
-import me.liuli.ez4h.utils.OtherUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +25,10 @@ import java.util.Date;
 import java.util.Set;
 
 public class EZ4H {
+    @Getter
+    private static final String name="EZ4H";
+    @Getter
+    private static final String version="v0.3";
     @Getter
     private static final String jarDir=EZ4H.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
@@ -43,13 +46,7 @@ public class EZ4H {
     @Getter
     private static ConverterManager converterManager;
     @Getter
-    private static LoginManager loginManager;
-    @Getter
     private static AuthManager authManager;
-    @Getter
-    private static final String name="EZ4H";
-    @Getter
-    private static final String version="B20210125";
 
     public static void main(String[] args) {
         long loadTime=System.currentTimeMillis();
@@ -121,7 +118,6 @@ public class EZ4H {
         AuthUtils.load();
 
         commonManager=new CommonManager();
-        loginManager=new LoginManager();
         authManager=new AuthManager();
 
         //opening server

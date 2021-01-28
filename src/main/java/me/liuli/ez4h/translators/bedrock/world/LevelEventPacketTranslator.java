@@ -7,7 +7,6 @@ import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.LevelEventPacket;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.minecraft.SmoothWeather;
 import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class LevelEventPacketTranslator implements BedrockTranslator {
@@ -26,36 +25,17 @@ public class LevelEventPacketTranslator implements BedrockTranslator {
                 client.sendPacket(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.RESET));
                 break;
             }
-            case STOP_RAINING:{
-                if(client.clientStat.rain){
-                    new SmoothWeather(0,false,client);
-                    client.clientStat.rain=false;
-                }
+            case STOP_RAINING:
+            case STOP_THUNDERSTORM: {
+                client.getWeather().setWeather(0);
                 break;
             }
             case START_RAINING:{
-                if(!client.clientStat.rain){
-                    new SmoothWeather(1,false,client);
-                    client.clientStat.rain=true;
-                }
-                if(client.clientStat.thunder){
-                    new SmoothWeather(0,true,client);
-                    client.clientStat.thunder=false;
-                }
+                client.getWeather().setWeather(1);
                 break;
             }
             case START_THUNDERSTORM:{
-                if(!client.clientStat.thunder){
-                    new SmoothWeather(1,true,client);
-                    client.clientStat.thunder=true;
-                }
-                break;
-            }
-            case STOP_THUNDERSTORM:{
-                if(client.clientStat.thunder){
-                    new SmoothWeather(0,true,client);
-                    client.clientStat.thunder=false;
-                }
+                client.getWeather().setWeather(2);
                 break;
             }
         }

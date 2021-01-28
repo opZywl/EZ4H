@@ -15,12 +15,13 @@ public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetDisplayObjectivePacket packet=(SetDisplayObjectivePacket)inPacket;
+
+        String name=BedrockUtils.lengthCutter(packet.getDisplayName(),32);
+
         switch (packet.getDisplaySlot()){
             case "sidebar":{
-                String name= BedrockUtils.lengthCutter(packet.getDisplayName(),32);
-                client.clientStat.scoreboardOrder=packet.getSortOrder();
-                client.clientStat.scoreboards.put(packet.getObjectiveId(),name);
-                client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD,name, ScoreType.HEARTS));
+                client.getData().setScoreSortorder(packet.getSortOrder());
+                client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD,name,ScoreType.INTEGER));
                 client.sendPacket(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, packet.getObjectiveId()));
                 break;
             }

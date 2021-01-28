@@ -13,7 +13,7 @@ public class ClientPlayerSwingArmPacketTranslator implements JavaTranslator {
         ClientPlayerSwingArmPacket packet=(ClientPlayerSwingArmPacket)inPacket;
         AnimatePacket animatePacket=new AnimatePacket();
         animatePacket.setAction(AnimatePacket.Action.SWING_ARM);
-        animatePacket.setRuntimeEntityId(client.clientStat.entityId);
+        animatePacket.setRuntimeEntityId(client.getPlayer().getEntityId());
         client.sendPacket(animatePacket);
     }
 

@@ -23,7 +23,7 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             CommandRequestPacket commandRequestPacket=new CommandRequestPacket();
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
-            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.playerUUID,"",0));
+            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.getPlayer().getUuid(),"",0));
             client.sendPacket(commandRequestPacket);
         }else if(firstChar.equals('`')) {
             if(packet.getMessage().length()>1) {
@@ -40,11 +40,11 @@ public class ClientChatPacketTranslator implements JavaTranslator {
             textPacket.setMessage(packet.getMessage());
             textPacket.setType(TextPacket.Type.CHAT);
             textPacket.setNeedsTranslation(false);
-            textPacket.setXuid(client.playerUUID.toString());
+            textPacket.setXuid(client.getPlayer().getXuid());
             textPacket.setPlatformChatId("");
             List<String> para = new ArrayList<>();
             textPacket.setParameters(para);
-            textPacket.setSourceName(client.playerName);
+            textPacket.setSourceName(client.getPlayer().getName());
             client.sendPacket(textPacket);
         }
     }

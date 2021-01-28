@@ -13,7 +13,7 @@ public class TakeItemEntityPacketTranslator implements BedrockTranslator {
         TakeItemEntityPacket packet=(TakeItemEntityPacket)inPacket;
         int[] entityIds=new int[1];
         entityIds[0]= (int) packet.getItemRuntimeEntityId();
-        client.clientStat.entityInfoMap.remove( (int) packet.getItemRuntimeEntityId());
+        client.getData().removeEntity((int) packet.getItemRuntimeEntityId());
         client.sendPacket(new ServerEntityDestroyPacket(entityIds));
         client.sendPacket(new ServerEntityCollectItemPacket((int)packet.getItemRuntimeEntityId(),(int)packet.getRuntimeEntityId(),1));
     }

@@ -1,4 +1,4 @@
-package me.liuli.ez4h.translators.bedrock.entity;
+package me.liuli.ez4h.translators.bedrock.play;
 
 import com.github.steveice10.mc.protocol.packet.ingame.server.scoreboard.ServerScoreboardObjectivePacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
@@ -10,10 +10,7 @@ public class RemoveObjectivePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         RemoveObjectivePacket packet=(RemoveObjectivePacket )inPacket;
-        String displayName=client.clientStat.scoreboards.get(packet.getObjectiveId());
-        if(displayName!=null){
-            client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));
-        }
+        client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));
     }
 
     @Override

@@ -25,8 +25,8 @@ public class ServerToClientHandshakePacketTranslator  implements BedrockTranslat
             JSONObject payloadObject = JSONObject.parseObject(payload);
 
             ECPublicKey serverKey = EncryptionUtils.generateKey(headerObject.getString("x5u"));
-            SecretKey key = EncryptionUtils.getSecretKey(client.privateKey, serverKey, Base64.getDecoder().decode(payloadObject.getString("salt")));
-            client.bedrockSession.enableEncryption(key);
+            SecretKey key = EncryptionUtils.getSecretKey(client.getPrivateKey(),serverKey, Base64.getDecoder().decode(payloadObject.getString("salt")));
+            client.getBedrockSession().enableEncryption(key);
         } catch (Exception e) {
             e.printStackTrace();
         }

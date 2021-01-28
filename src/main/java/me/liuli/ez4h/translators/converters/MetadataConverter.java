@@ -2,12 +2,18 @@ package me.liuli.ez4h.translators.converters;
 
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
 import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
+import com.github.steveice10.mc.protocol.data.game.scoreboard.ObjectiveAction;
+import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreType;
+import com.github.steveice10.mc.protocol.data.game.scoreboard.ScoreboardPosition;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityMetadataPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.scoreboard.ServerDisplayScoreboardPacket;
+import com.github.steveice10.mc.protocol.packet.ingame.server.scoreboard.ServerScoreboardObjectivePacket;
 import com.nukkitx.protocol.bedrock.data.entity.EntityData;
 import com.nukkitx.protocol.bedrock.data.entity.EntityDataMap;
 import com.nukkitx.protocol.bedrock.data.entity.EntityFlag;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.cache.EntityInfo;
+import me.liuli.ez4h.minecraft.data.entity.Entity;
+import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.ArrayList;
 
@@ -33,38 +39,38 @@ public class MetadataConverter {
         if(bedrockMetadata.getFlags()==null)
             return;
 
-        EntityInfo.Pose pose = EntityInfo.Pose.NONE;
+        Entity.Pose pose = Entity.Pose.NONE;
         if (bedrockMetadata.getFlags().getFlag(EntityFlag.SNEAKING)) {
-            pose = EntityInfo.Pose.SNEAK;
+            pose = Entity.Pose.SNEAK;
         }
         if (bedrockMetadata.getFlags().getFlag(EntityFlag.ON_FIRE)) {
-            pose = EntityInfo.Pose.FIRE;
+            pose = Entity.Pose.FIRE;
         }
-        if(entityId==client.clientStat.entityId){
+        if(entityId==client.getPlayer().getEntityId()){
             metadata.add(new EntityMetadata(0, MetadataType.BYTE, pose.data));
         }
-        EntityInfo entityInfo=client.clientStat.entityInfoMap.get(entityId);
-        if(entityInfo!=null) {
+        Entity entity=client.getData().getEntity(entityId);
+        if(entity!=null) {
             boolean canShowName = bedrockMetadata.getFlags().getFlag(EntityFlag.CAN_SHOW_NAME),
                     hasGravity = bedrockMetadata.getFlags().getFlag(EntityFlag.HAS_GRAVITY);
-            if (entityInfo.metadata.get(EntityFlag.CAN_SHOW_NAME) != canShowName) {
+            if (entity.getMetadata().get(EntityFlag.CAN_SHOW_NAME) != canShowName) {
                 if (canShowName) {
                     metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, true));
                 } else {
                     metadata.add(new EntityMetadata(3, MetadataType.BOOLEAN, false));
                 }
-                entityInfo.metadata.put(EntityFlag.CAN_SHOW_NAME, canShowName);
+                entity.getMetadata().put(EntityFlag.CAN_SHOW_NAME, canShowName);
             }
-            if (entityInfo.metadata.get(EntityFlag.HAS_GRAVITY) != hasGravity) {
+            if (entity.getMetadata().get(EntityFlag.HAS_GRAVITY) != hasGravity) {
                 if (hasGravity) {
                     metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, false));
                 } else {
                     metadata.add(new EntityMetadata(5, MetadataType.BOOLEAN, true));
                 }
-                entityInfo.metadata.put(EntityFlag.HAS_GRAVITY, hasGravity);
+                entity.getMetadata().put(EntityFlag.HAS_GRAVITY, hasGravity);
             }
-            if (!entityInfo.pose.equals(pose)) {
-                entityInfo.pose = pose;
+            if (!entity.getPose().equals(pose)) {
+                entity.setPose(pose);
                 metadata.add(new EntityMetadata(0, MetadataType.BYTE, pose.data));
             }
         }
@@ -72,5 +78,32 @@ public class MetadataConverter {
         if(metadata.size()>0){
             client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[metadata.size()])));
         }
+//        //score below name
+//        if(entity!=null){
+//            if(bedrockMetadata.containsKey(EntityData.SCORE_TAG)){
+//                boolean canChange=false;
+//                String score=BedrockUtils.lengthCutter(bedrockMetadata.getString(EntityData.SCORE_TAG),16);
+//                if(entity.scoretag==null){
+//                    canChange=true;
+//                }else{
+//                    canChange=!(entity.scoretag.equals(score));
+//                }
+//                if(canChange){
+//                    entity.scoretag=score;
+//                    client.sendPacket(new ServerScoreboardObjectivePacket("Entity_"+entity.id, ObjectiveAction.ADD,score,ScoreType.INTEGER));
+//                    client.sendPacket(new ServerDisplayScoreboardPacket(ScoreboardPosition.BELOW_NAME, "Entity_"+entity.id));
+//                }
+//            }else{
+//                if(entity.scoretag!=null){
+//                    entity.scoretag=null;
+//                    client.sendPacket(new ServerScoreboardObjectivePacket("Entity_"+entity.id));
+//                }
+//            }
+//        }else if(entityId==client.getPlayer().getEntityId()){
+//            if(bedrockMetadata.containsKey(EntityData.SCORE_TAG)) {
+//                client.sendPacket(new ServerScoreboardObjectivePacket("Entity_" + client.getPlayer().getEntityId(), ObjectiveAction.ADD, BedrockUtils.lengthCutter(bedrockMetadata.getString(EntityData.SCORE_TAG),16), ScoreType.INTEGER));
+//                client.sendPacket(new ServerDisplayScoreboardPacket(ScoreboardPosition.BELOW_NAME, "Entity_" + client.getPlayer().getEntityId()));
+//            }
+//        }
     }
 }

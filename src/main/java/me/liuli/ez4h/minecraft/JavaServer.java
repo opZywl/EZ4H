@@ -36,7 +36,7 @@ public class JavaServer {
             @Override
             public void loggedIn(Session session) {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                Client client=EZ4H.getCommonManager().getClientMap().get(profile.getName());
+                Client client=EZ4H.getCommonManager().getClient(profile.getName());
                 if(client!=null) {
                     session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) +"\"}").getBytes()));
                 }else{
@@ -72,10 +72,10 @@ public class JavaServer {
                 if(protocol.getSubProtocol() == SubProtocol.GAME) {
                     Session session=event.getSession();
                     GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                    Client client=EZ4H.getCommonManager().getClientMap().remove(profile.getName());
+                    Client client=EZ4H.getCommonManager().removeClient(profile.getName());
                     EZ4H.getLogger().info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
                     if(client!=null) {
-                        client.bedrockSession.disconnect();
+                        client.disconnectBedrock();
                     }else{
                         for(SessionListener sessionListener:session.getListeners()){
                             FakeServer fakeServer=(FakeServer)sessionListener;

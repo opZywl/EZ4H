@@ -9,7 +9,7 @@ public class DisconnectPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         DisconnectPacket packet=(DisconnectPacket)inPacket;
-        client.javaSession.disconnect(packet.getKickMessage());
+        client.disconnectJava(packet.getKickMessage());
     }
 
     @Override

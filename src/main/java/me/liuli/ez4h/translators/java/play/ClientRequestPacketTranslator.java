@@ -16,7 +16,7 @@ public class ClientRequestPacketTranslator implements JavaTranslator {
             case RESPAWN:{
                 RespawnPacket respawnPacket=new RespawnPacket();
                 respawnPacket.setPosition(Vector3f.from(0,0,0));
-                respawnPacket.setRuntimeEntityId(client.clientStat.entityId);
+                respawnPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 respawnPacket.setState(RespawnPacket.State.CLIENT_READY);
                 client.sendPacket(respawnPacket);
                 break;

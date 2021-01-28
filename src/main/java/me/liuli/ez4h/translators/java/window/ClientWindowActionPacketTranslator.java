@@ -27,14 +27,15 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
         ClientWindowActionPacket packet=(ClientWindowActionPacket)inPacket;
+        //TODO:Rewrite
         switch (packet.getMode()){
             case 0:{
                 if(packet.getSlot()==-999) return;
-                if(client.clientStat.itemInHand==0){
-                    client.clientStat.itemInHand=packet.getSlot();
+                if(client.getData().getItemInHand()==0){
+                    client.getData().setItemInHand(packet.getSlot());
                 }else{
-                    moveItem(client.clientStat.itemInHand, packet.getSlot(), client);
-                    client.clientStat.itemInHand=0;
+                    moveItem(client.getData().getItemInHand(), packet.getSlot(), client);
+                    client.getData().setItemInHand(0);
                 }
                 break;
             }
@@ -49,7 +50,7 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
             case 4:{
                 if(packet.getSlot()==-999) return;
                 int count=1;
-                ItemData item=client.clientStat.bedrockInventory[packet.getSlot()];
+                ItemData item=client.getData().getInventory().getBedrockItem(packet.getSlot());
                 if(packet.getButton()==1){
                     count=item.getCount();
                 }
@@ -60,16 +61,16 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
     }
 
     public void moveItem(int fromSlot,int toSlot,Client client){
-        if(!client.clientStat.invOpen){
+        if(!client.getInventory().isOpen()){
             InteractPacket interactPacket=new InteractPacket();
             interactPacket.setAction(InteractPacket.Action.OPEN_INVENTORY);
-            interactPacket.setRuntimeEntityId(client.clientStat.entityId);
+            interactPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
             interactPacket.setMousePosition(Vector3f.ZERO);
             client.sendPacket(interactPacket);
         }
         ItemConverter itemConverter=EZ4H.getConverterManager().getItemConverter();
-        ItemData fromItem=client.clientStat.bedrockInventory[fromSlot],
-                toItem=client.clientStat.bedrockInventory[toSlot];
+        ItemData fromItem=client.getInventory().getBedrockItem(fromSlot),
+                toItem=client.getInventory().getBedrockItem(toSlot);
 
         if(fromItem==null){
             fromItem=ItemData.AIR;
@@ -93,8 +94,8 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         client.sendPacket(inventoryTransactionPacket);
 
-        client.updateItem(fromItem,toSlot);
-        client.updateItem(toItem,fromSlot);
+        client.getInventory().updateItem(fromItem,toSlot,true);
+        client.getInventory().updateItem(toItem,fromSlot,true);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.liuli.ez4h.translators.cache;
+package me.liuli.ez4h.minecraft.data.world;
 
 import com.github.steveice10.mc.protocol.data.game.window.WindowType;
 

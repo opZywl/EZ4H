@@ -11,7 +11,7 @@ import com.nukkitx.protocol.bedrock.packet.AddItemEntityPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.translators.cache.EntityInfo;
+import me.liuli.ez4h.minecraft.data.entity.Entity;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class AddItemEntityPacketTranslator implements BedrockTranslator {
     public void translate(BedrockPacket inPacket, Client client) {
         AddItemEntityPacket packet=(AddItemEntityPacket)inPacket;
         Vector3f position=packet.getPosition(),motion=packet.getMotion();
-        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),new EntityInfo(position.getX(), (float) (position.getY()-1.62), position.getZ(), (int) packet.getRuntimeEntityId(), EntityInfo.Type.ITEM_ENTITY));
+        client.getData().addEntity((int) packet.getRuntimeEntityId(),new Entity(position.getX(), (float) (position.getY()-1.62), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ITEM_ENTITY));
         EntityMetadata[] metadata=new EntityMetadata[1];
         metadata[0]=new EntityMetadata(6, MetadataType.ITEM, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getItemInHand()));
         client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));

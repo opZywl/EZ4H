@@ -24,17 +24,17 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         switch (packet.getAction()){
             case START_DIGGING:{
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
 
-                if(client.clientStat.gameMode.equals(GameMode.CREATIVE)){
+                if(client.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
                     //creative block break only send START_DIGGING
                     Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
                     playerActionPacket = new PlayerActionPacket();
-                    playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                    playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                     playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
                     playerActionPacket.setBlockPosition(blockPosition);
                     playerActionPacket.setFace(packet.getFace().ordinal());
@@ -45,10 +45,10 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                     inventoryTransactionPacket.setActionType(2);
                     inventoryTransactionPacket.setBlockPosition(blockPosition);
                     inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
-                    inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-                    inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
-                    inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
-                    inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
+                    inventoryTransactionPacket.setHotbarSlot(client.getInventory().getHandSlot());
+                    inventoryTransactionPacket.setItemInHand(client.getInventory().getBedrockItemInHand());
+                    inventoryTransactionPacket.setPlayerPosition(client.getPlayer().getVec3Location());
+                    inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
                     client.sendPacket(inventoryTransactionPacket);
                 }
 
@@ -56,7 +56,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             }
             case CANCEL_DIGGING:{
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
@@ -66,7 +66,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             case FINISH_DIGGING:{
                 Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+                playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
                 playerActionPacket.setBlockPosition(blockPosition);
                 playerActionPacket.setFace(packet.getFace().ordinal());
@@ -77,19 +77,19 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 inventoryTransactionPacket.setActionType(2);
                 inventoryTransactionPacket.setBlockPosition(blockPosition);
                 inventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
-                inventoryTransactionPacket.setHotbarSlot(client.clientStat.slot);
-                inventoryTransactionPacket.setItemInHand(client.clientStat.bedrockInventory[36+client.clientStat.slot]);
-                inventoryTransactionPacket.setPlayerPosition(Vector3f.from(client.clientStat.x,client.clientStat.y,client.clientStat.z));
-                inventoryTransactionPacket.setClickPosition(Vector3f.from(0, 0, 0));
+                inventoryTransactionPacket.setHotbarSlot(client.getInventory().getHandSlot());
+                inventoryTransactionPacket.setItemInHand(client.getInventory().getBedrockItemInHand());
+                inventoryTransactionPacket.setPlayerPosition(client.getPlayer().getVec3Location());
+                inventoryTransactionPacket.setClickPosition(Vector3f.ZERO);
                 client.sendPacket(inventoryTransactionPacket);
                 break;
             }
             case DROP_ITEM:{
-                dropItem(client,1,client.clientStat.bedrockInventory[36+client.clientStat.slot]);
+                dropItem(client,1,client.getInventory().getBedrockItemInHand());
                 break;
             }
             case DROP_ITEM_STACK:{
-                dropItem(client,client.clientStat.bedrockInventory[36+client.clientStat.slot].getCount(),client.clientStat.bedrockInventory[36+client.clientStat.slot]);
+                dropItem(client,client.getInventory().getBedrockItemInHand().getCount(),client.getInventory().getBedrockItemInHand());
                 break;
             }
         }
@@ -119,11 +119,11 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         InventoryActionData inventoryActionData=new InventoryActionData(inventorySource,0,ItemData.AIR,itemData);
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         inventorySource=InventorySource.fromContainerWindowId(0);
-        inventoryActionData=new InventoryActionData(inventorySource,client.clientStat.slot,oldItem,newItem);
+        inventoryActionData=new InventoryActionData(inventorySource,client.getInventory().getHandSlot(),oldItem,newItem);
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         client.sendPacket(inventoryTransactionPacket);
 
-        client.updateItem(newItem,client.clientStat.slot+36);
+        client.getInventory().updateItem(newItem,client.getInventory().getHandSlot()+36,true);
     }
     @Override
     public Class<? extends MinecraftPacket> getPacketClass() {

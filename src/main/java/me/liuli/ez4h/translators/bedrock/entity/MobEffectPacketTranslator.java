@@ -55,9 +55,9 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
             return javaEffectId;
         }else{
             if(effectName==null){
-                EZ4H.getLogger().warn("Can't translate effect with ID "+id+" for player "+client.playerName);
+                EZ4H.getLogger().warn("Can't translate effect with ID "+id+" for player "+client.getPlayer().getName());
             }else{
-                EZ4H.getLogger().warn("Can't translate effect with name "+effectName+" for player "+client.playerName);
+                EZ4H.getLogger().warn("Can't translate effect with name "+effectName+" for player "+client.getPlayer().getName());
             }
         }
         return null;

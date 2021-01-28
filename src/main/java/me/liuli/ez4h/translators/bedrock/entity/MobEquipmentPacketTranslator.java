@@ -12,7 +12,7 @@ public class MobEquipmentPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobEquipmentPacket packet=(MobEquipmentPacket)inPacket;
-        if(packet.getRuntimeEntityId()==client.clientStat.entityId){
+        if(packet.getRuntimeEntityId()==client.getPlayer().getEntityId()){
             return;
         }
         switch (packet.getContainerId()){

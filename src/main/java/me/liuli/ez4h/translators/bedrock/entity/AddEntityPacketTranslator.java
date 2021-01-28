@@ -18,7 +18,7 @@ import com.nukkitx.protocol.bedrock.packet.AddEntityPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.translators.cache.EntityInfo;
+import me.liuli.ez4h.minecraft.data.entity.Entity;
 import me.liuli.ez4h.utils.BedrockUtils;
 import me.liuli.ez4h.utils.FileUtils;
 
@@ -36,8 +36,8 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
     public void translate(BedrockPacket inPacket, Client client) {
         AddEntityPacket packet=(AddEntityPacket)inPacket;
         Vector3f position=packet.getPosition();
-        EntityInfo entityInfo=new EntityInfo(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), EntityInfo.Type.ENTITY);
-        client.clientStat.entityInfoMap.put((int) packet.getRuntimeEntityId(),entityInfo);
+        Entity entity =new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ENTITY);
+        client.getData().addEntity((int) packet.getRuntimeEntityId(), entity);
 
         JSONObject entityData=entityMap.getJSONObject(prepareEntityName(packet.getIdentifier()));
         if(entityData!=null&&!entityData.getString("type").equals("disabled")){
@@ -66,7 +66,7 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
             }
         }else{
             //warn at console
-            EZ4H.getLogger().warn("Can't translate entity with name "+prepareEntityName(packet.getIdentifier())+" for player "+client.playerName);
+            EZ4H.getLogger().warn("Can't translate entity with name "+prepareEntityName(packet.getIdentifier())+" for player "+client.getPlayer().getName());
 
             //add a fakeplayer to replace this unknown entity
             UUID uuid= BedrockUtils.getUUID(packet.getRuntimeEntityId());

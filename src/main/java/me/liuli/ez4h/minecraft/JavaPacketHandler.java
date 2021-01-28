@@ -33,13 +33,13 @@ public class JavaPacketHandler extends SessionAdapter {
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
             Client client=null;
             if(!OtherUtils.isNull(profile)){
-                client=EZ4H.getCommonManager().getClientMap().get(profile.getName());
+                client=EZ4H.getCommonManager().getClient(profile.getName());
             }
             if(event.getPacket().getClass().equals(LoginStartPacket.class)){
                 LoginStartPacket lpacket=event.getPacket();
                 if(!EZ4H.getConfigManager().isXboxAuth()||EZ4H.getAuthManager().getAccessTokens().containsKey(lpacket.getUsername())) {
                     Client client_n = new Client(event, lpacket.getUsername());
-                    EZ4H.getCommonManager().getClientMap().put(lpacket.getUsername(), client_n);
+                    EZ4H.getCommonManager().addClient(lpacket.getUsername(), client_n);
                 }else{
                     event.getSession().removeListener(this);
                 }

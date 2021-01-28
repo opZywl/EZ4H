@@ -34,10 +34,6 @@ public class StartGamePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         StartGamePacket packet=(StartGamePacket)inPacket;
-        if(client.clientStat.onLogin){
-            return;
-        }
-        client.clientStat.onLogin=true;
         //player list
         ServerPlayerListDataPacket serverPlayerListDataPacket=new ServerPlayerListDataPacket(Ping.getDescription(),playerList);
 
@@ -50,21 +46,21 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         //login translate
         Difficulty difficulty;
         try {
-            difficulty=Difficulty.values()[packet.getDifficulty()];
+            difficulty=BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
         } catch (Exception e) {
             difficulty=Difficulty.NORMAL;
         }
         ServerDifficultyPacket serverDifficultyPacket=new ServerDifficultyPacket(difficulty);
         ServerEntityStatusPacket serverEntityStatusPacket=new ServerEntityStatusPacket((int) packet.getRuntimeEntityId(), EntityStatus.PLAYER_OP_PERMISSION_LEVEL_0);
-        GameMode gamemode=BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
+        GameMode gameMode=BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
         ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
                 (int) packet.getRuntimeEntityId(),
                 false,
-                gamemode,
+                gameMode,
                 packet.getDimensionId(),
                 BedrockUtils.convertDifficultyToJE(packet.getDifficulty()),
                 0,
-                WorldType.CUSTOMIZED,
+                WorldType.FLAT,
                 true
         );
         Vector3f position=packet.getPlayerPosition();
@@ -78,10 +74,10 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         client.sendPacket(serverEntityStatusPacket);
         client.sendPacket(serverPlayerListDataPacket);
 
-        client.clientStat.entityId=packet.getRuntimeEntityId();
-        client.clientStat.dimension=packet.getDimensionId();
-        client.clientStat.difficulty=BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
-        client.clientStat.gameMode=gamemode;
+        client.getPlayer().setEntityId(packet.getRuntimeEntityId());
+        client.getPlayer().setDimension(packet.getDimensionId());
+        client.getPlayer().setDifficulty(difficulty);
+        client.getPlayer().setGameMode(gameMode);
 
         SetLocalPlayerAsInitializedPacket setLocalPlayerAsInitializedPacket=new SetLocalPlayerAsInitializedPacket();
         setLocalPlayerAsInitializedPacket.setRuntimeEntityId(packet.getRuntimeEntityId());

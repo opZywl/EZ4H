@@ -14,13 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientPlayerPositionRotationPacketTranslator implements JavaTranslator {
-    private static Map<String, Boolean> canJumpMap=new HashMap<>();
     @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerPositionRotationPacket packet=(ClientPlayerPositionRotationPacket)inPacket;
         MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
-        movePlayerPacket.setRuntimeEntityId(client.clientStat.entityId);
-        movePlayerPacket.setPosition(Vector3f.from(packet.getX(),packet.getY()+1.62,packet.getZ()));
+        movePlayerPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
+        movePlayerPacket.setPosition(client.getPlayer().getVec3Location());
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), packet.getYaw()));
         movePlayerPacket.setMode(MovePlayerPacket.Mode.NORMAL);
         movePlayerPacket.setOnGround(packet.isOnGround());
@@ -28,27 +27,23 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
         movePlayerPacket.setEntityType(0);
         client.sendPacket(movePlayerPacket);
-        client.clientStat.x= (float) packet.getX();
-        client.clientStat.y= (float) packet.getY();
-        client.clientStat.z= (float) packet.getZ();
-        client.clientStat.yaw= (float) packet.getYaw();
-        client.clientStat.pitch= (float) packet.getPitch();
+        client.getPlayer().setPos(packet.getX(), packet.getY(), packet.getZ());
+        client.getPlayer().setRot(packet.getYaw(), packet.getPitch());
         playerGround(client,packet.isOnGround());
     }
 
     public static void playerGround(Client client, boolean onGround){
-        canJumpMap.putIfAbsent(client.playerName, true);
-        if(!onGround&&canJumpMap.get(client.playerName)){
+        if(!onGround&&client.getData().isJumpTiming()){
             PlayerActionPacket playerActionPacket=new PlayerActionPacket();
-            playerActionPacket.setRuntimeEntityId(client.clientStat.entityId);
+            playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
             playerActionPacket.setAction(PlayerActionPacket.Action.JUMP);
             playerActionPacket.setBlockPosition(Vector3i.ZERO);
             playerActionPacket.setFace(0);
             client.sendPacket(playerActionPacket);
-            canJumpMap.put(client.playerName,false);
+            client.getData().setJumpTiming(false);
         }
         if(onGround){
-            canJumpMap.put(client.playerName,true);
+            client.getData().setJumpTiming(true);
         }
     }
 

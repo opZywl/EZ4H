@@ -12,7 +12,7 @@ public class ClientCloseWindowPacketTranslator implements JavaTranslator {
     public void translate(Packet inPacket, Client client) {
         ClientCloseWindowPacket packet=(ClientCloseWindowPacket) inPacket;
 
-        if((!client.clientStat.invOpen)&&packet.getWindowId()==0)
+        if((!client.getInventory().isOpen())&&packet.getWindowId()==0)
             return;
 
         ContainerClosePacket containerClosePacket = new ContainerClosePacket();

@@ -16,15 +16,15 @@ public class InventorySlotPacketTranslator implements BedrockTranslator {
         
         switch (packet.getContainerId()){
             case 0:{
-                client.updateItem(packet.getItem(), itemConverter.inventoryIndex(packet.getSlot(),false));
+                client.getInventory().updateItem(packet.getItem(), itemConverter.inventoryIndex(packet.getSlot(),false),true);
                 break;
             }
             case 119:{
-                client.updateItem(packet.getItem(), 45);
+                client.getInventory().updateItem(packet.getItem(), 45,true);
                 break;
             }
             case 120:{
-                client.updateItem(packet.getItem(), packet.getSlot()+5);
+                client.getInventory().updateItem(packet.getItem(), packet.getSlot()+5,true);
                 break;
             }
             default:{

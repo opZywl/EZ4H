@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.cache.Form;
+import me.liuli.ez4h.minecraft.data.play.Form;
 import me.liuli.ez4h.utils.OtherUtils;
 
 //simple form:{"type":"form","title":"LSSW","content":"Choose Kits","buttons":[{"text":"Empty(NOW)"}],"closed":false}
@@ -28,7 +28,7 @@ public class FormConverter {
         }
     }
     public void showModalForm(Client client, JSONObject formJson){
-        client.clientStat.formData=new Form(Form.Type.MODAL,0,formJson);
+        client.getData().setForm(new Form(Form.Type.MODAL,0,formJson));
         client.sendAlert("You Received A Modal FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         client.sendMessage("Content:"+formJson.getString("content"));
@@ -39,7 +39,7 @@ public class FormConverter {
     }
     public void showSimpleForm(Client client, JSONObject formJson){
         JSONArray buttons=formJson.getJSONArray("buttons");
-        client.clientStat.formData=new Form(Form.Type.SIMPLE,buttons.size(),formJson);
+        client.getData().setForm(new Form(Form.Type.SIMPLE,buttons.size(),formJson));
         client.sendAlert("You Received A Simple FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         client.sendMessage("Content:"+formJson.getString("content"));
@@ -52,7 +52,7 @@ public class FormConverter {
     }
     public void showCustomForm(Client client, JSONObject formJson){
         JSONArray contents=formJson.getJSONArray("content"),defaults=new JSONArray(),types=new JSONArray();
-        client.clientStat.formData=new Form(Form.Type.CUSTOM,contents.size(),formJson);
+        client.getData().setForm(new Form(Form.Type.CUSTOM,contents.size(),formJson));
         client.sendAlert("You Received A Custom FormUI from the server.");
         client.sendMessage("Title:"+formJson.getString("title"));
         for(int i=0;i<contents.size();i++){
