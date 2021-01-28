@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import lombok.Getter;
 import me.liuli.ez4h.managers.*;
+import me.liuli.ez4h.managers.command.CommandBase;
 import me.liuli.ez4h.managers.command.commands.FormCommand;
 import me.liuli.ez4h.managers.command.commands.SayCommand;
 import me.liuli.ez4h.managers.command.commands.VersionCommand;
@@ -28,7 +29,7 @@ public class EZ4H {
     @Getter
     private static final String name="EZ4H";
     @Getter
-    private static final String version="v0.3";
+    private static final String version="0.3";
     @Getter
     private static final String jarDir=EZ4H.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
@@ -58,16 +59,9 @@ public class EZ4H {
         logger.info("Init Protocol...");
         initProtocol();
         logger.info("Loading things...");
-        registerCommands();
         //https://bstats.org/plugin/bukkit/EZ4H/10109
         new MetricsLite("EZ4H",10109);
         logger.info("Done!("+(new Date().getTime()-loadTime)+" ms)");
-    }
-    private static void registerCommands() {
-        commandManager=new CommandManager();
-        commandManager.registerCommand("say", new SayCommand());
-        commandManager.registerCommand("form", new FormCommand());
-        commandManager.registerCommand("version", new VersionCommand());
     }
     private static void initFile(){
         if(!new File("./config.json").exists()){
@@ -102,6 +96,19 @@ public class EZ4H {
                 try {
                     JavaTranslator javaTranslator = translatorClass.newInstance();
                     translatorManager.addJavaTranslator(javaTranslator);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        {
+            commandManager=new CommandManager();
+            Reflections reflections = new Reflections("me.liuli.ez4h.managers.command.commands");
+            Set<Class<? extends CommandBase>> subTypes = reflections.getSubTypesOf(CommandBase.class);
+            for (Class<? extends CommandBase> commandClass : subTypes) {
+                try {
+                    CommandBase command = commandClass.newInstance();
+                    commandManager.registerCommand(command);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -9,6 +9,10 @@ import java.util.List;
 
 public class SayCommand implements CommandBase {
     @Override
+    public String getCommandName() {
+        return "say";
+    }
+    @Override
     public String getHelpMessage(){
         return "Send Messages To Server.";
     }

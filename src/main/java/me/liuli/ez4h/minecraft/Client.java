@@ -17,9 +17,9 @@ import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.auth.Xbox;
-import me.liuli.ez4h.minecraft.data.play.ClientData;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
 import me.liuli.ez4h.minecraft.data.entity.PlayerData;
+import me.liuli.ez4h.minecraft.data.play.ClientData;
 import me.liuli.ez4h.minecraft.data.world.Weather;
 import me.liuli.ez4h.utils.OtherUtils;
 import me.liuli.ez4h.utils.RandUtils;
@@ -193,12 +193,13 @@ public class Client {
             JSONObject extraData = payloadObject.getJSONObject("extraData");
             this.player.setXuid(extraData.getString("XUID"));
             this.player.setUuid(UUID.fromString(extraData.getString("identity")));
+            EZ4H.getLogger().warn(this.player.getName()+" is login as "+extraData.getString("displayName"));
             this.player.setName(extraData.getString("displayName"));
         }
 
         loginPacket.setChainData(new AsciiString(chainDataObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
-        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockProtocolVersion());
+        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
     private void offlineLogin() throws Exception {
@@ -242,7 +243,7 @@ public class Client {
 
         loginPacket.setChainData(new AsciiString(jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
-        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockProtocolVersion());
+        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
     private String getSkinData() throws Exception{

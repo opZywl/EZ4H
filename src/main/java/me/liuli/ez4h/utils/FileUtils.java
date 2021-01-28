@@ -1,8 +1,6 @@
 package me.liuli.ez4h.utils;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarEntry;

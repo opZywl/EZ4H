@@ -14,7 +14,7 @@ import java.util.zip.GZIPInputStream;
 
 //Translate to java from https://github.com/XboxReplay/xboxlive-auth
 public class XboxLogin {
-    private static String XBOX_PRE_AUTH_URL="https://login.live.com/oauth20_authorize.srf?client_id=000000004C12AE6F&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&display=touch&response_type=token&locale=en";
+    private static String XBOX_PRE_AUTH_URL="https://login.live.com/oauth20_authorize.srf?client_id=00000000441cc96b&redirect_uri=https://login.live.com/oauth20_desktop.srf&response_type=token&display=touch&scope=service::user.auth.xboxlive.com::MBI_SSL&locale=en";
 
     private JSONObject getPreAuthToken() throws Exception{
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
@@ -61,18 +61,17 @@ public class XboxLogin {
 
         connection.connect();
         InputStream is = connection.getInputStream();
-        String url=connection.getURL().toString(),hash,access_token="";
-        System.out.println(url);
+        String url=connection.getURL().toString(),hash,accessToken="";
         hash=url.split("#")[1];
         String[] hashes=hash.split("&");
         for(String partHash:hashes){
             if(partHash.split("=")[0].equals("access_token")){
-                access_token=partHash.split("=")[1];
+                accessToken=partHash.split("=")[1];
                 break;
             }
         }
         is.close();
-        return access_token.replaceAll("%2b","+");
+        return accessToken.replaceAll("%2b","+");
     }
     private String findArgs(String str,String args){
         if(str.contains(args)){

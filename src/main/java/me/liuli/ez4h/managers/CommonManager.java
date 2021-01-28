@@ -10,8 +10,6 @@ import java.util.Map;
 
 public class CommonManager {
     @Getter
-    private final int bedrockProtocolVersion=422;
-    @Getter
     private final BedrockPacketCodec bedrockCodec=Bedrock_v422.V422_CODEC;
     private final Map<String, Client> clients=new HashMap<>();
 

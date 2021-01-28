@@ -10,9 +10,6 @@ import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ClientPlayerPositionRotationPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {

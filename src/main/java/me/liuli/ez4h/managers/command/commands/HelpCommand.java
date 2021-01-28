@@ -9,10 +9,13 @@ import java.util.Set;
 
 public class HelpCommand implements CommandBase {
     @Override
-    public String getHelpMessage() {
-        return null;
+    public String getCommandName() {
+        return "help";
     }
-
+    @Override
+    public String getHelpMessage() {
+        return "Show a list of commands";
+    }
     @Override
     public void exec(String[] args, Client client) {
         Set<Map.Entry<String, CommandBase>> entrySet=EZ4H.getCommandManager().getCommandMap().entrySet();

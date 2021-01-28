@@ -4,8 +4,8 @@ import com.github.steveice10.mc.protocol.data.game.window.WindowType;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.ContainerOpenPacket;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.minecraft.data.world.ChestData;
+import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ContainerOpenPacketTranslator implements BedrockTranslator {
     @Override

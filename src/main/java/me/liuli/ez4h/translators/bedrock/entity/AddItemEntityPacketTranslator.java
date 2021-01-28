@@ -10,8 +10,8 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.AddItemEntityPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.minecraft.data.entity.Entity;
+import me.liuli.ez4h.translators.BedrockTranslator;
 
 import java.util.UUID;
 

@@ -1,16 +1,13 @@
 package me.liuli.ez4h.translators.bedrock.entity;
 
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityHeadLookPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityPositionRotationPacket;
-import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityTeleportPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPositionRotationPacket;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import me.liuli.ez4h.minecraft.Client;
-import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.minecraft.data.entity.Entity;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {
     @Override

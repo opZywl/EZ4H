@@ -8,8 +8,6 @@ import lombok.Setter;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 
-import java.util.ArrayList;
-
 public class Inventory {
     private final Client client;
     @Getter

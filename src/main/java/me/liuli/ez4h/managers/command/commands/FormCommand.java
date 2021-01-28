@@ -8,6 +8,10 @@ import me.liuli.ez4h.minecraft.data.play.Form;
 
 public class FormCommand implements CommandBase {
     @Override
+    public String getCommandName() {
+        return "form";
+    }
+    @Override
     public String getHelpMessage(){
         return "Form Control Command.";
     }
