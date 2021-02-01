@@ -13,15 +13,15 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class BlockEventPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        BlockEventPacket packet=(BlockEventPacket)inPacket;
-        switch (packet.getEventType()){
-            case 1:{
-                Vector3i pos=packet.getBlockPosition();
-                Position blockPos=new Position(pos.getX(),pos.getY(),pos.getZ());
-                if(packet.getEventData()==2){
-                    client.sendPacket(new ServerBlockValuePacket(blockPos, ChestValueType.VIEWING_PLAYER_COUNT,new ChestValue(1),54));
-                }else{
-                    client.sendPacket(new ServerBlockValuePacket(blockPos, ChestValueType.VIEWING_PLAYER_COUNT,new ChestValue(0),54));
+        BlockEventPacket packet = (BlockEventPacket) inPacket;
+        switch (packet.getEventType()) {
+            case 1: {
+                Vector3i pos = packet.getBlockPosition();
+                Position blockPos = new Position(pos.getX(), pos.getY(), pos.getZ());
+                if (packet.getEventData() == 2) {
+                    client.sendPacket(new ServerBlockValuePacket(blockPos, ChestValueType.VIEWING_PLAYER_COUNT, new ChestValue(1), 54));
+                } else {
+                    client.sendPacket(new ServerBlockValuePacket(blockPos, ChestValueType.VIEWING_PLAYER_COUNT, new ChestValue(0), 54));
                 }
                 break;
             }

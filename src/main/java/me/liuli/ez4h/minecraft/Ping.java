@@ -19,60 +19,61 @@ import java.net.InetSocketAddress;
 public class Ping {
     @Setter
     @Getter
-    private static TextMessage description=new TextMessage("SERVER DESCRIPTION");
-    public Ping(Session session){
+    private static TextMessage description = new TextMessage("SERVER DESCRIPTION");
+
+    public Ping(Session session) {
         new Thread(new PingThread(session)).start();
     }
 }
 
-class PingThread implements Runnable{
-    private Session session;
+class PingThread implements Runnable {
+    private final Session session;
 
-    PingThread(Session session){
-        this.session=session;
+    PingThread(Session session) {
+        this.session = session;
     }
 
     @Override
     public void run() {
-        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000,50000));
+        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000, 50000));
         BedrockClient client = new BedrockClient(bindAddress);
         InetSocketAddress addressToPing = new InetSocketAddress(EZ4H.getConfigManager().getBedrockHost(), EZ4H.getConfigManager().getBedrockPort());
         client.bind().join();
         try {
             client.ping(addressToPing).whenComplete((pong, throwable) -> {
                 if (throwable != null) {
-                    sendPingData(session,new ServerStatusInfo(
-                            new VersionInfo("EZ4H",session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
+                    sendPingData(session, new ServerStatusInfo(
+                            new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                             new PlayerInfo(0, 0, new GameProfile[0]),
-                            new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:"+throwable.getLocalizedMessage()),
+                            new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:" + throwable.getLocalizedMessage()),
                             null
                     ));
                     return;
                 }
                 // Pong received.
-                Ping.setDescription(new TextMessage(pong.getMotd()+"\n"+pong.getSubMotd()));
-                sendPingData(session,new ServerStatusInfo(
-                        new VersionInfo("EZ4H",session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
+                Ping.setDescription(new TextMessage(pong.getMotd() + "\n" + pong.getSubMotd()));
+                sendPingData(session, new ServerStatusInfo(
+                        new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                         new PlayerInfo(pong.getMaximumPlayerCount(), pong.getPlayerCount(), new GameProfile[0]),
                         Ping.getDescription(),
                         null
                 ));
                 client.close();
             }).join();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             client.close();
-            sendPingData(session,new ServerStatusInfo(
-                    new VersionInfo("EZ4H",session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
+            sendPingData(session, new ServerStatusInfo(
+                    new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                     new PlayerInfo(0, 0, new GameProfile[0]),
-                    new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:"+e.getLocalizedMessage()),
+                    new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:" + e.getLocalizedMessage()),
                     null
             ));
         }
     }
 
-    private void sendPingData(Session session,ServerStatusInfo info){
-        if(session.isConnected()){
+    private void sendPingData(Session session, ServerStatusInfo info) {
+        if (session.isConnected()) {
             session.send(new StatusResponsePacket(info));
         }
     }

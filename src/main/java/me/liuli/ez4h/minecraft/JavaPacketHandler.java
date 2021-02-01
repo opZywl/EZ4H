@@ -18,31 +18,31 @@ public class JavaPacketHandler extends SessionAdapter {
     @Override
     public void packetReceived(PacketReceivedEvent event) {
         try {
-            Packet packet=event.getPacket();
-            if(((MinecraftProtocol) event.getSession().getPacketProtocol()).getSubProtocol() == SubProtocol.STATUS) {
-                if(packet instanceof StatusQueryPacket) {
+            Packet packet = event.getPacket();
+            if (((MinecraftProtocol) event.getSession().getPacketProtocol()).getSubProtocol() == SubProtocol.STATUS) {
+                if (packet instanceof StatusQueryPacket) {
                     new Ping(event.getSession());
-                } else if(packet instanceof StatusPingPacket) {
+                } else if (packet instanceof StatusPingPacket) {
                     event.getSession().send(new StatusPongPacket(event.<StatusPingPacket>getPacket().getPingTime()));
                 }
                 return;
             }
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
-            Client client=null;
-            if(!OtherUtils.isNull(profile)){
-                client=EZ4H.getClient(profile.getName());
+            Client client = null;
+            if (!OtherUtils.isNull(profile)) {
+                client = EZ4H.getClient(profile.getName());
             }
-            if(event.getPacket().getClass().equals(LoginStartPacket.class)){
-                LoginStartPacket lpacket=event.getPacket();
-                if(!EZ4H.getConfigManager().isXboxAuth()||EZ4H.getAuthManager().getAccessTokens().containsKey(lpacket.getUsername())) {
+            if (event.getPacket().getClass().equals(LoginStartPacket.class)) {
+                LoginStartPacket lpacket = event.getPacket();
+                if (!EZ4H.getConfigManager().isXboxAuth() || EZ4H.getAuthManager().getAccessTokens().containsKey(lpacket.getUsername())) {
                     Client client_n = new Client(event, lpacket.getUsername());
                     EZ4H.addClient(lpacket.getUsername(), client_n);
-                }else{
+                } else {
                     event.getSession().removeListener(this);
                 }
                 EZ4H.getLogger().info(lpacket.getUsername() + "[" + event.getSession().getHost() + ":" + event.getSession().getPort() + "] JOINED.");
-            }else{
-                if(client!=null) {
+            } else {
+                if (client != null) {
                     client.addPacket(packet);
                 }
             }

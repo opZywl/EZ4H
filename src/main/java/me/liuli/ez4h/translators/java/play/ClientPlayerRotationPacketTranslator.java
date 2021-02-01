@@ -11,17 +11,17 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerRotationPacket packet=(ClientPlayerRotationPacket)inPacket;
-        MovePlayerPacket movePlayerPacket=new MovePlayerPacket();
+        ClientPlayerRotationPacket packet = (ClientPlayerRotationPacket) inPacket;
+        MovePlayerPacket movePlayerPacket = new MovePlayerPacket();
         movePlayerPacket.setMode(MovePlayerPacket.Mode.HEAD_ROTATION);
         movePlayerPacket.setOnGround(packet.isOnGround());
         movePlayerPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
         movePlayerPacket.setRidingRuntimeEntityId(0);
         movePlayerPacket.setPosition(client.getPlayer().getVec3Location());
-        movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(),packet.getYaw(), 0));
+        movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(), packet.getYaw(), 0));
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
         movePlayerPacket.setEntityType(0);
-        client.getPlayer().setRot(packet.getYaw(),packet.getPitch());
+        client.getPlayer().setRot(packet.getYaw(), packet.getPitch());
         client.sendPacket(movePlayerPacket);
     }
 

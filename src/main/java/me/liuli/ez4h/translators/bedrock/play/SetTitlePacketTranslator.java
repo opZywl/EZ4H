@@ -10,20 +10,20 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class SetTitlePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        SetTitlePacket packet=(SetTitlePacket)inPacket;
-        switch (packet.getType()){
-            case TITLE:{
-                client.sendPacket(new ServerTitlePacket(packet.getText(),false));
+        SetTitlePacket packet = (SetTitlePacket) inPacket;
+        switch (packet.getType()) {
+            case TITLE: {
+                client.sendPacket(new ServerTitlePacket(packet.getText(), false));
                 break;
             }
-            case SUBTITLE:{
-                client.sendPacket(new ServerTitlePacket(packet.getText(),true));
+            case SUBTITLE: {
+                client.sendPacket(new ServerTitlePacket(packet.getText(), true));
                 break;
             }
-            case RESET:{
-                client.sendPacket(new ServerTitlePacket("",true));
-                client.sendPacket(new ServerTitlePacket("",false));
-                client.sendPacket(new ServerTitlePacket(TitleAction.RESET,""));
+            case RESET: {
+                client.sendPacket(new ServerTitlePacket("", true));
+                client.sendPacket(new ServerTitlePacket("", false));
+                client.sendPacket(new ServerTitlePacket(TitleAction.RESET, ""));
                 break;
             }
         }

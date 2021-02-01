@@ -18,13 +18,13 @@ import java.util.UUID;
 public class AddItemEntityPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        AddItemEntityPacket packet=(AddItemEntityPacket)inPacket;
-        Vector3f position=packet.getPosition(),motion=packet.getMotion();
-        client.getData().addEntity((int) packet.getRuntimeEntityId(),new Entity(position.getX(), (float) (position.getY()-1.62), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ITEM_ENTITY));
-        EntityMetadata[] metadata=new EntityMetadata[1];
-        metadata[0]=new EntityMetadata(6, MetadataType.ITEM, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getItemInHand()));
-        client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(),0,0));
-        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
+        AddItemEntityPacket packet = (AddItemEntityPacket) inPacket;
+        Vector3f position = packet.getPosition(), motion = packet.getMotion();
+        client.getData().addEntity((int) packet.getRuntimeEntityId(), new Entity(position.getX(), (float) (position.getY() - 1.62), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ITEM_ENTITY));
+        EntityMetadata[] metadata = new EntityMetadata[1];
+        metadata[0] = new EntityMetadata(6, MetadataType.ITEM, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getItemInHand()));
+        client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), UUID.nameUUIDFromBytes(String.valueOf(packet.getRuntimeEntityId()).getBytes()), ObjectType.ITEM, position.getX(), position.getY(), position.getZ(), 0, 0));
+        client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), metadata));
     }
 
     @Override

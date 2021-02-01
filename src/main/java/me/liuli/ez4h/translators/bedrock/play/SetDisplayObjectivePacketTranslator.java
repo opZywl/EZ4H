@@ -14,14 +14,14 @@ import me.liuli.ez4h.utils.BedrockUtils;
 public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        SetDisplayObjectivePacket packet=(SetDisplayObjectivePacket)inPacket;
+        SetDisplayObjectivePacket packet = (SetDisplayObjectivePacket) inPacket;
 
-        String name=BedrockUtils.lengthCutter(packet.getDisplayName(),32);
+        String name = BedrockUtils.lengthCutter(packet.getDisplayName(), 32);
 
-        switch (packet.getDisplaySlot()){
-            case "sidebar":{
+        switch (packet.getDisplaySlot()) {
+            case "sidebar": {
                 client.getData().setScoreSortorder(packet.getSortOrder());
-                client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD,name,ScoreType.INTEGER));
+                client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId(), ObjectiveAction.ADD, name, ScoreType.INTEGER));
                 client.sendPacket(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, packet.getObjectiveId()));
                 break;
             }

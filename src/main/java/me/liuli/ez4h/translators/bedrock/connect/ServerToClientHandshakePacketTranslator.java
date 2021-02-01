@@ -12,10 +12,10 @@ import javax.crypto.SecretKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.Base64;
 
-public class ServerToClientHandshakePacketTranslator  implements BedrockTranslator {
+public class ServerToClientHandshakePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        ServerToClientHandshakePacket packet=(ServerToClientHandshakePacket)inPacket;
+        ServerToClientHandshakePacket packet = (ServerToClientHandshakePacket) inPacket;
         try {
             String[] jwtSplit = packet.getJwt().split("\\.");
             String header = new String(Base64.getDecoder().decode(jwtSplit[0]));
@@ -25,7 +25,7 @@ public class ServerToClientHandshakePacketTranslator  implements BedrockTranslat
             JSONObject payloadObject = JSONObject.parseObject(payload);
 
             ECPublicKey serverKey = EncryptionUtils.generateKey(headerObject.getString("x5u"));
-            SecretKey key = EncryptionUtils.getSecretKey(client.getPrivateKey(),serverKey, Base64.getDecoder().decode(payloadObject.getString("salt")));
+            SecretKey key = EncryptionUtils.getSecretKey(client.getPrivateKey(), serverKey, Base64.getDecoder().decode(payloadObject.getString("salt")));
             client.getBedrockSession().enableEncryption(key);
         } catch (Exception e) {
             e.printStackTrace();

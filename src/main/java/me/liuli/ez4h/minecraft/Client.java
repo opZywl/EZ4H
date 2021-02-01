@@ -15,7 +15,6 @@ import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import io.netty.util.AsciiString;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.managers.DebugManager;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.auth.Xbox;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
@@ -36,8 +35,10 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
+    @Getter
+    private final PlayerData player;
     //xbox access token
-    private String accessToken=null;
+    private String accessToken = null;
     @Getter
     private BedrockClientSession bedrockSession;
     @Getter
@@ -49,22 +50,20 @@ public class Client {
     @Getter
     private ClientData data;
     @Getter
-    private final PlayerData player;
-    @Getter
-    private boolean alive=true;
+    private boolean alive = true;
     @Getter
     private PacketStorage packetStorage;
 
     private TranslateThread translateThread;
 
-    public Client(PacketReceivedEvent event, String playerName){
-        this.player=new PlayerData();
+    public Client(PacketReceivedEvent event, String playerName) {
+        this.player = new PlayerData();
         player.setName(playerName);
-        Client clientM=this;
+        Client clientM = this;
         try {
-            javaSession=event.getSession();
-            this.data=new ClientData(this);
-            InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000,50000));
+            javaSession = event.getSession();
+            this.data = new ClientData(this);
+            InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000, 50000));
             BedrockClient client = new BedrockClient(bindAddress);
             client.bind().join();
             InetSocketAddress addressToConnect = new InetSocketAddress(EZ4H.getConfigManager().getBedrockHost(), EZ4H.getConfigManager().getBedrockPort());
@@ -73,14 +72,14 @@ public class Client {
                     return;
                 }
 
-                this.bedrockSession=session;
+                this.bedrockSession = session;
                 session.setPacketCodec(EZ4H.getBedrockCodec());
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
 
-                packetStorage=new PacketStorage();
-                translateThread=new TranslateThread(this);
+                packetStorage = new PacketStorage();
+                translateThread = new TranslateThread(this);
                 new Thread(translateThread).start();
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
@@ -95,60 +94,68 @@ public class Client {
                         this.player.setUuid(UUID.nameUUIDFromBytes(("OfflinePlayer:" + this.player.getName()).getBytes(StandardCharsets.UTF_8)));
                         offlineLogin();
                     }
-                }catch (Throwable t){
-                    javaSession.disconnect("LOGIN ERROR\n"+t.toString());
+                } catch (Throwable t) {
+                    javaSession.disconnect("LOGIN ERROR\n" + t.toString());
                     t.printStackTrace();
                 }
             }).join();
         } catch (Exception e) {
-            event.getSession().disconnect("EZ4H ERROR!\nCaused by "+e.getLocalizedMessage());
-            if(bedrockSession != null){
+            event.getSession().disconnect("EZ4H ERROR!\nCaused by " + e.getLocalizedMessage());
+            if (bedrockSession != null) {
                 bedrockSession.disconnect();
             }
             e.printStackTrace();
         }
     }
 
-    public void addPacket(Packet packet){
-        packetStorage.addPacket(packet);
-    }
-    public void addPacket(BedrockPacket packet){
+    public void addPacket(Packet packet) {
         packetStorage.addPacket(packet);
     }
 
-    public void sendMessage(String msg){
+    public void addPacket(BedrockPacket packet) {
+        packetStorage.addPacket(packet);
+    }
+
+    public void sendMessage(String msg) {
         this.sendPacket(new ServerChatPacket(msg));
     }
-    public void sendAlert(String msg){
-        this.sendPacket(new ServerChatPacket("§f[§l§bEZ§94§bH§f§r] "+msg));
+
+    public void sendAlert(String msg) {
+        this.sendPacket(new ServerChatPacket("§f[§l§bEZ§94§bH§f§r] " + msg));
     }
-    public void sendPacket(BedrockPacket packet){
-        if(packet==null) return;
-        if(EZ4H.getDebugManager().isOutPackets()){
-            EZ4H.getLogger().debug("Bedrock OUT "+packet.toString());
+
+    public void sendPacket(BedrockPacket packet) {
+        if (packet == null) return;
+        if (EZ4H.getDebugManager().isOutPackets()) {
+            EZ4H.getLogger().debug("Bedrock OUT " + packet.toString());
         }
         this.bedrockSession.sendPacket(packet);
     }
-    public void sendPacket(Packet packet){
-        if(packet==null) return;
-        if(EZ4H.getDebugManager().isOutPackets()){
-            EZ4H.getLogger().debug("Java OUT "+packet.toString());
+
+    public void sendPacket(Packet packet) {
+        if (packet == null) return;
+        if (EZ4H.getDebugManager().isOutPackets()) {
+            EZ4H.getLogger().debug("Java OUT " + packet.toString());
         }
         this.javaSession.send(packet);
     }
-    public Inventory getInventory(){
+
+    public Inventory getInventory() {
         return this.data.getInventory();
     }
-    public Weather getWeather(){
+
+    public Weather getWeather() {
         return this.data.getWeather();
     }
-    public void disconnectJava(String reason){
-        alive=false;
+
+    public void disconnectJava(String reason) {
+        alive = false;
         javaSession.disconnect(reason);
     }
-    public void disconnectBedrock(){
-        alive=false;
-        DisconnectPacket disconnectPacket=new DisconnectPacket();
+
+    public void disconnectBedrock() {
+        alive = false;
+        DisconnectPacket disconnectPacket = new DisconnectPacket();
         disconnectPacket.setKickMessage("disconnect");
         disconnectPacket.setMessageSkipped(false);
         sendPacket(disconnectPacket);
@@ -157,12 +164,12 @@ public class Client {
             public void run() {
                 bedrockSession.disconnect();
             }
-        },1000);
+        }, 1000);
     }
 
     //login
     private void onlineLogin() throws Exception {
-        LoginPacket loginPacket=new LoginPacket();
+        LoginPacket loginPacket = new LoginPacket();
 
         KeyPair ecdsa256KeyPair = AuthUtils.createKeyPair();//for xbox live, xbox live requests use, ES256, ECDSA256
         this.publicKey = (ECPublicKey) ecdsa256KeyPair.getPublic();
@@ -208,7 +215,7 @@ public class Client {
             String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(newFirstChain.toJSONString().getBytes());
 
             byte[] dataToSign = (header + "." + payload).getBytes();
-            String signatureString = AuthUtils.signBytes(dataToSign,this.privateKey);
+            String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
 
             String jwt = header + "." + payload + "." + signatureString;
 
@@ -224,7 +231,7 @@ public class Client {
             JSONObject extraData = payloadObject.getJSONObject("extraData");
             this.player.setXuid(extraData.getString("XUID"));
             this.player.setUuid(UUID.fromString(extraData.getString("identity")));
-            EZ4H.getLogger().warn(this.player.getName()+" is login as "+extraData.getString("displayName"));
+            EZ4H.getLogger().warn(this.player.getName() + " is login as " + extraData.getString("displayName"));
             this.player.setName(extraData.getString("displayName"));
         }
 
@@ -233,8 +240,9 @@ public class Client {
         loginPacket.setProtocolVersion(EZ4H.getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
+
     private void offlineLogin() throws Exception {
-        LoginPacket loginPacket=new LoginPacket();
+        LoginPacket loginPacket = new LoginPacket();
 
         KeyPair ecdsa384KeyPair = EncryptionUtils.createKeyPair();//use ES384, ECDSA384
         this.publicKey = (ECPublicKey) ecdsa384KeyPair.getPublic();
@@ -261,7 +269,7 @@ public class Client {
         String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(chain.toJSONString().getBytes());
 
         byte[] dataToSign = (header + "." + payload).getBytes();
-        String signatureString = AuthUtils.signBytes(dataToSign,this.privateKey);
+        String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
 
         String jwt = header + "." + payload + "." + signatureString;
 
@@ -277,7 +285,8 @@ public class Client {
         loginPacket.setProtocolVersion(EZ4H.getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
-    private String getSkinData() throws Exception{
+
+    private String getSkinData() throws Exception {
         String publicKeyBase64 = Base64.getEncoder().encodeToString(this.publicKey.getEncoded());
 
         JSONObject jwtHeader = new JSONObject();
@@ -309,12 +318,12 @@ public class Client {
         skinData.put("PlatformOnlineId", "");
         skinData.put("PremiumSkin", false);
         skinData.put("SelfSignedId", this.player.getUuid().toString());//erm? i hope this works?
-        skinData.put("ServerAddress", EZ4H.getConfigManager().getBedrockHost()+":"+EZ4H.getConfigManager().getBedrockPort());
+        skinData.put("ServerAddress", EZ4H.getConfigManager().getBedrockHost() + ":" + EZ4H.getConfigManager().getBedrockPort());
         skinData.put("SkinAnimationData", "");
         skinData.put("SkinColor", "#0");
-        skinData.put("SkinData",getSkinB64());
+        skinData.put("SkinData", getSkinB64());
         skinData.put("SkinGeometryData", OtherUtils.base64Encode("{\"format_version\":\"1.12.0\",\"minecraft:geometry\":[{\"bones\":[{\"name\":\"body\",\"parent\":\"waist\",\"pivot\":[0,24,0]},{\"name\":\"waist\",\"pivot\":[0,12,0]},{\"cubes\":[{\"origin\":[-5,8,3],\"size\":[10,16,1],\"uv\":[0,0]}],\"name\":\"cape\",\"parent\":\"body\",\"pivot\":[0,24,3],\"rotation\":[0,180,0]}],\"description\":{\"identifier\":\"geometry.cape\",\"texture_height\":32,\"texture_width\":64}},{\"bones\":[{\"name\":\"root\",\"pivot\":[0,0,0]},{\"cubes\":[{\"origin\":[-4,12,-2],\"size\":[8,12,4],\"uv\":[16,16]}],\"name\":\"body\",\"parent\":\"waist\",\"pivot\":[0,24,0]},{\"name\":\"waist\",\"parent\":\"root\",\"pivot\":[0,12,0]},{\"cubes\":[{\"origin\":[-4,24,-4],\"size\":[8,8,8],\"uv\":[0,0]}],\"name\":\"head\",\"parent\":\"body\",\"pivot\":[0,24,0]},{\"name\":\"cape\",\"parent\":\"body\",\"pivot\":[0,24,3]},{\"cubes\":[{\"inflate\":0.5,\"origin\":[-4,24,-4],\"size\":[8,8,8],\"uv\":[32,0]}],\"name\":\"hat\",\"parent\":\"head\",\"pivot\":[0,24,0]},{\"cubes\":[{\"origin\":[4,12,-2],\"size\":[4,12,4],\"uv\":[32,48]}],\"name\":\"leftArm\",\"parent\":\"body\",\"pivot\":[5,22,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[4,12,-2],\"size\":[4,12,4],\"uv\":[48,48]}],\"name\":\"leftSleeve\",\"parent\":\"leftArm\",\"pivot\":[5,22,0]},{\"name\":\"leftItem\",\"parent\":\"leftArm\",\"pivot\":[6,15,1]},{\"cubes\":[{\"origin\":[-8,12,-2],\"size\":[4,12,4],\"uv\":[40,16]}],\"name\":\"rightArm\",\"parent\":\"body\",\"pivot\":[-5,22,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-8,12,-2],\"size\":[4,12,4],\"uv\":[40,32]}],\"name\":\"rightSleeve\",\"parent\":\"rightArm\",\"pivot\":[-5,22,0]},{\"locators\":{\"lead_hold\":[-6,15,1]},\"name\":\"rightItem\",\"parent\":\"rightArm\",\"pivot\":[-6,15,1]},{\"cubes\":[{\"origin\":[-0.1,0,-2],\"size\":[4,12,4],\"uv\":[16,48]}],\"name\":\"leftLeg\",\"parent\":\"root\",\"pivot\":[1.9,12,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-0.1,0,-2],\"size\":[4,12,4],\"uv\":[0,48]}],\"name\":\"leftPants\",\"parent\":\"leftLeg\",\"pivot\":[1.9,12,0]},{\"cubes\":[{\"origin\":[-3.9,0,-2],\"size\":[4,12,4],\"uv\":[0,16]}],\"name\":\"rightLeg\",\"parent\":\"root\",\"pivot\":[-1.9,12,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-3.9,0,-2],\"size\":[4,12,4],\"uv\":[0,32]}],\"name\":\"rightPants\",\"parent\":\"rightLeg\",\"pivot\":[-1.9,12,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-4,12,-2],\"size\":[8,12,4],\"uv\":[16,32]}],\"name\":\"jacket\",\"parent\":\"body\",\"pivot\":[0,24,0]}],\"description\":{\"identifier\":\"geometry.humanoid.custom\",\"texture_height\":64,\"texture_width\":64,\"visible_bounds_height\":2,\"visible_bounds_offset\":[0,1,0],\"visible_bounds_width\":1}},{\"bones\":[{\"name\":\"root\",\"pivot\":[0,0,0]},{\"name\":\"waist\",\"parent\":\"root\",\"pivot\":[0,12,0]},{\"cubes\":[{\"origin\":[-4,12,-2],\"size\":[8,12,4],\"uv\":[16,16]}],\"name\":\"body\",\"parent\":\"waist\",\"pivot\":[0,24,0]},{\"cubes\":[{\"origin\":[-4,24,-4],\"size\":[8,8,8],\"uv\":[0,0]}],\"name\":\"head\",\"parent\":\"body\",\"pivot\":[0,24,0]},{\"cubes\":[{\"inflate\":0.5,\"origin\":[-4,24,-4],\"size\":[8,8,8],\"uv\":[32,0]}],\"name\":\"hat\",\"parent\":\"head\",\"pivot\":[0,24,0]},{\"cubes\":[{\"origin\":[-3.9,0,-2],\"size\":[4,12,4],\"uv\":[0,16]}],\"name\":\"rightLeg\",\"parent\":\"root\",\"pivot\":[-1.9,12,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-3.9,0,-2],\"size\":[4,12,4],\"uv\":[0,32]}],\"name\":\"rightPants\",\"parent\":\"rightLeg\",\"pivot\":[-1.9,12,0]},{\"cubes\":[{\"origin\":[-0.1,0,-2],\"size\":[4,12,4],\"uv\":[16,48]}],\"mirror\":true,\"name\":\"leftLeg\",\"parent\":\"root\",\"pivot\":[1.9,12,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-0.1,0,-2],\"size\":[4,12,4],\"uv\":[0,48]}],\"name\":\"leftPants\",\"parent\":\"leftLeg\",\"pivot\":[1.9,12,0]},{\"cubes\":[{\"origin\":[4,11.5,-2],\"size\":[3,12,4],\"uv\":[32,48]}],\"name\":\"leftArm\",\"parent\":\"body\",\"pivot\":[5,21.5,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[4,11.5,-2],\"size\":[3,12,4],\"uv\":[48,48]}],\"name\":\"leftSleeve\",\"parent\":\"leftArm\",\"pivot\":[5,21.5,0]},{\"name\":\"leftItem\",\"parent\":\"leftArm\",\"pivot\":[6,14.5,1]},{\"cubes\":[{\"origin\":[-7,11.5,-2],\"size\":[3,12,4],\"uv\":[40,16]}],\"name\":\"rightArm\",\"parent\":\"body\",\"pivot\":[-5,21.5,0]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-7,11.5,-2],\"size\":[3,12,4],\"uv\":[40,32]}],\"name\":\"rightSleeve\",\"parent\":\"rightArm\",\"pivot\":[-5,21.5,0]},{\"locators\":{\"lead_hold\":[-6,14.5,1]},\"name\":\"rightItem\",\"parent\":\"rightArm\",\"pivot\":[-6,14.5,1]},{\"cubes\":[{\"inflate\":0.25,\"origin\":[-4,12,-2],\"size\":[8,12,4],\"uv\":[16,32]}],\"name\":\"jacket\",\"parent\":\"body\",\"pivot\":[0,24,0]},{\"name\":\"cape\",\"parent\":\"body\",\"pivot\":[0,24,-3]}],\"description\":{\"identifier\":\"geometry.humanoid.customSlim\",\"texture_height\":64,\"texture_width\":64,\"visible_bounds_height\":2,\"visible_bounds_offset\":[0,1,0],\"visible_bounds_width\":1}}]}"));
-        skinData.put("SkinId", this.player.getUuid().toString()+ ".Custom");//ok..? :shrug:
+        skinData.put("SkinId", this.player.getUuid().toString() + ".Custom");//ok..? :shrug:
         skinData.put("SkinImageHeight", 64);
         skinData.put("SkinImageWidth", 64);
         skinData.put("SkinResourcePatch", "ewogICAiZ2VvbWV0cnkiIDogewogICAgICAiZGVmYXVsdCIgOiAiZ2VvbWV0cnkuaHVtYW5vaWQuY3VzdG9tIgogICB9Cn0K");//base 64 of course
@@ -326,11 +335,12 @@ public class Client {
         String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(skinData.toJSONString().getBytes());
 
         byte[] dataToSign = (header + "." + payload).getBytes();
-        String signatureString = AuthUtils.signBytes(dataToSign,this.privateKey);
+        String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
 
         return header + "." + payload + "." + signatureString;
     }
-    private String getSkinB64(){
+
+    private String getSkinB64() {
 //        if(EZ4H.getConfigManager().isMojangSkin()){
 //            try {
 //                String uuid=OtherUtils.httpGet("https://api.mojang.com/users/profiles/minecraft/"+playerName);

@@ -14,50 +14,50 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.utils.FileUtils;
 
 public class MobEffectPacketTranslator implements BedrockTranslator {
-    private final JSONObject bedrockEffects,javaEffects;
+    private final JSONObject bedrockEffects, javaEffects;
 
-    public MobEffectPacketTranslator(){
-        JSONObject effectJSON=JSONObject.parseObject(FileUtils.readJarText("resources/effect.json", EZ4H.getJarDir()));
-        bedrockEffects=effectJSON.getJSONObject("bedrock");
-        javaEffects=effectJSON.getJSONObject("java");
+    public MobEffectPacketTranslator() {
+        JSONObject effectJSON = JSONObject.parseObject(FileUtils.getTextFromResource("resources/effect.json"));
+        bedrockEffects = effectJSON.getJSONObject("bedrock");
+        javaEffects = effectJSON.getJSONObject("java");
     }
 
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        MobEffectPacket packet=(MobEffectPacket)inPacket;
+        MobEffectPacket packet = (MobEffectPacket) inPacket;
 
-        Integer effect=getEffect(packet.getEffectId(),client);
-        if(effect==null) return;
+        Integer effect = getEffect(packet.getEffectId(), client);
+        if (effect == null) return;
 
-        switch (packet.getEvent()){
+        switch (packet.getEvent()) {
             case ADD:
             case MODIFY: {
-                EntityMetadata[] metadata=new EntityMetadata[1];
-                metadata[0]=new EntityMetadata(8, MetadataType.INT, packet.getEffectId());
-                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
-                client.sendPacket(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(),effect,packet.getAmplifier(),packet.getDuration(),true,packet.isParticles()));
+                EntityMetadata[] metadata = new EntityMetadata[1];
+                metadata[0] = new EntityMetadata(8, MetadataType.INT, packet.getEffectId());
+                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), metadata));
+                client.sendPacket(new ServerEntityEffectPacket((int) packet.getRuntimeEntityId(), effect, packet.getAmplifier(), packet.getDuration(), true, packet.isParticles()));
                 break;
             }
-            case REMOVE:{
-                EntityMetadata[] metadata=new EntityMetadata[1];
-                metadata[0]=new EntityMetadata(8, MetadataType.INT, 0);
-                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(),metadata));
-                client.sendPacket(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(),effect));
+            case REMOVE: {
+                EntityMetadata[] metadata = new EntityMetadata[1];
+                metadata[0] = new EntityMetadata(8, MetadataType.INT, 0);
+                client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), metadata));
+                client.sendPacket(new ServerEntityRemoveEffectPacket((int) packet.getRuntimeEntityId(), effect));
                 break;
             }
         }
     }
 
-    private Integer getEffect(int id,Client client){
-        String effectName=bedrockEffects.getString(id+"");
-        Integer javaEffectId=javaEffects.getInteger(effectName);
-        if(javaEffectId!=null) {
+    private Integer getEffect(int id, Client client) {
+        String effectName = bedrockEffects.getString(id + "");
+        Integer javaEffectId = javaEffects.getInteger(effectName);
+        if (javaEffectId != null) {
             return javaEffectId;
-        }else{
-            if(effectName==null){
-                EZ4H.getLogger().warn("Can't translate effect with ID "+id+" for player "+client.getPlayer().getName());
-            }else{
-                EZ4H.getLogger().warn("Can't translate effect with name "+effectName+" for player "+client.getPlayer().getName());
+        } else {
+            if (effectName == null) {
+                EZ4H.getLogger().warn("Can't translate effect with ID " + id + " for player " + client.getPlayer().getName());
+            } else {
+                EZ4H.getLogger().warn("Can't translate effect with name " + effectName + " for player " + client.getPlayer().getName());
             }
         }
         return null;

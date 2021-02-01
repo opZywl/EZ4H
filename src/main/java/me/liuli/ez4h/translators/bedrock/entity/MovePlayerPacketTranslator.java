@@ -12,16 +12,16 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class MovePlayerPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        MovePlayerPacket packet=(MovePlayerPacket)inPacket;
-        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
-        if(packet.getRuntimeEntityId()==client.getPlayer().getEntityId()){
-            ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(),rotation.getY(),rotation.getX(), 1);
+        MovePlayerPacket packet = (MovePlayerPacket) inPacket;
+        Vector3f position = packet.getPosition(), rotation = packet.getRotation();
+        if (packet.getRuntimeEntityId() == client.getPlayer().getEntityId()) {
+            ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), rotation.getY(), rotation.getX(), 1);
             client.sendPacket(serverPlayerPositionRotationPacket);
-            client.getPlayer().setPos(position.getX(),position.getY(), position.getZ());
-        }else{
-            Entity entity =client.getData().getEntity((int)packet.getRuntimeEntityId());
-            client.getData().moveEntity(entity,position,rotation,packet.isOnGround());
-            client.sendPacket(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
+            client.getPlayer().setPos(position.getX(), position.getY(), position.getZ());
+        } else {
+            Entity entity = client.getData().getEntity((int) packet.getRuntimeEntityId());
+            client.getData().moveEntity(entity, position, rotation, packet.isOnGround());
+            client.sendPacket(new ServerEntityHeadLookPacket((int) packet.getRuntimeEntityId(), rotation.getZ()));
         }
     }
 

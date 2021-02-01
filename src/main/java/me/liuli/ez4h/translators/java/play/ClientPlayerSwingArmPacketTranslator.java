@@ -10,8 +10,8 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerSwingArmPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerSwingArmPacket packet=(ClientPlayerSwingArmPacket)inPacket;
-        AnimatePacket animatePacket=new AnimatePacket();
+        ClientPlayerSwingArmPacket packet = (ClientPlayerSwingArmPacket) inPacket;
+        AnimatePacket animatePacket = new AnimatePacket();
         animatePacket.setAction(AnimatePacket.Action.SWING_ARM);
         animatePacket.setRuntimeEntityId(client.getPlayer().getEntityId());
         client.sendPacket(animatePacket);

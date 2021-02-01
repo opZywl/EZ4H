@@ -11,41 +11,46 @@ import me.liuli.ez4h.minecraft.Client;
 public class Inventory {
     private final Client client;
     @Getter
-    private final ItemStack[] javaInventory=new ItemStack[46];
+    private final ItemStack[] javaInventory = new ItemStack[46];
     @Getter
-    private final ItemData[] bedrockInventory=new ItemData[46];
-    @Getter
-    @Setter
-    private int handSlot=0;
+    private final ItemData[] bedrockInventory = new ItemData[46];
     @Getter
     @Setter
-    private boolean open=false;
+    private int handSlot = 0;
+    @Getter
+    @Setter
+    private boolean open = false;
 
-    public ItemData getBedrockItemInHand(){
-        return bedrockInventory[36+handSlot];
+    public Inventory(Client client) {
+        this.client = client;
     }
-    public ItemStack getJavaItemInHand(){
-        return javaInventory[36+handSlot];
+
+    public ItemData getBedrockItemInHand() {
+        return bedrockInventory[36 + handSlot];
     }
-    public void updateHand(int hand){
-        this.handSlot=hand;
+
+    public ItemStack getJavaItemInHand() {
+        return javaInventory[36 + handSlot];
     }
-    public ItemStack getJavaItem(int slot){
+
+    public void updateHand(int hand) {
+        this.handSlot = hand;
+    }
+
+    public ItemStack getJavaItem(int slot) {
         return javaInventory[slot];
     }
-    public ItemData getBedrockItem(int slot){
+
+    public ItemData getBedrockItem(int slot) {
         return bedrockInventory[slot];
     }
-    public void updateItem(ItemData itemData, int slot,boolean packet){
-        ItemStack itemStack=EZ4H.getConverterManager().getItemConverter().convertToJE(itemData);
-        javaInventory[slot]=itemStack;
-        bedrockInventory[slot]=itemData;
-        if(packet) {
+
+    public void updateItem(ItemData itemData, int slot, boolean packet) {
+        ItemStack itemStack = EZ4H.getConverterManager().getItemConverter().convertToJE(itemData);
+        javaInventory[slot] = itemStack;
+        bedrockInventory[slot] = itemData;
+        if (packet) {
             client.sendPacket(new ServerSetSlotPacket(0, slot, itemStack));
         }
-    }
-
-    public Inventory(Client client){
-        this.client=client;
     }
 }

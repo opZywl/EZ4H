@@ -26,18 +26,18 @@ import java.util.ArrayList;
 public class AddPlayerPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        AddPlayerPacket packet=(AddPlayerPacket)inPacket;
-        ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
-        playerListEntries.add(new PlayerListEntry(new GameProfile(packet.getUuid(), BedrockUtils.lengthCutter(packet.getMetadata().getString(EntityData.NAMETAG),16)), GameMode.SURVIVAL,0,new TextMessage(packet.getMetadata().getString(EntityData.NAMETAG))));
-        PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
+        AddPlayerPacket packet = (AddPlayerPacket) inPacket;
+        ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
+        playerListEntries.add(new PlayerListEntry(new GameProfile(packet.getUuid(), BedrockUtils.lengthCutter(packet.getMetadata().getString(EntityData.NAMETAG), 16)), GameMode.SURVIVAL, 0, new TextMessage(packet.getMetadata().getString(EntityData.NAMETAG))));
+        PlayerListEntry[] playerListEntriesL = playerListEntries.toArray(new PlayerListEntry[0]);
         client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 
-        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
-        client.getData().addEntity((int) packet.getRuntimeEntityId(),new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.PLAYER));
-        client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),packet.getUuid(), position.getX(), position.getY(), position.getZ(),rotation.getY(),rotation.getX(),new EntityMetadata[0]));
+        Vector3f position = packet.getPosition(), rotation = packet.getRotation();
+        client.getData().addEntity((int) packet.getRuntimeEntityId(), new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.PLAYER));
+        client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(), packet.getUuid(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), new EntityMetadata[0]));
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getHand())));
         client.sendPacket(new ServerEntityMetadataPacket((int) packet.getRuntimeEntityId(), new EntityMetadata[0]));
-        EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
+        EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
     }
 
 

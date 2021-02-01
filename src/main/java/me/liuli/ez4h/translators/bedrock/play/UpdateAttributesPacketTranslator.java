@@ -20,9 +20,9 @@ import java.util.List;
 public class UpdateAttributesPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        boolean updateHP=false,updateEXP=false;
-        UpdateAttributesPacket packet=(UpdateAttributesPacket)inPacket;
-        if(packet.getRuntimeEntityId()==client.getPlayer().getEntityId()) {
+        boolean updateHP = false, updateEXP = false;
+        UpdateAttributesPacket packet = (UpdateAttributesPacket) inPacket;
+        if (packet.getRuntimeEntityId() == client.getPlayer().getEntityId()) {
             List<AttributeData> attributes = packet.getAttributes();
             for (AttributeData attribute : attributes) {
                 switch (attribute.getName()) {
@@ -31,44 +31,44 @@ public class UpdateAttributesPacketTranslator implements BedrockTranslator {
                         attributes1.add(new Attribute(AttributeType.GENERIC_MAX_HEALTH, attribute.getMaximum()));
                         client.sendPacket(new ServerEntityPropertiesPacket((int) client.getPlayer().getEntityId(), attributes1));
                         client.getPlayer().setHealth(attribute.getValue());
-                        updateHP=true;
+                        updateHP = true;
                         break;
                     }
                     case "minecraft:player.experience": {
                         client.getPlayer().setExp(attribute.getValue() / attribute.getMaximum());
-                        updateEXP=true;
+                        updateEXP = true;
                         break;
                     }
                     case "minecraft:player.hunger": {
-                        client.getPlayer().setFood((int)attribute.getValue());
-                        updateHP=true;
+                        client.getPlayer().setFood((int) attribute.getValue());
+                        updateHP = true;
                         break;
                     }
                     case "minecraft:player.level": {
                         client.getPlayer().setExpLevel(attribute.getValue());
-                        updateEXP=true;
+                        updateEXP = true;
                         break;
                     }
-                    case "minecraft:movement":{
+                    case "minecraft:movement": {
                         client.getPlayer().setWalkSpeed(attribute.getValue());
-                        List<Attribute> attributes1=new ArrayList<>();
-                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED,attribute.getValue()));
-                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.getPlayer().getEntityId(),attributes1));
+                        List<Attribute> attributes1 = new ArrayList<>();
+                        attributes1.add(new Attribute(AttributeType.GENERIC_MOVEMENT_SPEED, attribute.getValue()));
+                        client.sendPacket(new ServerEntityPropertiesPacket((int) client.getPlayer().getEntityId(), attributes1));
                         break;
                     }
                     //ServerEntityMetadataPacket(entityId=2, metadata=[EntityMetadata(id=11, type=FLOAT, value=1024.0)])
                     //AttributeData(name=minecraft:absorption, minimum=0.0, maximum=3.4028235E38, value=4.0, defaultValue=0.0)
-                    case "minecraft:absorption":{
-                        client.sendPacket(new ServerEntityMetadataPacket((int) client.getPlayer().getEntityId(),new EntityMetadata[]{new EntityMetadata(11, MetadataType.FLOAT,attribute.getValue())}));
+                    case "minecraft:absorption": {
+                        client.sendPacket(new ServerEntityMetadataPacket((int) client.getPlayer().getEntityId(), new EntityMetadata[]{new EntityMetadata(11, MetadataType.FLOAT, attribute.getValue())}));
                         break;
                     }
                 }
             }
-            if(updateHP) {
+            if (updateHP) {
                 //idk why client display hurtcam when regen
                 client.sendPacket(new ServerPlayerHealthPacket(client.getPlayer().getHealth(), client.getPlayer().getFood(), 0));
             }
-            if(updateEXP) {
+            if (updateEXP) {
                 client.sendPacket(new ServerPlayerSetExperiencePacket(client.getPlayer().getExp(), (int) client.getPlayer().getExpLevel(), 0));
             }
         }

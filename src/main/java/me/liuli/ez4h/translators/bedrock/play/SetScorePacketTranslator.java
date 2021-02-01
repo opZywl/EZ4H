@@ -13,17 +13,17 @@ import java.util.List;
 public class SetScorePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        SetScorePacket packet=(SetScorePacket)inPacket;
-        List<ScoreInfo> infos=packet.getInfos();
-        for(ScoreInfo scoreInfo:infos){
-            switch (scoreInfo.getType()){
-                default:{
-                    int score=scoreInfo.getScore();
+        SetScorePacket packet = (SetScorePacket) inPacket;
+        List<ScoreInfo> infos = packet.getInfos();
+        for (ScoreInfo scoreInfo : infos) {
+            switch (scoreInfo.getType()) {
+                default: {
+                    int score = scoreInfo.getScore();
                     //JE dont support sortorder :sadface:
-                    if(client.getData().getScoreSortorder()==0){
-                        score=-score;
+                    if (client.getData().getScoreSortorder() == 0) {
+                        score = -score;
                     }
-                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo.getName(),40),scoreInfo.getObjectiveId(), score));
+                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo.getName(), 40), scoreInfo.getObjectiveId(), score));
                     break;
                 }
             }

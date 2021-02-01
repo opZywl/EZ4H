@@ -7,47 +7,51 @@ import lombok.Getter;
 import me.liuli.ez4h.minecraft.Client;
 
 public class Weather {
-    private Client client;
+    private final Client client;
     @Getter
     private int weather;
-    public Weather(Client client){
-        this.client=client;
+
+    public Weather(Client client) {
+        this.client = client;
     }
-    public void setWeather(int weather){
-        switch (weather){
-            case 0:{
-                if(this.weather==2){
-                    changeWeatherToClient(0,true);
-                }else if(this.weather==1){
-                    changeWeatherToClient(0,false);
+
+    public void setWeather(int weather) {
+        switch (weather) {
+            case 0: {
+                if (this.weather == 2) {
+                    changeWeatherToClient(0, true);
+                } else if (this.weather == 1) {
+                    changeWeatherToClient(0, false);
                 }
                 break;
             }
-            case 1:{
-                changeWeatherToClient(1,false);
+            case 1: {
+                changeWeatherToClient(1, false);
                 break;
             }
-            case 2:{
-                changeWeatherToClient(1,true);
+            case 2: {
+                changeWeatherToClient(1, true);
                 break;
             }
         }
-        this.weather=weather;
+        this.weather = weather;
     }
-    private void changeWeatherToClient(float to,boolean isThunder){
-        WeatherThread weatherThread=new WeatherThread();
-        weatherThread.isThunder=isThunder;
-        weatherThread.to=to;
-        weatherThread.client=client;
+
+    private void changeWeatherToClient(float to, boolean isThunder) {
+        WeatherThread weatherThread = new WeatherThread();
+        weatherThread.isThunder = isThunder;
+        weatherThread.to = to;
+        weatherThread.client = client;
         Thread thread = new Thread(weatherThread);
         thread.start();
     }
 }
 
 class WeatherThread implements Runnable {
-    public boolean isThunder,mode=false;//mode true plus,false minus
+    public boolean isThunder, mode = false;//mode true plus,false minus
     public Client client;
     public float to;
+
     public void run() {
         try {
             if (to == 1) {

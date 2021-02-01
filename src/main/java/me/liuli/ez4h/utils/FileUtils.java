@@ -1,24 +1,31 @@
 package me.liuli.ez4h.utils;
 
+import com.google.gson.JsonObject;
+import me.liuli.ez4h.EZ4H;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class FileUtils {
-    public static String readIS(InputStream inputStream) throws Exception {
+    public static String getTextFromInputStream(InputStream inputStream) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
         while ((length = inputStream.read(buffer)) != -1) {
             byteArrayOutputStream.write(buffer, 0, length);
         }
+
         byteArrayOutputStream.close();
         inputStream.close();
+
         return byteArrayOutputStream.toString("UTF-8");
     }
-    public static byte[] readIS2Byte(InputStream inputStream) throws Exception {
+
+    public static byte[] getByteFromInputStream(InputStream inputStream) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
@@ -29,60 +36,33 @@ public class FileUtils {
         inputStream.close();
         return byteArrayOutputStream.toByteArray();
     }
-    public static String readFile(String fileName) {
-        File file = new File(fileName);
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
+
+    public static String readFile(File file) {
         try {
-            FileInputStream in = new FileInputStream(file);
-            in.read(filecontent);
-            in.close();
-            return new String(filecontent, StandardCharsets.UTF_8);
+            return new String(Files.readAllBytes(file.toPath()));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
-    public static void writeFile(String path,String text) {
+
+    public static void writeFile(String path, String text) {
         try {
-            Writer writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
+            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
             writer.write(text);
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void readJar(String fileName,String jarDir,String path){
+
+    public static String getTextFromResource(String resourceName) {
+        InputStream inputStream = EZ4H.class.getClassLoader().getResourceAsStream(resourceName);
         try {
-            JarFile jarFile = new JarFile(jarDir);
-            JarEntry entry = jarFile.getJarEntry(fileName);
-            InputStream input = jarFile.getInputStream(entry);
-            writeIS(input,new File(path));
-            input.close();
-            jarFile.close();
-        }catch (Exception e){
+            return getTextFromInputStream(inputStream);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public static String readJarText(String fileName,String jarDir){
-        try {
-            JarFile jarFile = new JarFile(jarDir);
-            JarEntry entry = jarFile.getJarEntry(fileName);
-            InputStream input = jarFile.getInputStream(entry);
-            String text=readIS(input);
-            input.close();
-            jarFile.close();
-            return text;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return "";
-    }
-    private static void writeIS(InputStream input,File file) {
-        try {
-            java.nio.file.Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        return null;
     }
 }

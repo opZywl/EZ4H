@@ -2,15 +2,15 @@ package me.liuli.ez4h.utils.nukkit;
 
 public interface BitArray {
 
-	void set(int index, int value);
+    void set(int index, int value);
 
-	int get(int index);
+    int get(int index);
 
-	int size();
+    int size();
 
-	int[] getWords();
+    int[] getWords();
 
-	BitArrayVersion getVersion();
+    BitArrayVersion getVersion();
 
-	BitArray copy();
+    BitArray copy();
 }

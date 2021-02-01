@@ -8,10 +8,12 @@ public class GcCommand implements CommandBase {
     public String getCommandName() {
         return "gc";
     }
+
     @Override
     public String getHelpMessage() {
         return "Garbage Collection";
     }
+
     @Override
     public void exec(String[] args, Client client) {
         long memory = Runtime.getRuntime().freeMemory();

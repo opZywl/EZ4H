@@ -13,18 +13,18 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerInteractEntityPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerInteractEntityPacket packet=(ClientPlayerInteractEntityPacket)inPacket;
-        switch (packet.getAction()){
+        ClientPlayerInteractEntityPacket packet = (ClientPlayerInteractEntityPacket) inPacket;
+        switch (packet.getAction()) {
             case INTERACT_AT:
-            case INTERACT:{
-                InteractPacket interactPacket=new InteractPacket();
+            case INTERACT: {
+                InteractPacket interactPacket = new InteractPacket();
                 interactPacket.setAction(InteractPacket.Action.INTERACT);
                 interactPacket.setRuntimeEntityId(packet.getEntityId());
                 interactPacket.setMousePosition(Vector3f.ZERO);
                 client.sendPacket(interactPacket);
                 break;
             }
-            case ATTACK:{
+            case ATTACK: {
                 InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
                 inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE_ON_ENTITY);
                 inventoryTransactionPacket.setActionType(1);

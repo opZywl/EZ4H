@@ -12,9 +12,9 @@ import me.liuli.ez4h.translators.converters.ItemConverter;
 public class MobArmorEquipmentPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        MobArmorEquipmentPacket packet=(MobArmorEquipmentPacket)inPacket;
+        MobArmorEquipmentPacket packet = (MobArmorEquipmentPacket) inPacket;
 
-        ItemConverter itemConverter=EZ4H.getConverterManager().getItemConverter();
+        ItemConverter itemConverter = EZ4H.getConverterManager().getItemConverter();
 
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.HELMET, itemConverter.convertToJE(packet.getHelmet())));
         client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.CHESTPLATE, itemConverter.convertToJE(packet.getChestplate())));

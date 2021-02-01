@@ -4,6 +4,8 @@ import me.liuli.ez4h.minecraft.Client;
 
 public interface CommandBase {
     String getCommandName();
+
     String getHelpMessage();
+
     void exec(String[] args, Client client);
 }

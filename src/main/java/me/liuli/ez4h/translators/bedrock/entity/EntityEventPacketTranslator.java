@@ -10,9 +10,9 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class EntityEventPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        EntityEventPacket packet=(EntityEventPacket)inPacket;
-        switch (packet.getType()){
-            case HURT:{
+        EntityEventPacket packet = (EntityEventPacket) inPacket;
+        switch (packet.getType()) {
+            case HURT: {
                 client.sendPacket(new ServerEntityAnimationPacket((int) packet.getRuntimeEntityId(), Animation.DAMAGE));
                 break;
             }

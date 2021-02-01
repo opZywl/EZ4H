@@ -17,25 +17,25 @@ import java.util.List;
 public class ClientChatPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientChatPacket packet=(ClientChatPacket)inPacket;
-        Character firstChar=packet.getMessage().charAt(0);
-        if(firstChar.equals('/')) {
-            CommandRequestPacket commandRequestPacket=new CommandRequestPacket();
+        ClientChatPacket packet = (ClientChatPacket) inPacket;
+        Character firstChar = packet.getMessage().charAt(0);
+        if (firstChar.equals('/')) {
+            CommandRequestPacket commandRequestPacket = new CommandRequestPacket();
             commandRequestPacket.setInternal(false);
             commandRequestPacket.setCommand(packet.getMessage());
-            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER,client.getPlayer().getUuid(),"",0));
+            commandRequestPacket.setCommandOriginData(new CommandOriginData(CommandOriginType.PLAYER, client.getPlayer().getUuid(), "", 0));
             client.sendPacket(commandRequestPacket);
-        }else if(firstChar.equals('`')) {
-            if(packet.getMessage().length()>1) {
-                String[] commandList = packet.getMessage().substring(1).split(" "),argsList=new String[commandList.length-1];
-                if(commandList.length!=1){
-                    for(int i=1;i<commandList.length;i++){
-                        argsList[i-1]=commandList[i];
+        } else if (firstChar.equals('`')) {
+            if (packet.getMessage().length() > 1) {
+                String[] commandList = packet.getMessage().substring(1).split(" "), argsList = new String[commandList.length - 1];
+                if (commandList.length != 1) {
+                    for (int i = 1; i < commandList.length; i++) {
+                        argsList[i - 1] = commandList[i];
                     }
                 }
-                EZ4H.getCommandManager().runCommand(commandList[0],argsList,client);
+                EZ4H.getCommandManager().runCommand(commandList[0], argsList, client);
             }
-        }else{
+        } else {
             TextPacket textPacket = new TextPacket();
             textPacket.setMessage(packet.getMessage());
             textPacket.setType(TextPacket.Type.CHAT);

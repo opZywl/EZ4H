@@ -12,18 +12,20 @@ public class SayCommand implements CommandBase {
     public String getCommandName() {
         return "say";
     }
+
     @Override
-    public String getHelpMessage(){
+    public String getHelpMessage() {
         return "Send Messages To Server.";
     }
+
     @Override
-    public void exec(String[] args, Client client){
-        if(args.length==0){
+    public void exec(String[] args, Client client) {
+        if (args.length == 0) {
             client.sendAlert("`say <message>");
             return;
         }
-        StringBuilder sayMessage= new StringBuilder();
-        for(String partMessage:args){
+        StringBuilder sayMessage = new StringBuilder();
+        for (String partMessage : args) {
             sayMessage.append(partMessage);
             sayMessage.append(" ");
         }

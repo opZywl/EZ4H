@@ -28,63 +28,63 @@ import java.util.UUID;
 public class AddEntityPacketTranslator implements BedrockTranslator {
     private final JSONObject entityMap;
 
-    public AddEntityPacketTranslator(){
-        entityMap=JSONObject.parseObject(FileUtils.readJarText("resources/entity.json", EZ4H.getJarDir()));
+    public AddEntityPacketTranslator() {
+        entityMap = JSONObject.parseObject(FileUtils.getTextFromResource("resources/entity.json"));
     }
 
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        AddEntityPacket packet=(AddEntityPacket)inPacket;
-        Vector3f position=packet.getPosition();
-        Entity entity =new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ENTITY);
+        AddEntityPacket packet = (AddEntityPacket) inPacket;
+        Vector3f position = packet.getPosition();
+        Entity entity = new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.ENTITY);
         client.getData().addEntity((int) packet.getRuntimeEntityId(), entity);
 
-        JSONObject entityData=entityMap.getJSONObject(prepareEntityName(packet.getIdentifier()));
-        if(entityData!=null&&!entityData.getString("type").equals("disabled")){
-            String name=entityData.getString("name").toUpperCase();
-            switch (entityData.getString("type")){
-                case "mob":{
-                    Vector3f rotation=packet.getRotation(),motion=packet.getMotion();
-                    client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), MobType.valueOf(name), position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(),rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
-                    EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
+        JSONObject entityData = entityMap.getJSONObject(prepareEntityName(packet.getIdentifier()));
+        if (entityData != null && !entityData.getString("type").equals("disabled")) {
+            String name = entityData.getString("name").toUpperCase();
+            switch (entityData.getString("type")) {
+                case "mob": {
+                    Vector3f rotation = packet.getRotation(), motion = packet.getMotion();
+                    client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), MobType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
+                    EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
                     break;
                 }
-                case "object":{
-                    Vector3f rotation=packet.getRotation(),motion=packet.getMotion();
-                    client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), ObjectType.valueOf(name), position.getX(), position.getY()+1.62, position.getZ(), rotation.getY(),rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
-                    EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
+                case "object": {
+                    Vector3f rotation = packet.getRotation(), motion = packet.getMotion();
+                    client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), ObjectType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
+                    EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
                     break;
                 }
-                case "global":{
-                    client.sendPacket(new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(), GlobalEntityType.valueOf(name), position.getX(), position.getY()+1.62, position.getZ()));
+                case "global": {
+                    client.sendPacket(new ServerSpawnGlobalEntityPacket((int) packet.getRuntimeEntityId(), GlobalEntityType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ()));
                     break;
                 }
-                case "xp_orb":{
-                    client.sendPacket(new ServerSpawnExpOrbPacket((int) packet.getRuntimeEntityId(),position.getX(), position.getY()+1.62, position.getZ(), 1));
+                case "xp_orb": {
+                    client.sendPacket(new ServerSpawnExpOrbPacket((int) packet.getRuntimeEntityId(), position.getX(), position.getY() + 1.62, position.getZ(), 1));
                     break;
                 }
             }
-        }else{
+        } else {
             //warn at console
-            EZ4H.getLogger().warn("Can't translate entity with name "+prepareEntityName(packet.getIdentifier())+" for player "+client.getPlayer().getName());
+            EZ4H.getLogger().warn("Can't translate entity with name " + prepareEntityName(packet.getIdentifier()) + " for player " + client.getPlayer().getName());
 
             //add a fakeplayer to replace this unknown entity
-            UUID uuid= BedrockUtils.getUUID(packet.getRuntimeEntityId());
-            ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
-            playerListEntries.add(new PlayerListEntry(new GameProfile(uuid, BedrockUtils.lengthCutter(prepareEntityName(packet.getIdentifier()),16)), GameMode.SURVIVAL,0,new TextMessage(packet.getIdentifier())));
-            PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
+            UUID uuid = BedrockUtils.getUUID(packet.getRuntimeEntityId());
+            ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
+            playerListEntries.add(new PlayerListEntry(new GameProfile(uuid, BedrockUtils.lengthCutter(prepareEntityName(packet.getIdentifier()), 16)), GameMode.SURVIVAL, 0, new TextMessage(packet.getIdentifier())));
+            PlayerListEntry[] playerListEntriesL = playerListEntries.toArray(new PlayerListEntry[0]);
             client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 
-            Vector3f rotation=packet.getRotation();
-            client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(),uuid, position.getX(), position.getY()+1.62, position.getZ(),rotation.getY(),rotation.getX(), new EntityMetadata[0]));
-            EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(),client, (int) packet.getRuntimeEntityId());
+            Vector3f rotation = packet.getRotation();
+            client.sendPacket(new ServerSpawnPlayerPacket((int) packet.getRuntimeEntityId(), uuid, position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), new EntityMetadata[0]));
+            EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
 
             client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
         }
     }
 
-    private String prepareEntityName(String name){
-        if(name.contains("minecraft:")){
+    private String prepareEntityName(String name) {
+        if (name.contains("minecraft:")) {
             return name.substring(10);
         }
         return name;

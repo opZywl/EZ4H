@@ -13,14 +13,14 @@ public class DebugManager {
     @Getter
     private final boolean other;
 
-    public DebugManager(JSONObject data){
-        this.allPackets=data.getBoolean("all-packet");
-        this.unknownPackets=data.getBoolean("unknown-packet");
-        this.outPackets=data.getBoolean("out-packet");
-        this.other=data.getBoolean("other");
+    public DebugManager(JSONObject data) {
+        this.allPackets = data.getBoolean("all-packet");
+        this.unknownPackets = data.getBoolean("unknown-packet");
+        this.outPackets = data.getBoolean("out-packet");
+        this.other = data.getBoolean("other");
     }
 
-    public boolean enableDebug(){
-        return allPackets||unknownPackets||outPackets||other;
+    public boolean enableDebug() {
+        return allPackets || unknownPackets || outPackets || other;
     }
 }

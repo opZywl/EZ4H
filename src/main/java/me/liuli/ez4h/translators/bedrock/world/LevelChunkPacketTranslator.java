@@ -22,25 +22,40 @@ import me.liuli.ez4h.utils.nukkit.BitArrayVersion;
 import java.util.Arrays;
 
 public class LevelChunkPacketTranslator implements BedrockTranslator {
-    private BlockStorage badBlockStrage;
+    private final BlockStorage badBlockStrage;
+    private final boolean asyncChunkTranslate;
 
-    public LevelChunkPacketTranslator(){
+    public LevelChunkPacketTranslator() {
         //generate blockstage for bad chunk data
-        BlockState stone=new BlockState(1,0);
-        badBlockStrage=new BlockStorage();
+        BlockState stone = new BlockState(1, 0);
+        badBlockStrage = new BlockStorage();
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                badBlockStrage.set(x,1,z,stone);
+                badBlockStrage.set(x, 1, z, stone);
             }
         }
+        asyncChunkTranslate = EZ4H.getConfigManager().isAsyncChunkTranslate();
     }
 
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        LevelChunkPacket packet=(LevelChunkPacket)inPacket;
+        LevelChunkPacket packet = (LevelChunkPacket) inPacket;
+        if (asyncChunkTranslate) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    translateChunk(packet, client);
+                }
+            }).start();
+        } else {
+            translateChunk(packet, client);
+        }
+    }
+
+    private void translateChunk(LevelChunkPacket packet, Client client) {
         Chunk[] chunkSections = new Chunk[16];
 
-        BlockConverter blockConverter=EZ4H.getConverterManager().getBlockConverter();
+        BlockConverter blockConverter = EZ4H.getConverterManager().getBlockConverter();
 
         int chunkX = packet.getChunkX();
         int chunkZ = packet.getChunkZ();
@@ -49,8 +64,8 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
         for (int sectionIndex = 0; sectionIndex < packet.getSubChunksLength(); sectionIndex++) {
             byte something = byteBuf.readByte();//geyser says CHUNK_SECTION_VERSION
             byte storageSize = byteBuf.readByte();
-            BlockStorage blockStorage=new BlockStorage();
-            NibbleArray3d lightArray=new NibbleArray3d(4096);
+            BlockStorage blockStorage = new BlockStorage();
+            NibbleArray3d lightArray = new NibbleArray3d(4096);
             try {
                 for (int storageReadIndex = 0; storageReadIndex < storageSize; storageReadIndex++) {//1 appears to basically be empty, also nukkit basically says its empty
                     byte paletteHeader = byteBuf.readByte();
@@ -80,10 +95,10 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                                 int paletteIndex = bitArray.get(index);
                                 String mcbeBlockName = blockConverter.getBedrockNameByRuntime(sectionPalette[paletteIndex]);
                                 if (!mcbeBlockName.equals("air")) {
-                                    blockStorage.set(x,y,z,blockConverter.getBlockByName(mcbeBlockName));
-                                    int light=blockConverter.getBlockLightByName(mcbeBlockName);
-                                    if(light>0) {
-                                        lightArray.set(x,y,z,light);
+                                    blockStorage.set(x, y, z, blockConverter.getBlockByName(mcbeBlockName));
+                                    int light = blockConverter.getBlockLightByName(mcbeBlockName);
+                                    if (light > 0) {
+                                        lightArray.set(x, y, z, light);
                                     }
                                 }
                                 index++;
@@ -93,11 +108,11 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                EZ4H.getLogger().warn("Translate Chunk("+chunkX+","+chunkZ+","+sectionIndex+") for player "+client.getPlayer().getName()+" failed!");
-                blockStorage=badBlockStrage;
-                lightArray=blockConverter.getNoLight();
+                EZ4H.getLogger().warn("Translate Chunk(" + chunkX + "," + chunkZ + "," + sectionIndex + ") for player " + client.getPlayer().getName() + " failed!");
+                blockStorage = badBlockStrage;
+                lightArray = blockConverter.getNoLight();
             }
-            chunkSections[sectionIndex] = new Chunk(blockStorage,lightArray, blockConverter.getFullLight());
+            chunkSections[sectionIndex] = new Chunk(blockStorage, lightArray, blockConverter.getFullLight());
         }
 
         byteBuf.release();
@@ -105,7 +120,7 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
         byte[] biomeArray = new byte[256];
         Arrays.fill(biomeArray, (byte) 1);
 
-        ServerChunkDataPacket serverChunkDataPacket=new ServerChunkDataPacket(new Column(chunkX,chunkZ,chunkSections,biomeArray,new CompoundTag[0]));
+        ServerChunkDataPacket serverChunkDataPacket = new ServerChunkDataPacket(new Column(chunkX, chunkZ, chunkSections, biomeArray, new CompoundTag[0]));
         client.sendPacket(serverChunkDataPacket);
     }
 

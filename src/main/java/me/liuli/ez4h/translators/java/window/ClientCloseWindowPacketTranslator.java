@@ -10,9 +10,9 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientCloseWindowPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientCloseWindowPacket packet=(ClientCloseWindowPacket) inPacket;
+        ClientCloseWindowPacket packet = (ClientCloseWindowPacket) inPacket;
 
-        if((!client.getInventory().isOpen())&&packet.getWindowId()==0)
+        if ((!client.getInventory().isOpen()) && packet.getWindowId() == 0)
             return;
 
         ContainerClosePacket containerClosePacket = new ContainerClosePacket();

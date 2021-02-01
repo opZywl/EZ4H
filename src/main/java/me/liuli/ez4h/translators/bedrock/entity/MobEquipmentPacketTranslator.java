@@ -11,16 +11,16 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class MobEquipmentPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        MobEquipmentPacket packet=(MobEquipmentPacket)inPacket;
-        if(packet.getRuntimeEntityId()==client.getPlayer().getEntityId()){
+        MobEquipmentPacket packet = (MobEquipmentPacket) inPacket;
+        if (packet.getRuntimeEntityId() == client.getPlayer().getEntityId()) {
             return;
         }
-        switch (packet.getContainerId()){
-            case 0:{
+        switch (packet.getContainerId()) {
+            case 0: {
                 client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.MAIN_HAND, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getItem())));
                 break;
             }
-            case 119:{
+            case 119: {
                 client.sendPacket(new ServerEntityEquipmentPacket((int) packet.getRuntimeEntityId(), EquipmentSlot.OFF_HAND, EZ4H.getConverterManager().getItemConverter().convertToJE(packet.getItem())));
                 break;
             }

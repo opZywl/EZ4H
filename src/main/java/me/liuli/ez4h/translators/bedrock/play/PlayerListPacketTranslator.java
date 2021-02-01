@@ -17,24 +17,25 @@ import java.util.ArrayList;
 public class PlayerListPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        PlayerListPacket packet=(PlayerListPacket)inPacket;
-        ArrayList<PlayerListEntry> playerListEntries=new ArrayList<>();
-        for(PlayerListPacket.Entry entry:packet.getEntries()){
-            GameProfile gameProfile=new GameProfile(entry.getUuid(), BedrockUtils.lengthCutter(entry.getName(),16));
-            playerListEntries.add(new PlayerListEntry(gameProfile, GameMode.SURVIVAL,0,new TextMessage(BedrockUtils.lengthCutter(entry.getName(),16))));
+        PlayerListPacket packet = (PlayerListPacket) inPacket;
+        ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
+        for (PlayerListPacket.Entry entry : packet.getEntries()) {
+            GameProfile gameProfile = new GameProfile(entry.getUuid(), BedrockUtils.lengthCutter(entry.getName(), 16));
+            playerListEntries.add(new PlayerListEntry(gameProfile, GameMode.SURVIVAL, 0, new TextMessage(BedrockUtils.lengthCutter(entry.getName(), 16))));
         }
-        PlayerListEntry[] playerListEntriesL=playerListEntries.toArray(new PlayerListEntry[0]);
-        switch (packet.getAction()){
-            case ADD:{
+        PlayerListEntry[] playerListEntriesL = playerListEntries.toArray(new PlayerListEntry[0]);
+        switch (packet.getAction()) {
+            case ADD: {
                 client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
                 break;
             }
-            case REMOVE:{
+            case REMOVE: {
                 client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.REMOVE_PLAYER, playerListEntriesL));
                 break;
             }
         }
     }
+
     @Override
     public Class<? extends BedrockPacket> getPacketClass() {
         return PlayerListPacket.class;

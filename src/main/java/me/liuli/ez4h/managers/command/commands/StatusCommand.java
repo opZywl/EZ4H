@@ -11,6 +11,7 @@ public class StatusCommand implements CommandBase {
     public String getCommandName() {
         return "status";
     }
+
     @Override
     public String getHelpMessage() {
         return "Show EZ4H status";
@@ -27,12 +28,12 @@ public class StatusCommand implements CommandBase {
         long totalMB = Math.round(((double) runtime.totalMemory()) / 1024 / 1024);
         long usedMB = Math.round((double) (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024);
         long maxMB = Math.round(((double) runtime.maxMemory()) / 1024 / 1024);
-        int usage = (int) (((double)usedMB) / ((double)totalMB) * 100D);
-        String usageColor="§a";
-        if(usage>85){
-            usageColor="§c";
-        }else if(usage>60){
-            usageColor="§e";
+        int usage = (int) (((double) usedMB) / ((double) totalMB) * 100D);
+        String usageColor = "§a";
+        if (usage > 85) {
+            usageColor = "§c";
+        } else if (usage > 60) {
+            usageColor = "§e";
         }
         client.sendMessage("§bUsed memory: " + usageColor + usedMB + " MB. (" + usage + "%)");
         client.sendMessage("§bTotal memory: §c" + totalMB + " MB.");
@@ -41,7 +42,7 @@ public class StatusCommand implements CommandBase {
         client.sendMessage("§bPlayers: §a" + EZ4H.getOnlinePlayers() + " online.");
     }
 
-    private static String formatUptime(long uptime) {
+    private String formatUptime(long uptime) {
         long days = TimeUnit.MILLISECONDS.toDays(uptime);
         uptime -= TimeUnit.DAYS.toMillis(days);
         long hours = TimeUnit.MILLISECONDS.toHours(uptime);

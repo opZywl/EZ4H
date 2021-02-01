@@ -11,18 +11,18 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class AdventureSettingsPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        AdventureSettingsPacket packet=(AdventureSettingsPacket)inPacket;
-        boolean flyable=false;
-        if(packet.getSettings().contains(AdventureSetting.MAY_FLY)){
-            flyable=true;
+        AdventureSettingsPacket packet = (AdventureSettingsPacket) inPacket;
+        boolean flyable = false;
+        if (packet.getSettings().contains(AdventureSetting.MAY_FLY)) {
+            flyable = true;
         }
-        if(client.getPlayer().isFlyable()!=flyable){
+        if (client.getPlayer().isFlyable() != flyable) {
             client.getPlayer().setFlyable(flyable);
-            boolean creativeMode=false;
-            if(client.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
-                creativeMode=true;
+            boolean creativeMode = false;
+            if (client.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+                creativeMode = true;
             }
-            client.sendPacket(new ServerPlayerAbilitiesPacket(false,flyable,flyable,creativeMode,client.getPlayer().getWalkSpeed(), client.getPlayer().getWalkSpeed()));
+            client.sendPacket(new ServerPlayerAbilitiesPacket(false, flyable, flyable, creativeMode, client.getPlayer().getWalkSpeed(), client.getPlayer().getWalkSpeed()));
         }
     }
 

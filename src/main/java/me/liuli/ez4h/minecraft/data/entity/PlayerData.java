@@ -32,22 +32,22 @@ public class PlayerData extends Location {
     private GameMode gameMode;
     @Getter
     @Setter
-    private float health=20;
+    private float health = 20;
     @Getter
     @Setter
-    private float exp=0;
+    private float exp = 0;
     @Getter
     @Setter
-    private float expLevel=0;
+    private float expLevel = 0;
     @Getter
     @Setter
-    private int food=20;
+    private int food = 20;
     @Getter
     @Setter
-    private boolean flyable=false;
+    private boolean flyable = false;
     @Getter
     @Setter
-    private float walkSpeed=0.7F;
+    private float walkSpeed = 0.7F;
 
     public PlayerData() {
         super();

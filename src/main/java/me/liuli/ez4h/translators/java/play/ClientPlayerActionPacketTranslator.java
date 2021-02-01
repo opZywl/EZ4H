@@ -19,20 +19,20 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerActionPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerActionPacket packet=(ClientPlayerActionPacket)inPacket;
-        Position blockPos=packet.getPosition();
-        switch (packet.getAction()){
-            case START_DIGGING:{
+        ClientPlayerActionPacket packet = (ClientPlayerActionPacket) inPacket;
+        Position blockPos = packet.getPosition();
+        switch (packet.getAction()) {
+            case START_DIGGING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
-                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
+                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
 
-                if(client.getPlayer().getGameMode().equals(GameMode.CREATIVE)){
+                if (client.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
                     //creative block break only send START_DIGGING
-                    Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
+                    Vector3i blockPosition = Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                     playerActionPacket = new PlayerActionPacket();
                     playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                     playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
@@ -54,17 +54,17 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
 
                 break;
             }
-            case CANCEL_DIGGING:{
+            case CANCEL_DIGGING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
-                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ()));
+                playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
                 break;
             }
-            case FINISH_DIGGING:{
-                Vector3i blockPosition=Vector3i.from(blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            case FINISH_DIGGING: {
+                Vector3i blockPosition = Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
@@ -84,26 +84,26 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 client.sendPacket(inventoryTransactionPacket);
                 break;
             }
-            case DROP_ITEM:{
-                dropItem(client,1,client.getInventory().getBedrockItemInHand());
+            case DROP_ITEM: {
+                dropItem(client, 1, client.getInventory().getBedrockItemInHand());
                 break;
             }
-            case DROP_ITEM_STACK:{
-                dropItem(client,client.getInventory().getBedrockItemInHand().getCount(),client.getInventory().getBedrockItemInHand());
+            case DROP_ITEM_STACK: {
+                dropItem(client, client.getInventory().getBedrockItemInHand().getCount(), client.getInventory().getBedrockItemInHand());
                 break;
             }
         }
     }
 
-    public void dropItem(Client client,int itemCount,ItemData oldItem){
-        if(oldItem.getCount()==0){
+    public void dropItem(Client client, int itemCount, ItemData oldItem) {
+        if (oldItem.getCount() == 0) {
             return;
         }
 
-        ItemData itemData=ItemData.of(oldItem.getId(),oldItem.getDamage(),itemCount,oldItem.getTag(),oldItem.getCanPlace(),oldItem.getCanBreak(),oldItem.getBlockingTicks()),
-                newItem=ItemData.of(oldItem.getId(),oldItem.getDamage(),oldItem.getCount()-itemCount,oldItem.getTag(),oldItem.getCanPlace(),oldItem.getCanBreak(),oldItem.getBlockingTicks());
-        if(newItem.getCount()==0){
-            newItem=ItemData.AIR;
+        ItemData itemData = ItemData.of(oldItem.getId(), oldItem.getDamage(), itemCount, oldItem.getTag(), oldItem.getCanPlace(), oldItem.getCanBreak(), oldItem.getBlockingTicks()),
+                newItem = ItemData.of(oldItem.getId(), oldItem.getDamage(), oldItem.getCount() - itemCount, oldItem.getTag(), oldItem.getCanPlace(), oldItem.getCanBreak(), oldItem.getBlockingTicks());
+        if (newItem.getCount() == 0) {
+            newItem = ItemData.AIR;
         }
 
         InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
@@ -115,16 +115,17 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.setHotbarSlot(0);
         inventoryTransactionPacket.setBlockRuntimeId(0);
         inventoryTransactionPacket.setHasNetworkIds(false);
-        InventorySource inventorySource=InventorySource.fromWorldInteraction(InventorySource.Flag.DROP_ITEM);
-        InventoryActionData inventoryActionData=new InventoryActionData(inventorySource,0,ItemData.AIR,itemData);
+        InventorySource inventorySource = InventorySource.fromWorldInteraction(InventorySource.Flag.DROP_ITEM);
+        InventoryActionData inventoryActionData = new InventoryActionData(inventorySource, 0, ItemData.AIR, itemData);
         inventoryTransactionPacket.getActions().add(inventoryActionData);
-        inventorySource=InventorySource.fromContainerWindowId(0);
-        inventoryActionData=new InventoryActionData(inventorySource,client.getInventory().getHandSlot(),oldItem,newItem);
+        inventorySource = InventorySource.fromContainerWindowId(0);
+        inventoryActionData = new InventoryActionData(inventorySource, client.getInventory().getHandSlot(), oldItem, newItem);
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         client.sendPacket(inventoryTransactionPacket);
 
-        client.getInventory().updateItem(newItem,client.getInventory().getHandSlot()+36,true);
+        client.getInventory().updateItem(newItem, client.getInventory().getHandSlot() + 36, true);
     }
+
     @Override
     public Class<? extends MinecraftPacket> getPacketClass() {
         return ClientPlayerActionPacket.class;

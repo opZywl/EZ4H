@@ -14,18 +14,18 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerPlaceBlockPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerPlaceBlockPacket packet=(ClientPlayerPlaceBlockPacket)inPacket;
-        Position position=packet.getPosition();
+        ClientPlayerPlaceBlockPacket packet = (ClientPlayerPlaceBlockPacket) inPacket;
+        Position position = packet.getPosition();
 
         InventoryTransactionPacket useInventoryTransactionPacket = new InventoryTransactionPacket();
         useInventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
         useInventoryTransactionPacket.setActionType(0);
-        useInventoryTransactionPacket.setBlockPosition(Vector3i.from(position.getX(),position.getY(), position.getZ()));
+        useInventoryTransactionPacket.setBlockPosition(Vector3i.from(position.getX(), position.getY(), position.getZ()));
         useInventoryTransactionPacket.setBlockFace(packet.getFace().ordinal());
         useInventoryTransactionPacket.setHotbarSlot(client.getInventory().getHandSlot());
         useInventoryTransactionPacket.setItemInHand(client.getInventory().getBedrockItemInHand());
         useInventoryTransactionPacket.setPlayerPosition(client.getPlayer().getVec3Location());
-        useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(),packet.getCursorY(), packet.getCursorZ()));
+        useInventoryTransactionPacket.setClickPosition(Vector3f.from(packet.getCursorX(), packet.getCursorY(), packet.getCursorZ()));
         useInventoryTransactionPacket.setBlockRuntimeId(0);
         client.sendPacket(useInventoryTransactionPacket);
     }

@@ -17,23 +17,32 @@ public class ConfigManager {
     @Getter
     private final int bedrockPort;
     @Getter
-    private final boolean xboxAuth,autoLogin/*,mojangSkin*/;
+    private final boolean xboxAuth;
+    @Getter
+    private final boolean autoLogin;
     @Getter
     private final TextMessage playerList;
+    @Getter
+    private final boolean asyncChunkTranslate;
 
-    public ConfigManager(JSONObject json){
-        config=json;
 
-        javaHost=json.getString("je_host");
-        javaPort=json.getInteger("je_port");
-        bedrockHost=json.getString("be_host");
-        bedrockPort=json.getInteger("be_port");
-        playerList=new TextMessage(json.getString("player-list"));
+    public ConfigManager(JSONObject json) {
+        config = json;
 
-        JSONObject advanced=json.getJSONObject("auth");
-        autoLogin=advanced.getBoolean("autologin");
-        xboxAuth=advanced.getBoolean("xbox-auth");
+        javaHost = json.getString("je_host");
+        javaPort = json.getInteger("je_port");
+        bedrockHost = json.getString("be_host");
+        bedrockPort = json.getInteger("be_port");
+        playerList = new TextMessage(json.getString("player-list"));
+
+        JSONObject auth = json.getJSONObject("auth");
+        autoLogin = auth.getBoolean("autologin");
+        xboxAuth = auth.getBoolean("xbox-auth");
 //        mojangSkin=advanced.getBoolean("mojang-skin");
+
+
+        JSONObject advanced = json.getJSONObject("advanced");
+        asyncChunkTranslate = advanced.getBoolean("async-chunk-translate");
 
         EZ4H.setDebugManager(new DebugManager(json.getJSONObject("debug")));
     }

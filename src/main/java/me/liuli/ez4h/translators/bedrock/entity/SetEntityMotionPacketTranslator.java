@@ -10,8 +10,8 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class SetEntityMotionPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        SetEntityMotionPacket packet=(SetEntityMotionPacket)inPacket;
-        Vector3f motion=packet.getMotion();
+        SetEntityMotionPacket packet = (SetEntityMotionPacket) inPacket;
+        Vector3f motion = packet.getMotion();
         client.sendPacket(new ServerEntityVelocityPacket((int) packet.getRuntimeEntityId(), motion.getX(), motion.getY(), motion.getZ()));
     }
 

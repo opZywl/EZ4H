@@ -13,11 +13,11 @@ import me.liuli.ez4h.utils.BedrockUtils;
 public class SetPlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        SetPlayerGameTypePacket packet=(SetPlayerGameTypePacket)inPacket;
+        SetPlayerGameTypePacket packet = (SetPlayerGameTypePacket) inPacket;
 
-        GameMode gameMode=BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()));
+        GameMode gameMode = BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()));
         client.getPlayer().setGameMode(gameMode);
-        client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE,gameMode));
+        client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, gameMode));
     }
 
     @Override

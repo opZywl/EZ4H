@@ -14,12 +14,12 @@ import me.liuli.ez4h.translators.converters.BlockConverter;
 public class UpdateBlockPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        UpdateBlockPacket packet=(UpdateBlockPacket)inPacket;
-        if(packet.getDataLayer()==0){//layer 1 for waterlogging,and you know mc1.12 not support this....
-            Vector3i pos=packet.getBlockPosition();
-            BlockConverter blockConverter=EZ4H.getConverterManager().getBlockConverter();
+        UpdateBlockPacket packet = (UpdateBlockPacket) inPacket;
+        if (packet.getDataLayer() == 0) {//layer 1 for waterlogging,and you know mc1.12 not support this....
+            Vector3i pos = packet.getBlockPosition();
+            BlockConverter blockConverter = EZ4H.getConverterManager().getBlockConverter();
 
-            client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()),blockConverter.getBlockByName(blockConverter.getBedrockNameByRuntime(packet.getRuntimeId())))));
+            client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(new Position(pos.getX(), pos.getY(), pos.getZ()), blockConverter.getBlockByName(blockConverter.getBedrockNameByRuntime(packet.getRuntimeId())))));
         }
     }
 

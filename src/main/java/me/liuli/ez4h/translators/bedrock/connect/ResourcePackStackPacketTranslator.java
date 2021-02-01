@@ -9,7 +9,7 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class ResourcePackStackPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        ResourcePackStackPacket packet=(ResourcePackStackPacket)inPacket;
+        ResourcePackStackPacket packet = (ResourcePackStackPacket) inPacket;
         ResourcePackClientResponsePacket resourcePackClientResponsePacket = new ResourcePackClientResponsePacket();
         resourcePackClientResponsePacket.setStatus(ResourcePackClientResponsePacket.Status.COMPLETED);
         client.sendPacket(resourcePackClientResponsePacket);

@@ -11,11 +11,11 @@ public class ContainerOpenPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ContainerOpenPacket packet = (ContainerOpenPacket) inPacket;
-        if(packet.getId()==0) return;
-        switch (packet.getType()){
-            case CONTAINER:{
+        if (packet.getId() == 0) return;
+        switch (packet.getType()) {
+            case CONTAINER: {
                 //bedrock dont send slots data in this packet.slot count send to client in InventoryContentPacket
-                client.getData().setQueueChest(new ChestData(packet.getId(),"",WindowType.CHEST));
+                client.getData().setQueueChest(new ChestData(packet.getId(), "", WindowType.CHEST));
                 break;
             }
         }

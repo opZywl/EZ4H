@@ -10,12 +10,12 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class TakeItemEntityPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        TakeItemEntityPacket packet=(TakeItemEntityPacket)inPacket;
-        int[] entityIds=new int[1];
-        entityIds[0]= (int) packet.getItemRuntimeEntityId();
+        TakeItemEntityPacket packet = (TakeItemEntityPacket) inPacket;
+        int[] entityIds = new int[1];
+        entityIds[0] = (int) packet.getItemRuntimeEntityId();
         client.getData().removeEntity((int) packet.getItemRuntimeEntityId());
         client.sendPacket(new ServerEntityDestroyPacket(entityIds));
-        client.sendPacket(new ServerEntityCollectItemPacket((int)packet.getItemRuntimeEntityId(),(int)packet.getRuntimeEntityId(),1));
+        client.sendPacket(new ServerEntityCollectItemPacket((int) packet.getItemRuntimeEntityId(), (int) packet.getRuntimeEntityId(), 1));
     }
 
     @Override

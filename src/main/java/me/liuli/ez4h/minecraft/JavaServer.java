@@ -24,11 +24,11 @@ import me.liuli.ez4h.minecraft.auth.fakeAuthServer.FakeServer;
 import me.liuli.ez4h.utils.OtherUtils;
 
 public class JavaServer {
-    private Server server;
+    private final Server server;
 
-    public JavaServer(){
+    public JavaServer() {
         SessionService sessionService = new SessionService();
-        server = new Server(EZ4H.getConfigManager().getJavaHost(),EZ4H.getConfigManager().getJavaPort(), MinecraftProtocol.class, new TcpSessionFactory());
+        server = new Server(EZ4H.getConfigManager().getJavaHost(), EZ4H.getConfigManager().getJavaPort(), MinecraftProtocol.class, new TcpSessionFactory());
         server.setGlobalFlag("session-service", sessionService);
         server.setGlobalFlag(MinecraftConstants.VERIFY_USERS_KEY, false);
 
@@ -36,11 +36,11 @@ public class JavaServer {
             @Override
             public void loggedIn(Session session) {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                Client client=EZ4H.getClient(profile.getName());
-                if(client!=null) {
-                    session.send(new ServerPluginMessagePacket("EZ4H",("{\"type\":\"join\",\"data\":\""+ OtherUtils.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) +"\"}").getBytes()));
-                }else{
-                    ServerJoinGamePacket serverJoinGamePacket=new ServerJoinGamePacket(
+                Client client = EZ4H.getClient(profile.getName());
+                if (client != null) {
+                    session.send(new ServerPluginMessagePacket("EZ4H", ("{\"type\":\"join\",\"data\":\"" + OtherUtils.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) + "\"}").getBytes()));
+                } else {
+                    ServerJoinGamePacket serverJoinGamePacket = new ServerJoinGamePacket(
                             1,
                             false,
                             GameMode.SURVIVAL,
@@ -50,10 +50,10 @@ public class JavaServer {
                             WorldType.CUSTOMIZED,
                             true
                     );
-                    ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket=new ServerPlayerPositionRotationPacket(0, 70, 0, 90,90,1);
+                    ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(0, 70, 0, 90, 90, 1);
                     session.send(serverJoinGamePacket);
                     session.send(serverPlayerPositionRotationPacket);
-                    session.addListener(new FakeServer(session,profile.getName()));
+                    session.addListener(new FakeServer(session, profile.getName()));
                 }
             }
         });
@@ -69,16 +69,16 @@ public class JavaServer {
             @Override
             public void sessionRemoved(SessionRemovedEvent event) {
                 MinecraftProtocol protocol = (MinecraftProtocol) event.getSession().getPacketProtocol();
-                if(protocol.getSubProtocol() == SubProtocol.GAME) {
-                    Session session=event.getSession();
+                if (protocol.getSubProtocol() == SubProtocol.GAME) {
+                    Session session = event.getSession();
                     GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
-                    Client client=EZ4H.removeClient(profile.getName());
+                    Client client = EZ4H.removeClient(profile.getName());
                     EZ4H.getLogger().info(profile.getName() + "[" + session.getHost() + ":" + session.getPort() + "] QUITED.");
-                    if(client!=null) {
+                    if (client != null) {
                         client.disconnectBedrock();
-                    }else{
-                        for(SessionListener sessionListener:session.getListeners()){
-                            FakeServer fakeServer=(FakeServer)sessionListener;
+                    } else {
+                        for (SessionListener sessionListener : session.getListeners()) {
+                            FakeServer fakeServer = (FakeServer) sessionListener;
                             fakeServer.setAuth();
                         }
                     }

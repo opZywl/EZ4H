@@ -20,10 +20,10 @@ public class ConverterManager {
     @Getter
     private final MetadataConverter metadataConverter;
 
-    public ConverterManager(){
-        blockConverter=new BlockConverter(JSONArray.parseArray(FileUtils.readJarText("resources/blocks.json", EZ4H.getJarDir())), JSONObject.parseObject(FileUtils.readJarText("resources/block_runtime.json",EZ4H.getJarDir())));
-        formConverter=new FormConverter();
-        itemConverter=new ItemConverter(JSONObject.parseObject(FileUtils.readJarText("resources/bedrock_items.json",EZ4H.getJarDir())),JSONObject.parseObject(FileUtils.readJarText("resources/java_items.json",EZ4H.getJarDir())),JSONObject.parseObject(FileUtils.readJarText("resources/enchant.json",EZ4H.getJarDir())));
-        metadataConverter=new MetadataConverter();
+    public ConverterManager() {
+        blockConverter = new BlockConverter(JSONArray.parseArray(FileUtils.getTextFromResource("resources/blocks.json")), JSONObject.parseObject(FileUtils.getTextFromResource("resources/block_runtime.json")));
+        formConverter = new FormConverter();
+        itemConverter = new ItemConverter(JSONObject.parseObject(FileUtils.getTextFromResource("resources/bedrock_items.json")), JSONObject.parseObject(FileUtils.getTextFromResource("resources/java_items.json")), JSONObject.parseObject(FileUtils.getTextFromResource("resources/enchant.json")));
+        metadataConverter = new MetadataConverter();
     }
 }

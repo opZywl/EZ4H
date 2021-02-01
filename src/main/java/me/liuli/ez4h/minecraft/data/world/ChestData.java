@@ -7,9 +7,9 @@ public class ChestData {
     public WindowType type;
     public int id;
 
-    public ChestData(int id,String name,WindowType type){
-        this.name=name;
-        this.id=id;
-        this.type=type;
+    public ChestData(int id, String name, WindowType type) {
+        this.name = name;
+        this.id = id;
+        this.type = type;
     }
 }

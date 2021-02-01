@@ -12,17 +12,17 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class LevelEventPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        LevelEventPacket packet=(LevelEventPacket)inPacket;
+        LevelEventPacket packet = (LevelEventPacket) inPacket;
         //TODO:PARTICLES
-        switch (packet.getType()){
-            case BLOCK_START_BREAK:{
-                Vector3f pos=packet.getPosition();
-                client.sendPacket(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.STAGE_1));
+        switch (packet.getType()) {
+            case BLOCK_START_BREAK: {
+                Vector3f pos = packet.getPosition();
+                client.sendPacket(new ServerBlockBreakAnimPacket(0, new Position((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()), BlockBreakStage.STAGE_1));
                 break;
             }
-            case BLOCK_STOP_BREAK:{
-                Vector3f pos=packet.getPosition();
-                client.sendPacket(new ServerBlockBreakAnimPacket(0,new Position((int)pos.getX(),(int)pos.getY(),(int)pos.getZ()), BlockBreakStage.RESET));
+            case BLOCK_STOP_BREAK: {
+                Vector3f pos = packet.getPosition();
+                client.sendPacket(new ServerBlockBreakAnimPacket(0, new Position((int) pos.getX(), (int) pos.getY(), (int) pos.getZ()), BlockBreakStage.RESET));
                 break;
             }
             case STOP_RAINING:
@@ -30,11 +30,11 @@ public class LevelEventPacketTranslator implements BedrockTranslator {
                 client.getWeather().setWeather(0);
                 break;
             }
-            case START_RAINING:{
+            case START_RAINING: {
                 client.getWeather().setWeather(1);
                 break;
             }
-            case START_THUNDERSTORM:{
+            case START_THUNDERSTORM: {
                 client.getWeather().setWeather(2);
                 break;
             }

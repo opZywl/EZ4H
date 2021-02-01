@@ -13,7 +13,7 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerUseItemPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerUseItemPacket packet=(ClientPlayerUseItemPacket)inPacket;
+        ClientPlayerUseItemPacket packet = (ClientPlayerUseItemPacket) inPacket;
         InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
         inventoryTransactionPacket.setTransactionType(TransactionType.ITEM_USE);
         inventoryTransactionPacket.setActionType(1);

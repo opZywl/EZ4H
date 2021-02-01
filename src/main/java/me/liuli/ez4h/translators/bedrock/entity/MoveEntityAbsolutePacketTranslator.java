@@ -11,12 +11,12 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class MoveEntityAbsolutePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        MoveEntityAbsolutePacket packet=(MoveEntityAbsolutePacket)inPacket;
-        Vector3f position=packet.getPosition(),rotation=packet.getRotation();
-        Entity entity=client.getData().getEntity(packet.getRuntimeEntityId());
-        if(entity!=null) {
-            client.getData().moveEntity(entity,position,rotation,packet.isOnGround());
-            client.sendPacket(new ServerEntityHeadLookPacket((int)packet.getRuntimeEntityId(),rotation.getZ()));
+        MoveEntityAbsolutePacket packet = (MoveEntityAbsolutePacket) inPacket;
+        Vector3f position = packet.getPosition(), rotation = packet.getRotation();
+        Entity entity = client.getData().getEntity(packet.getRuntimeEntityId());
+        if (entity != null) {
+            client.getData().moveEntity(entity, position, rotation, packet.isOnGround());
+            client.sendPacket(new ServerEntityHeadLookPacket((int) packet.getRuntimeEntityId(), rotation.getZ()));
         }
     }
 

@@ -17,13 +17,13 @@ public class RandUtils {
         if (min == max) {
             return max;
         }
-        return min + Math.random() * (max-min);
+        return min + Math.random() * (max - min);
     }
 
     public static float rand(float min, float max) {
         if (min == max) {
             return max;
         }
-        return min + (float) Math.random() * (max-min);
+        return min + (float) Math.random() * (max - min);
     }
 }

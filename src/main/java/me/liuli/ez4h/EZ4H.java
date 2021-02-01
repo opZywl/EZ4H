@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.liuli.ez4h.managers.*;
 import me.liuli.ez4h.managers.command.CommandBase;
-import me.liuli.ez4h.managers.command.commands.FormCommand;
-import me.liuli.ez4h.managers.command.commands.SayCommand;
-import me.liuli.ez4h.managers.command.commands.VersionCommand;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.JavaServer;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
@@ -26,21 +23,20 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.reflections.Reflections;
 
 import java.io.File;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class EZ4H {
     @Getter
-    private static final String name="EZ4H";
+    private static final String name = "EZ4H";
     @Getter
-    private static final String version="0.3";
+    private static final String version = "0.3";
     @Getter
-    private static final String jarDir=EZ4H.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    private static final long startTime = System.currentTimeMillis();
     @Getter
-    private static final long startTime=System.currentTimeMillis();;
-
+    private static final BedrockPacketCodec bedrockCodec = Bedrock_v422.V422_CODEC;
+    private static final Map<String, Client> clients = new HashMap<>();
     private static JavaServer javaServer;
     @Getter
     private static Logger logger;
@@ -57,13 +53,10 @@ public class EZ4H {
     @Getter
     @Setter
     private static DebugManager debugManager;
-    @Getter
-    private static final BedrockPacketCodec bedrockCodec=Bedrock_v422.V422_CODEC;
-    private static final Map<String, Client> clients=new HashMap<>();
 
     public static void main(String[] args) {
-        logger=LogManager.getLogger(EZ4H.class);
-        logger.info("Loading EZ4H v"+version);
+        logger = LogManager.getLogger(EZ4H.class);
+        logger.info("Loading EZ4H v" + version);
 
         logger.info("Init files...");
         initFile();
@@ -71,24 +64,26 @@ public class EZ4H {
         initProtocol();
         logger.info("Loading things...");
         //https://bstats.org/plugin/bukkit/EZ4H/10109
-        new MetricsLite("EZ4H",10109);
-        logger.info("Done!("+(System.currentTimeMillis()-startTime)+" ms)");
+        new MetricsLite("EZ4H", 10109);
+        logger.info("Done!(" + (System.currentTimeMillis() - startTime) + " ms)");
     }
-    private static void initFile(){
-        new File("./data").mkdir();
-        if(!new File("./config.json").exists()){
-            FileUtils.readJar("resources/config.json",jarDir,"./config.json");
-        }
-        configManager=new ConfigManager(JSONObject.parseObject(FileUtils.readFile("./config.json")));
 
-        if(debugManager.enableDebug()){
+    private static void initFile() {
+        new File("./data").mkdir();
+        if (!new File("./config.json").exists()) {
+            FileUtils.writeFile("./config.json",FileUtils.getTextFromResource("resources/config.json"));
+        }
+        configManager = new ConfigManager(JSONObject.parseObject(FileUtils.readFile(new File("./config.json"))));
+
+        if (debugManager.enableDebug()) {
             logger.warn("Debug Mode Enabled in Config");
             Configurator.setRootLevel(Level.DEBUG);
         }
     }
+
     private static void initProtocol() {
         //register translators
-        translatorManager=new TranslatorManager();
+        translatorManager = new TranslatorManager();
         {
             Reflections reflections = new Reflections("me.liuli.ez4h.translators.bedrock");
             Set<Class<? extends BedrockTranslator>> subTypes = reflections.getSubTypesOf(BedrockTranslator.class);
@@ -114,7 +109,7 @@ public class EZ4H {
             }
         }
         {
-            commandManager=new CommandManager();
+            commandManager = new CommandManager();
             Reflections reflections = new Reflections("me.liuli.ez4h.managers.command.commands");
             Set<Class<? extends CommandBase>> subTypes = reflections.getSubTypesOf(CommandBase.class);
             for (Class<? extends CommandBase> commandClass : subTypes) {
@@ -128,31 +123,31 @@ public class EZ4H {
         }
 
         //load converters
-        converterManager=new ConverterManager();
-
-        //load text data
-        ((TextPacketTranslator)translatorManager.getBedrockTranslator(TextPacket.class)).load(JSONObject.parseObject(FileUtils.readJarText("resources/lang.json",jarDir)));
+        converterManager = new ConverterManager();
 
         //load key pair
         AuthUtils.load();
 
-        authManager=new AuthManager();
+        authManager = new AuthManager();
 
         //opening server
-        javaServer=new JavaServer();
+        javaServer = new JavaServer();
     }
 
     //manage clients
-    public static void addClient(String name,Client client){
-        clients.put(name,client);
+    public static void addClient(String name, Client client) {
+        clients.put(name, client);
     }
-    public static Client getClient(String name){
+
+    public static Client getClient(String name) {
         return clients.get(name);
     }
-    public static Client removeClient(String name){
+
+    public static Client removeClient(String name) {
         return clients.remove(name);
     }
-    public static int getOnlinePlayers(){
+
+    public static int getOnlinePlayers() {
         return clients.size();
     }
 }

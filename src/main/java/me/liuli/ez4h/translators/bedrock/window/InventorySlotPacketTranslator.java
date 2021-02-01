@@ -10,24 +10,24 @@ import me.liuli.ez4h.translators.converters.ItemConverter;
 public class InventorySlotPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        InventorySlotPacket packet=(InventorySlotPacket)inPacket;
+        InventorySlotPacket packet = (InventorySlotPacket) inPacket;
 
-        ItemConverter itemConverter=EZ4H.getConverterManager().getItemConverter();
-        
-        switch (packet.getContainerId()){
-            case 0:{
-                client.getInventory().updateItem(packet.getItem(), itemConverter.inventoryIndex(packet.getSlot(),false),true);
+        ItemConverter itemConverter = EZ4H.getConverterManager().getItemConverter();
+
+        switch (packet.getContainerId()) {
+            case 0: {
+                client.getInventory().updateItem(packet.getItem(), itemConverter.inventoryIndex(packet.getSlot(), false), true);
                 break;
             }
-            case 119:{
-                client.getInventory().updateItem(packet.getItem(), 45,true);
+            case 119: {
+                client.getInventory().updateItem(packet.getItem(), 45, true);
                 break;
             }
-            case 120:{
-                client.getInventory().updateItem(packet.getItem(), packet.getSlot()+5,true);
+            case 120: {
+                client.getInventory().updateItem(packet.getItem(), packet.getSlot() + 5, true);
                 break;
             }
-            default:{
+            default: {
                 break;
             }
         }

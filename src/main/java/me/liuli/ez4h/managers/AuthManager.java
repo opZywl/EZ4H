@@ -15,27 +15,28 @@ public class AuthManager {
     @Getter
     private final XboxLogin xboxLogin;
     @Getter
-    private final Map<String, String> accessTokens=new HashMap<>();
-    private JSONObject accounts=null;
+    private final Map<String, String> accessTokens = new HashMap<>();
+    private JSONObject accounts = null;
 
-    public AuthManager(){
-        xboxLogin=new XboxLogin();
-        if(EZ4H.getConfigManager().isAutoLogin()){
-            if(!new File("./data/accounts.json").exists()){
-                FileUtils.writeFile("./data/accounts.json","{}");
+    public AuthManager() {
+        xboxLogin = new XboxLogin();
+        if (EZ4H.getConfigManager().isAutoLogin()) {
+            if (!new File("./data/accounts.json").exists()) {
+                FileUtils.writeFile("./data/accounts.json", "{}");
             }
-            accounts=JSONObject.parseObject(FileUtils.readFile("./data/accounts.json"));
+            accounts = JSONObject.parseObject(FileUtils.readFile(new File("./data/accounts.json")));
         }
     }
 
-    public JSONObject getAccount(String mcUsername){
-        if(EZ4H.getConfigManager().isAutoLogin()&&accounts.containsKey(mcUsername)) {
+    public JSONObject getAccount(String mcUsername) {
+        if (EZ4H.getConfigManager().isAutoLogin() && accounts.containsKey(mcUsername)) {
             return JSONObject.parseObject(OtherUtils.base64Decode((String) accounts.get(mcUsername)));
         }
         return null;
     }
-    public void saveAccount(String mcUsername,String username,String password){
-        if(EZ4H.getConfigManager().isAutoLogin()) {
+
+    public void saveAccount(String mcUsername, String username, String password) {
+        if (EZ4H.getConfigManager().isAutoLogin()) {
             JSONObject account = new JSONObject();
             account.put("username", username);
             account.put("password", password);
@@ -43,14 +44,15 @@ public class AuthManager {
             saveAccountsToFile();
         }
     }
-    public void removeAccount(String mcUsername){
-        if(EZ4H.getConfigManager().isAutoLogin()) {
+
+    public void removeAccount(String mcUsername) {
+        if (EZ4H.getConfigManager().isAutoLogin()) {
             accounts.remove(mcUsername);
             saveAccountsToFile();
         }
     }
 
-    public void saveAccountsToFile(){
-        FileUtils.writeFile("./data/accounts.json",accounts.toJSONString());
+    public void saveAccountsToFile() {
+        FileUtils.writeFile("./data/accounts.json", accounts.toJSONString());
     }
 }

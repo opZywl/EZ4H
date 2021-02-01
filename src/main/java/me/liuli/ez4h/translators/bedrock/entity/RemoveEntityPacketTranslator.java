@@ -9,9 +9,9 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class RemoveEntityPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
-        RemoveEntityPacket packet=(RemoveEntityPacket)inPacket;
-        int[] entityIds=new int[1];
-        entityIds[0]= (int) packet.getUniqueEntityId();
+        RemoveEntityPacket packet = (RemoveEntityPacket) inPacket;
+        int[] entityIds = new int[1];
+        entityIds[0] = (int) packet.getUniqueEntityId();
         client.getData().removeEntity((int) packet.getUniqueEntityId());
         client.sendPacket(new ServerEntityDestroyPacket(entityIds));
     }

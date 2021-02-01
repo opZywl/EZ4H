@@ -10,8 +10,8 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientPlayerChangeHeldItemPacket packet=(ClientPlayerChangeHeldItemPacket)inPacket;
-        PlayerHotbarPacket playerHotbarPacket=new PlayerHotbarPacket();
+        ClientPlayerChangeHeldItemPacket packet = (ClientPlayerChangeHeldItemPacket) inPacket;
+        PlayerHotbarPacket playerHotbarPacket = new PlayerHotbarPacket();
         playerHotbarPacket.setContainerId(0);
         playerHotbarPacket.setSelectedHotbarSlot(packet.getSlot());
         playerHotbarPacket.setSelectHotbarSlot(true);

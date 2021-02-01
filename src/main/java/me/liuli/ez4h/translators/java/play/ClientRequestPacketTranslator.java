@@ -11,11 +11,11 @@ import me.liuli.ez4h.translators.JavaTranslator;
 public class ClientRequestPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {
-        ClientRequestPacket packet=(ClientRequestPacket)inPacket;
-        switch (packet.getRequest()){
-            case RESPAWN:{
-                RespawnPacket respawnPacket=new RespawnPacket();
-                respawnPacket.setPosition(Vector3f.from(0,0,0));
+        ClientRequestPacket packet = (ClientRequestPacket) inPacket;
+        switch (packet.getRequest()) {
+            case RESPAWN: {
+                RespawnPacket respawnPacket = new RespawnPacket();
+                respawnPacket.setPosition(Vector3f.from(0, 0, 0));
                 respawnPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 respawnPacket.setState(RespawnPacket.State.CLIENT_READY);
                 client.sendPacket(respawnPacket);
