@@ -23,7 +23,6 @@ import java.util.Arrays;
 
 public class LevelChunkPacketTranslator implements BedrockTranslator {
     private final BlockStorage badBlockStrage;
-    private final boolean asyncChunkTranslate;
 
     public LevelChunkPacketTranslator() {
         //generate blockstage for bad chunk data
@@ -34,25 +33,11 @@ public class LevelChunkPacketTranslator implements BedrockTranslator {
                 badBlockStrage.set(x, 1, z, stone);
             }
         }
-        asyncChunkTranslate = EZ4H.getConfigManager().isAsyncChunkTranslate();
     }
 
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         LevelChunkPacket packet = (LevelChunkPacket) inPacket;
-        if (asyncChunkTranslate) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    translateChunk(packet, client);
-                }
-            }).start();
-        } else {
-            translateChunk(packet, client);
-        }
-    }
-
-    private void translateChunk(LevelChunkPacket packet, Client client) {
         Chunk[] chunkSections = new Chunk[16];
 
         BlockConverter blockConverter = EZ4H.getConverterManager().getBlockConverter();

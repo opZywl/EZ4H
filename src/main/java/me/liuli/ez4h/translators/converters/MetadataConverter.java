@@ -17,17 +17,18 @@ public class MetadataConverter {
         if(bedrockMetadata.containsKey(EntityData.AIR_SUPPLY)) {
             metadata.add(new EntityMetadata(1, MetadataType.INT, (int) bedrockMetadata.getShort(EntityData.AIR_SUPPLY)));
         }
-        if(bedrockMetadata.containsKey(EntityData.HEALTH)) {
-            Object value=bedrockMetadata.get(EntityData.HEALTH);
-            float hp=20;
-            if(value instanceof Integer){
-                hp=bedrockMetadata.getInt(EntityData.HEALTH);
-            }else if(value instanceof Float){
-                hp=bedrockMetadata.getFloat(EntityData.HEALTH);
+        if(client.getPlayer().getEntityId()!=entityId) {
+            if (bedrockMetadata.containsKey(EntityData.HEALTH)) {
+                float hp=20;
+                try {
+                    hp=bedrockMetadata.getInt(EntityData.HEALTH);
+                } catch (Exception e) {
+                    hp=bedrockMetadata.getFloat(EntityData.HEALTH);
+                }
+                metadata.add(new EntityMetadata(7, MetadataType.FLOAT, hp));
             }
-            metadata.add(new EntityMetadata(7, MetadataType.FLOAT, hp));
         }
-        client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[metadata.size()])));
+        client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[0])));
         metadata.clear();
 
         if(bedrockMetadata.getFlags()==null)

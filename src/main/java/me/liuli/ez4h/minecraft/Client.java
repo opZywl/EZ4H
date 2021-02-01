@@ -15,11 +15,11 @@ import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import io.netty.util.AsciiString;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.managers.TranslatorManager;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.auth.Xbox;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
 import me.liuli.ez4h.minecraft.data.entity.PlayerData;
-import me.liuli.ez4h.minecraft.data.other.PacketStorage;
 import me.liuli.ez4h.minecraft.data.play.ClientData;
 import me.liuli.ez4h.minecraft.data.world.Weather;
 import me.liuli.ez4h.utils.OtherUtils;
@@ -51,15 +51,14 @@ public class Client {
     private ClientData data;
     @Getter
     private boolean alive = true;
-    @Getter
-    private PacketStorage packetStorage;
 
-    private TranslateThread translateThread;
+    private final TranslatorManager translatorManager;
 
     public Client(PacketReceivedEvent event, String playerName) {
         this.player = new PlayerData();
         player.setName(playerName);
         Client clientM = this;
+        this.translatorManager=EZ4H.getTranslatorManager();
         try {
             javaSession = event.getSession();
             this.data = new ClientData(this);
@@ -78,9 +77,6 @@ public class Client {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
 
-                packetStorage = new PacketStorage();
-                translateThread = new TranslateThread(this);
-                new Thread(translateThread).start();
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
 
@@ -109,11 +105,11 @@ public class Client {
     }
 
     public void addPacket(Packet packet) {
-        packetStorage.addPacket(packet);
+        translatorManager.translatePacket(packet,this);
     }
 
     public void addPacket(BedrockPacket packet) {
-        packetStorage.addPacket(packet);
+        translatorManager.translatePacket(packet,this);
     }
 
     public void sendMessage(String msg) {

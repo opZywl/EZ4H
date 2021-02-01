@@ -62,4 +62,14 @@ public class OtherUtils {
         connection.setRequestProperty("Accept-Language", "en-US");
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (XboxReplay; XboxLiveAuth/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
     }
+
+    public static boolean intToBool(int value,boolean defaultValue){
+        if(value==0){
+            return false;
+        }else if(value==1){
+            return true;
+        }else{
+            return defaultValue;
+        }
+    }
 }

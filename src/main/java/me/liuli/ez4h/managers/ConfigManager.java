@@ -22,8 +22,6 @@ public class ConfigManager {
     private final boolean autoLogin;
     @Getter
     private final TextMessage playerList;
-    @Getter
-    private final boolean asyncChunkTranslate;
 
 
     public ConfigManager(JSONObject json) {
@@ -39,10 +37,6 @@ public class ConfigManager {
         autoLogin = auth.getBoolean("autologin");
         xboxAuth = auth.getBoolean("xbox-auth");
 //        mojangSkin=advanced.getBoolean("mojang-skin");
-
-
-        JSONObject advanced = json.getJSONObject("advanced");
-        asyncChunkTranslate = advanced.getBoolean("async-chunk-translate");
 
         EZ4H.setDebugManager(new DebugManager(json.getJSONObject("debug")));
     }
