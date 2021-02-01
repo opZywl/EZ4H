@@ -19,9 +19,6 @@ public class JavaPacketHandler extends SessionAdapter {
     public void packetReceived(PacketReceivedEvent event) {
         try {
             Packet packet=event.getPacket();
-            if(EZ4H.getConfigManager().getDebugLevel()==2){
-                EZ4H.getLogger().debug("Java > "+packet.toString());
-            }
             if(((MinecraftProtocol) event.getSession().getPacketProtocol()).getSubProtocol() == SubProtocol.STATUS) {
                 if(packet instanceof StatusQueryPacket) {
                     new Ping(event.getSession());
@@ -33,24 +30,20 @@ public class JavaPacketHandler extends SessionAdapter {
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
             Client client=null;
             if(!OtherUtils.isNull(profile)){
-                client=EZ4H.getCommonManager().getClient(profile.getName());
+                client=EZ4H.getClient(profile.getName());
             }
             if(event.getPacket().getClass().equals(LoginStartPacket.class)){
                 LoginStartPacket lpacket=event.getPacket();
                 if(!EZ4H.getConfigManager().isXboxAuth()||EZ4H.getAuthManager().getAccessTokens().containsKey(lpacket.getUsername())) {
                     Client client_n = new Client(event, lpacket.getUsername());
-                    EZ4H.getCommonManager().addClient(lpacket.getUsername(), client_n);
+                    EZ4H.addClient(lpacket.getUsername(), client_n);
                 }else{
                     event.getSession().removeListener(this);
                 }
                 EZ4H.getLogger().info(lpacket.getUsername() + "[" + event.getSession().getHost() + ":" + event.getSession().getPort() + "] JOINED.");
             }else{
                 if(client!=null) {
-                    try {
-                        EZ4H.getTranslatorManager().translateJavaPacket(packet, client);
-                    }catch (Throwable t){
-                        EZ4H.getLogger().throwing(t);
-                    }
+                    client.addPacket(packet);
                 }
             }
         } catch (Exception e) {

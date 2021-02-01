@@ -58,6 +58,7 @@ public class ClientData {
         return getEntity((int)id);
     }
     public void moveEntity(Entity entity, Vector3f position,Vector3f rotation,boolean onGround){
+        if(entity==null) return;
         double moveX = position.getX() - entity.getX(), moveY = (position.getY() - 1.62) - entity.getY(), moveZ = position.getZ() - entity.getZ();
         if (BedrockUtils.calcDistance(position.getX(),position.getY()-1.62,position.getZ(), entity.getX(), entity.getY(), entity.getZ()) < 8) {
             client.sendPacket(new ServerEntityPositionRotationPacket(entity.getId(), moveX, moveY, moveZ, rotation.getY(), rotation.getX(),onGround));

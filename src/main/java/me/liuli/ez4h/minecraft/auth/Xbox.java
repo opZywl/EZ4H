@@ -208,7 +208,7 @@ public class Xbox {
 		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setRequestProperty("Authorization", "XBL3.0 x=" + xstsObject.getJSONObject("DisplayClaims").getJSONArray("xui").getJSONObject(0).getString("uhs") + ";" + xstsObject.getString("Token"));
 		connection.setRequestProperty("User-Agent", "MCPE/UWP");
-		connection.setRequestProperty("Client-Version", EZ4H.getCommonManager().getBedrockCodec().getMinecraftVersion());
+		connection.setRequestProperty("Client-Version", EZ4H.getBedrockCodec().getMinecraftVersion());
 
 		this.writeJsonObjectToPost(connection, jsonObject);
 

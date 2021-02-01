@@ -15,10 +15,12 @@ import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import io.netty.util.AsciiString;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.managers.DebugManager;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.minecraft.auth.Xbox;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
 import me.liuli.ez4h.minecraft.data.entity.PlayerData;
+import me.liuli.ez4h.minecraft.data.other.PacketStorage;
 import me.liuli.ez4h.minecraft.data.play.ClientData;
 import me.liuli.ez4h.minecraft.data.world.Weather;
 import me.liuli.ez4h.utils.OtherUtils;
@@ -34,11 +36,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Client {
+    //xbox access token
+    private String accessToken=null;
     @Getter
     private BedrockClientSession bedrockSession;
     @Getter
     private Session javaSession;
-    private String accessToken=null;
     @Getter
     private ECPublicKey publicKey;
     @Getter
@@ -47,6 +50,12 @@ public class Client {
     private ClientData data;
     @Getter
     private final PlayerData player;
+    @Getter
+    private boolean alive=true;
+    @Getter
+    private PacketStorage packetStorage;
+
+    private TranslateThread translateThread;
 
     public Client(PacketReceivedEvent event, String playerName){
         this.player=new PlayerData();
@@ -63,13 +72,19 @@ public class Client {
                 if (throwable != null) {
                     return;
                 }
+
                 this.bedrockSession=session;
-                session.setPacketCodec(EZ4H.getCommonManager().getBedrockCodec());
+                session.setPacketCodec(EZ4H.getBedrockCodec());
                 session.addDisconnectHandler((reason) -> {
                     event.getSession().disconnect("Raknet Disconnect!Please Check your bedrock server!");
                 });
+
+                packetStorage=new PacketStorage();
+                translateThread=new TranslateThread(this);
+                new Thread(translateThread).start();
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
+
                 try {
                     //thanks TunnelMC:https://github.com/THEREALWWEFAN231/TunnelMC/blob/master/src/main/java/me/THEREALWWEFAN231/tunnelmc/auth/Auth.java
                     if (EZ4H.getConfigManager().isXboxAuth()) {
@@ -93,6 +108,14 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    public void addPacket(Packet packet){
+        packetStorage.addPacket(packet);
+    }
+    public void addPacket(BedrockPacket packet){
+        packetStorage.addPacket(packet);
+    }
+
     public void sendMessage(String msg){
         this.sendPacket(new ServerChatPacket(msg));
     }
@@ -101,10 +124,16 @@ public class Client {
     }
     public void sendPacket(BedrockPacket packet){
         if(packet==null) return;
+        if(EZ4H.getDebugManager().isOutPackets()){
+            EZ4H.getLogger().debug("Bedrock OUT "+packet.toString());
+        }
         this.bedrockSession.sendPacket(packet);
     }
     public void sendPacket(Packet packet){
         if(packet==null) return;
+        if(EZ4H.getDebugManager().isOutPackets()){
+            EZ4H.getLogger().debug("Java OUT "+packet.toString());
+        }
         this.javaSession.send(packet);
     }
     public Inventory getInventory(){
@@ -114,9 +143,11 @@ public class Client {
         return this.data.getWeather();
     }
     public void disconnectJava(String reason){
+        alive=false;
         javaSession.disconnect(reason);
     }
     public void disconnectBedrock(){
+        alive=false;
         DisconnectPacket disconnectPacket=new DisconnectPacket();
         disconnectPacket.setKickMessage("disconnect");
         disconnectPacket.setMessageSkipped(false);
@@ -199,7 +230,7 @@ public class Client {
 
         loginPacket.setChainData(new AsciiString(chainDataObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
-        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockCodec().getProtocolVersion());
+        loginPacket.setProtocolVersion(EZ4H.getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
     private void offlineLogin() throws Exception {
@@ -243,7 +274,7 @@ public class Client {
 
         loginPacket.setChainData(new AsciiString(jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8)));
         loginPacket.setSkinData(new AsciiString(this.getSkinData()));
-        loginPacket.setProtocolVersion(EZ4H.getCommonManager().getBedrockCodec().getProtocolVersion());
+        loginPacket.setProtocolVersion(EZ4H.getBedrockCodec().getProtocolVersion());
         this.sendPacket(loginPacket);
     }
     private String getSkinData() throws Exception{
@@ -268,7 +299,7 @@ public class Client {
         skinData.put("DeviceId", UUID.randomUUID().toString());
         skinData.put("DeviceModel", "");
         skinData.put("DeviceOS", 7);//windows 10?
-        skinData.put("GameVersion", EZ4H.getCommonManager().getBedrockCodec().getMinecraftVersion());
+        skinData.put("GameVersion", EZ4H.getBedrockCodec().getMinecraftVersion());
         skinData.put("GuiScale", 0);
         skinData.put("LanguageCode", "en_US");
         skinData.put("PersonaPieces", new JSONArray());

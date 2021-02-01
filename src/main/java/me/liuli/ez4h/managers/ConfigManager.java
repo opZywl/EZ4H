@@ -3,6 +3,7 @@ package me.liuli.ez4h.managers;
 import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import lombok.Getter;
+import me.liuli.ez4h.EZ4H;
 
 public class ConfigManager {
     @Getter
@@ -19,8 +20,6 @@ public class ConfigManager {
     private final boolean xboxAuth,autoLogin/*,mojangSkin*/;
     @Getter
     private final TextMessage playerList;
-    @Getter
-    private final int debugLevel;
 
     public ConfigManager(JSONObject json){
         config=json;
@@ -31,10 +30,11 @@ public class ConfigManager {
         bedrockPort=json.getInteger("be_port");
         playerList=new TextMessage(json.getString("player-list"));
 
-        JSONObject advanced=json.getJSONObject("advanced");
-        debugLevel=advanced.getInteger("debug");
+        JSONObject advanced=json.getJSONObject("auth");
         autoLogin=advanced.getBoolean("autologin");
         xboxAuth=advanced.getBoolean("xbox-auth");
 //        mojangSkin=advanced.getBoolean("mojang-skin");
+
+        EZ4H.setDebugManager(new DebugManager(json.getJSONObject("debug")));
     }
 }

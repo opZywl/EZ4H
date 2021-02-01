@@ -98,9 +98,9 @@ public class MetricsLite {
      */
     private JSONObject getServerData() {
         // Minecraft specific data
-        int playerAmount = EZ4H.getCommonManager().clientCount();
+        int playerAmount = EZ4H.getOnlinePlayers();
         int onlineMode = EZ4H.getConfigManager().isXboxAuth() ? 1 : 0;
-        String minecraftVersion = EZ4H.getCommonManager().getBedrockCodec().getMinecraftVersion();
+        String minecraftVersion = EZ4H.getBedrockCodec().getMinecraftVersion();
         String softwareName = EZ4H.getName();
 
         // OS/Java specific data

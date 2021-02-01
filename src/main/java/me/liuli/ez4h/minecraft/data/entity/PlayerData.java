@@ -32,7 +32,7 @@ public class PlayerData extends Location {
     private GameMode gameMode;
     @Getter
     @Setter
-    private float health=0;
+    private float health=20;
     @Getter
     @Setter
     private float exp=0;

@@ -4,9 +4,14 @@
   "be_host": "127.0.0.1",
   "be_port": 19132,
   "player-list": "A §bEZ§94§bH§f§r Proxyed Server!\nhttps://github.com/Project-EZ4H/EZ4H",
-  "advanced": {
-    "debug": 0,
+  "auth": {
     "autologin": false,
     "xbox-auth": true
+  },
+  "debug": {
+    "all-packet": false,
+    "unknown-packet": false,
+    "out-packet": false,
+    "other": false
   }
 }

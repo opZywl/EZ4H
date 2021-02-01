@@ -21,23 +21,37 @@ public class TranslatorManager {
         javaTranslators.put(translator.getPacketClass(),translator);
     }
 
-    public void translateBedrockPacket(BedrockPacket packet, Client client){
+    public void translatePacket(BedrockPacket packet, Client client){
+        if(EZ4H.getDebugManager().isAllPackets()){
+            EZ4H.getLogger().debug("Bedrock IN "+packet.toString());
+        }
         BedrockTranslator translator=bedrockTranslators.get(packet.getClass());
         if(translator!=null){
-            translator.translate(packet,client);
+            try {
+                translator.translate(packet,client);
+            }catch (Throwable t){
+                EZ4H.getLogger().throwing(t);
+            }
         }else{
-            if(EZ4H.getConfigManager().getDebugLevel()==1){
-                EZ4H.getLogger().debug("Bedrock > "+packet.toString());
+            if(EZ4H.getDebugManager().isUnknownPackets()){
+                EZ4H.getLogger().debug("Bedrock IN-UNKNOWN "+packet.toString());
             }
         }
     }
-    public void translateJavaPacket(Packet packet, Client client){
+    public void translatePacket(Packet packet, Client client){
+        if(EZ4H.getDebugManager().isAllPackets()){
+            EZ4H.getLogger().debug("Java IN "+packet.toString());
+        }
         JavaTranslator translator=javaTranslators.get(packet.getClass());
         if(translator!=null) {
-            translator.translate(packet, client);
+            try {
+                translator.translate(packet, client);
+            }catch (Throwable t){
+                EZ4H.getLogger().throwing(t);
+            }
         }else{
-            if(EZ4H.getConfigManager().getDebugLevel()==1){
-                EZ4H.getLogger().debug("Java > "+packet.toString());
+            if(EZ4H.getDebugManager().isUnknownPackets()){
+                EZ4H.getLogger().debug("Java IN-UNKNOWN "+packet.toString());
             }
         }
     }
