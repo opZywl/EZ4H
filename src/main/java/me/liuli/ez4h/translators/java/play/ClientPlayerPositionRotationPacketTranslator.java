@@ -39,8 +39,8 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
         movePlayerPacket.setEntityType(0);
         client.sendPacket(movePlayerPacket);
-        client.getPlayer().setPos(packet.getX(), packet.getY(), packet.getZ());
-        client.getPlayer().setRot(packet.getYaw(), packet.getPitch());
+        client.getPlayer().setPosition(packet.getX(), packet.getY(), packet.getZ());
+        client.getPlayer().setRotation(packet.getYaw(), packet.getPitch());
         playerGround(client, packet.isOnGround());
     }
 

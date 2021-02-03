@@ -17,12 +17,6 @@ import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 import me.liuli.ez4h.translators.java.play.ClientPlayerActionPacketTranslator;
 
-//Creative Item
-//InventoryTransactionPacket(legacyRequestId=0, legacySlots=[], actions=[InventoryActionData(source=InventorySource(type=CONTAINER, containerId=0, flag=NONE), slot=0, fromItem=ItemData(id=0, damage=0, count=0, tag=null, canPlace=[], canBreak=[], blockingTicks=0, netId=0), toItem=ItemData(id=339, damage=0, count=1, tag={
-//  "Damage": 0i
-//}, canPlace=[], canBreak=[], blockingTicks=0, netId=1), stackNetworkId=0), InventoryActionData(source=InventorySource(type=CREATIVE, containerId=-1, flag=NONE), slot=1, fromItem=ItemData(id=339, damage=0, count=1, tag={
-//  "Damage": 0i
-//}, canPlace=[], canBreak=[], blockingTicks=0, netId=1), toItem=ItemData(id=0, damage=0, count=0, tag=null, canPlace=[], canBreak=[], blockingTicks=0, netId=0), stackNetworkId=0)], transactionType=NORMAL, actionType=0, runtimeEntityId=0, blockPosition=null, blockFace=0, hotbarSlot=0, itemInHand=null, playerPosition=null, clickPosition=null, headPosition=null, hasNetworkIds=false, blockRuntimeId=0)
 public class ClientWindowActionPacketTranslator implements JavaTranslator {
     @Override
     public void translate(Packet inPacket, Client client) {

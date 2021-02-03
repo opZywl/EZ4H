@@ -63,12 +63,13 @@ public class ClientData {
 
     public void moveEntity(Entity entity, Vector3f position, Vector3f rotation, boolean onGround) {
         if (entity == null) return;
-        double moveX = position.getX() - entity.getX(), moveY = (position.getY() - 1.62) - entity.getY(), moveZ = position.getZ() - entity.getZ();
-        if (BedrockUtils.calcDistance(position.getX(), position.getY() - 1.62, position.getZ(), entity.getX(), entity.getY(), entity.getZ()) < 8) {
-            client.sendPacket(new ServerEntityPositionRotationPacket(entity.getId(), moveX, moveY, moveZ, rotation.getY(), rotation.getX(), onGround));
-        } else {
-            client.sendPacket(new ServerEntityTeleportPacket(entity.getId(), position.getX(), position.getY(), position.getZ(), rotation.getY(), rotation.getX(), onGround));
-        }
+
+        float packetY = position.getY();
+        //player head height
+        if(entity.getType().equals(Entity.Type.PLAYER))
+            packetY -= 1.62F;
+
+        client.sendPacket(new ServerEntityTeleportPacket(entity.getId(), position.getX(), packetY, position.getZ(), rotation.getY(), rotation.getX(), onGround));
         entity.setX(position.getX());
         entity.setY(position.getY() - 1.62F);
         entity.setZ(position.getZ());

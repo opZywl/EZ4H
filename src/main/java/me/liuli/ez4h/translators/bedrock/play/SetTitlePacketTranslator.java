@@ -23,7 +23,6 @@ public class SetTitlePacketTranslator implements BedrockTranslator {
             case RESET: {
                 client.sendPacket(new ServerTitlePacket("", true));
                 client.sendPacket(new ServerTitlePacket("", false));
-                client.sendPacket(new ServerTitlePacket(TitleAction.RESET, ""));
                 break;
             }
         }

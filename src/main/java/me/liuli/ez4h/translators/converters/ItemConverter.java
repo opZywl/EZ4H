@@ -11,16 +11,30 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ItemConverter {
-    private final JSONObject BedrockItemMap;
-    private final JSONObject JavaItemMap;
-    private final JSONObject BedrockEnchantMap;
-    private final JSONObject JavaEnchantMap;
+    private final JSONObject bedrockItemMap;
+    private final JSONObject javaItemMap;
+    private final JSONObject bedrockRewindItemMap;
+    private final JSONObject javaRewindItemMap;
+    private final JSONObject bedrockEnchantMap;
+    private final JSONObject javaEnchantMap;
+    private final ArrayList<String> usableItems = new ArrayList<>();
 
     public ItemConverter(JSONObject bedrock, JSONObject java, JSONObject enchant) {
-        BedrockItemMap = bedrock;
-        JavaItemMap = java;
-        BedrockEnchantMap = enchant.getJSONObject("bedrock");
-        JavaEnchantMap = enchant.getJSONObject("java");
+        bedrockItemMap = bedrock;
+        javaItemMap = java;
+        bedrockEnchantMap = enchant.getJSONObject("bedrock");
+        javaEnchantMap = enchant.getJSONObject("java");
+
+        bedrockRewindItemMap=new JSONObject();
+        javaRewindItemMap=new JSONObject();
+        for(Map.Entry<String, Object> entry:bedrockItemMap.entrySet()){
+            bedrockRewindItemMap.put((String) entry.getValue(),entry.getKey());
+        }
+        for(Map.Entry<String, Object> entry:javaItemMap.entrySet()){
+            javaRewindItemMap.put((String) entry.getValue(),entry.getKey());
+        }
+
+        usableItems.add("bow");
     }
 
     public int inventoryIndex(int index, boolean isToBedrock) {
@@ -111,7 +125,7 @@ public class ItemConverter {
 
     public ItemStack convertToJE(ItemData itemData) {
         int id = 1, data = 0;
-        String item = (String) JavaItemMap.get(BedrockItemMap.get(itemData.getId() + ":" + itemData.getDamage()));
+        String item = javaItemMap.getString(bedrockItemMap.getString(itemData.getId() + ":" + itemData.getDamage()));
         if (item != null) {
             String[] splitData = item.split(":");
             id = new Integer(splitData[0]);
@@ -128,15 +142,35 @@ public class ItemConverter {
         return new ItemStack(id, itemData.getCount(), data, tag);
     }
 
+    public ItemData convertToBE(ItemStack itemStack){
+        int id = 1, data = 0;
+        String name = javaRewindItemMap.getString(itemStack.getId() + ":" + itemStack.getData());
+        if(name==null){
+            name = javaRewindItemMap.getString(itemStack.getId()+"");
+        }
+        String item = bedrockRewindItemMap.getString(name);
+        if(item!=null){
+            String[] splitData = item.split(":");
+            id = new Integer(splitData[0]);
+            data = new Integer(splitData[1]);
+        }
+        return ItemData.of(id, (short) itemStack.getAmount(),data);
+    }
+
     public short getJavaEnchant(short id) {
-        String result = BedrockEnchantMap.getString(id + "");
+        String result = bedrockEnchantMap.getString(id + "");
         if (result == null) {
             return id;
         }
-        Short javaResult = JavaEnchantMap.getShort(result);
+        Short javaResult = javaEnchantMap.getShort(result);
         if (javaResult == null) {
             return id;
         }
         return javaResult;
+    }
+
+    public boolean isUseableItem(ItemData itemData){
+        String name=bedrockItemMap.getString(itemData.getId() + ":" + itemData.getDamage());
+        return usableItems.contains(name);
     }
 }

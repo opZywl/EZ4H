@@ -12,34 +12,36 @@ import java.util.Map;
 
 public class BlockConverter {
     @Getter
-    private NibbleArray3d FullLight, NoLight;
+    private final NibbleArray3d fullLight;
+    @Getter
+    private final NibbleArray3d noLight;
 
-    private Map<String, BlockState> BlockStateMap = new HashMap<>();
-    private Map<String, Integer> BlockLightMap = new HashMap<>();
-    private JSONObject RuntimeBlockMap;
-    private final BlockState NullBlock = new BlockState(1, 0);
+    private final Map<String, BlockState> blockStateMap = new HashMap<>();
+    private final Map<String, Integer> blockLightMap = new HashMap<>();
+    private final JSONObject runtimeBlockMap;
+    private final BlockState nullBlock = new BlockState(1, 0);
 
     public BlockConverter(JSONArray blockArray, JSONObject blockRuntimeData) {
         for (Object jsonObject : blockArray) {
             JSONObject json = (JSONObject) jsonObject;
-            BlockLightMap.put(json.getString("name"), json.getInteger("light"));
-            BlockStateMap.put(json.getString("name"), new BlockState(json.getInteger("id"), json.getInteger("meta")));
+            blockLightMap.put(json.getString("name"), json.getInteger("light"));
+            blockStateMap.put(json.getString("name"), new BlockState(json.getInteger("id"), json.getInteger("meta")));
         }
-        RuntimeBlockMap = blockRuntimeData;
-        FullLight = new NibbleArray3d(4096);
-        NoLight = new NibbleArray3d(4096);
+        runtimeBlockMap = blockRuntimeData;
+        fullLight = new NibbleArray3d(4096);
+        noLight = new NibbleArray3d(4096);
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
-                    FullLight.set(x, y, z, 15);
-                    NoLight.set(x, y, z, 0);
+                    fullLight.set(x, y, z, 15);
+                    noLight.set(x, y, z, 0);
                 }
             }
         }
     }
 
     public String getBedrockNameByRuntime(int runtime) {
-        String result = (String) RuntimeBlockMap.get(runtime);
+        String result = (String) runtimeBlockMap.get(runtime);
         if (result == null) {
             result = "minecraft:stone[stone_type=stone]";
         }
@@ -47,15 +49,15 @@ public class BlockConverter {
     }
 
     public BlockState getBlockByName(String name) {
-        BlockState result = BlockStateMap.get(name);
+        BlockState result = blockStateMap.get(name);
         if (result == null) {
-            result = NullBlock;
+            result = nullBlock;
         }
         return result;
     }
 
     public int getBlockLightByName(String name) {
-        Integer result = BlockLightMap.get(name);
+        Integer result = blockLightMap.get(name);
         if (result == null) {
             result = 0;
         }

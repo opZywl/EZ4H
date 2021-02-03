@@ -80,20 +80,22 @@ public class Client {
                 bedrockSession.setBatchHandler(new BedrockBatchHandler(clientM));
                 bedrockSession.setLogging(false);
 
-                try {
-                    //thanks TunnelMC:https://github.com/THEREALWWEFAN231/TunnelMC/blob/master/src/main/java/me/THEREALWWEFAN231/tunnelmc/auth/Auth.java
-                    if (EZ4H.getConfigManager().isXboxAuth()) {
-                        this.accessToken = EZ4H.getAuthManager().getAccessTokens().remove(playerName);
-                        onlineLogin();
-                    } else {
-                        this.player.setXuid("");
-                        this.player.setUuid(UUID.nameUUIDFromBytes(("OfflinePlayer:" + this.player.getName()).getBytes(StandardCharsets.UTF_8)));
-                        offlineLogin();
+                new Thread(() -> {
+                    try {
+                        //thanks TunnelMC:https://github.com/THEREALWWEFAN231/TunnelMC/blob/master/src/main/java/me/THEREALWWEFAN231/tunnelmc/auth/Auth.java
+                        if (EZ4H.getConfigManager().isXboxAuth()) {
+                            this.accessToken = EZ4H.getAuthManager().getAccessTokens().remove(playerName);
+                            onlineLogin();
+                        } else {
+                            this.player.setXuid("");
+                            this.player.setUuid(UUID.nameUUIDFromBytes(("OfflinePlayer:" + this.player.getName()).getBytes(StandardCharsets.UTF_8)));
+                            offlineLogin();
+                        }
+                    } catch (Throwable t) {
+                        javaSession.disconnect("LOGIN ERROR\n" + t.toString());
+                        t.printStackTrace();
                     }
-                } catch (Throwable t) {
-                    javaSession.disconnect("LOGIN ERROR\n" + t.toString());
-                    t.printStackTrace();
-                }
+                }).start();
             }).join();
         } catch (Exception e) {
             event.getSession().disconnect("EZ4H ERROR!\nCaused by " + e.getLocalizedMessage());

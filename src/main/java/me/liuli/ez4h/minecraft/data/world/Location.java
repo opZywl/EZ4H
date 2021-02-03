@@ -33,26 +33,30 @@ public class Location {
         this.pitch = pitch;
     }
 
-    public void setRot(float yaw, float pitch) {
+    public void setRotation(float yaw, float pitch) {
         this.yaw = yaw;
         this.pitch = pitch;
     }
 
-    public void setRot(double yaw, double pitch) {
-        setRot((float) yaw, (float) pitch);
+    public void setRotation(double yaw, double pitch) {
+        setRotation((float) yaw, (float) pitch);
     }
 
-    public void setPos(float x, float y, float z) {
+    public void setPosition(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public void setPos(double x, double y, double z) {
-        setPos((float) x, (float) y, (float) z);
+    public void setPosition(double x, double y, double z) {
+        setPosition((float) x, (float) y, (float) z);
     }
 
     public Vector3f getVec3Location() {
         return Vector3f.from(x, y + 1.62, z);
+    }
+
+    public Vector3f getHeadRotation(){
+        return Vector3f.from(pitch,yaw,yaw);
     }
 }

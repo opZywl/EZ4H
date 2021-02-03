@@ -21,7 +21,7 @@ public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
         movePlayerPacket.setRotation(Vector3f.from(packet.getPitch(), packet.getYaw(), 0));
         movePlayerPacket.setTeleportationCause(MovePlayerPacket.TeleportationCause.UNKNOWN);
         movePlayerPacket.setEntityType(0);
-        client.getPlayer().setRot(packet.getYaw(), packet.getPitch());
+        client.getPlayer().setRotation(packet.getYaw(), packet.getPitch());
         client.sendPacket(movePlayerPacket);
     }
 
