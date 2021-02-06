@@ -1,6 +1,5 @@
 package me.liuli.ez4h.translators.bedrock.play;
 
-import com.github.steveice10.mc.protocol.data.game.TitleAction;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerTitlePacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.SetTitlePacket;

@@ -56,7 +56,7 @@ public class Location {
         return Vector3f.from(x, y + 1.62, z);
     }
 
-    public Vector3f getHeadRotation(){
-        return Vector3f.from(pitch,yaw,yaw);
+    public Vector3f getHeadRotation() {
+        return Vector3f.from(pitch, yaw, yaw);
     }
 }

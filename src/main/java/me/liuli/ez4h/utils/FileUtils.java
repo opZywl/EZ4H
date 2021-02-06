@@ -1,14 +1,10 @@
 package me.liuli.ez4h.utils;
 
-import com.google.gson.JsonObject;
 import me.liuli.ez4h.EZ4H;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 public class FileUtils {
     public static String getTextFromInputStream(InputStream inputStream) throws Exception {

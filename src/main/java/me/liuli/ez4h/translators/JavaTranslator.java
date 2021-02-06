@@ -6,5 +6,6 @@ import me.liuli.ez4h.minecraft.Client;
 
 public interface JavaTranslator {
     void translate(Packet inPacket, Client client);
+
     Class<? extends MinecraftPacket> getPacketClass();
 }

@@ -11,9 +11,9 @@ import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import me.liuli.ez4h.EZ4H;
 
 public class FakeServer extends SessionAdapter {
+    private final String playerName;
     public AuthAlertThread runnable;
     public Thread thread;
-    private final String playerName;
 
     public FakeServer(Session session, String playerName) {
         this.playerName = playerName;

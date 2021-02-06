@@ -25,21 +25,21 @@ public class ClientCreativeInventoryActionPacketTranslator implements JavaTransl
     public void translate(Packet inPacket, Client client) {
         ClientCreativeInventoryActionPacket packet = (ClientCreativeInventoryActionPacket) inPacket;
 
-        if(packet.getClickedItem()==null)
+        if (packet.getClickedItem() == null)
             return;
 
-        ItemData getItem=EZ4H.getConverterManager().getItemConverter().convertToBE(packet.getClickedItem());
+        ItemData getItem = EZ4H.getConverterManager().getItemConverter().convertToBE(packet.getClickedItem());
 
-        if(packet.getSlot()==-1){
+        if (packet.getSlot() == -1) {
             //drop item
             return;
         }
 
-        InventoryTransactionPacket inventoryTransactionPacket=new InventoryTransactionPacket();
+        InventoryTransactionPacket inventoryTransactionPacket = new InventoryTransactionPacket();
         inventoryTransactionPacket.setLegacyRequestId(0);
-        InventoryActionData action1=new InventoryActionData(InventorySource.fromContainerWindowId(0), EZ4H.getConverterManager().getItemConverter().inventoryIndex(packet.getSlot(),true),client.getInventory().getBedrockItem(packet.getSlot()), getItem);
+        InventoryActionData action1 = new InventoryActionData(InventorySource.fromContainerWindowId(0), EZ4H.getConverterManager().getItemConverter().inventoryIndex(packet.getSlot(), true), client.getInventory().getBedrockItem(packet.getSlot()), getItem);
         inventoryTransactionPacket.getActions().add(action1);
-        InventoryActionData action2=new InventoryActionData(InventorySource.fromCreativeInventory(),1,getItem,client.getInventory().getBedrockItem(packet.getSlot()));
+        InventoryActionData action2 = new InventoryActionData(InventorySource.fromCreativeInventory(), 1, getItem, client.getInventory().getBedrockItem(packet.getSlot()));
         inventoryTransactionPacket.getActions().add(action2);
         inventoryTransactionPacket.setTransactionType(TransactionType.NORMAL);
         inventoryTransactionPacket.setActionType(0);

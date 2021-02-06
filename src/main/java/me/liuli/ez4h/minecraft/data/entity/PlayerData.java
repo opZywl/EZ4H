@@ -29,7 +29,7 @@ public class PlayerData extends Location {
     private Difficulty difficulty;
     @Getter
     @Setter
-    private GameMode gameMode=GameMode.SURVIVAL;
+    private GameMode gameMode = GameMode.SURVIVAL;
     @Getter
     @Setter
     private float health = 20;

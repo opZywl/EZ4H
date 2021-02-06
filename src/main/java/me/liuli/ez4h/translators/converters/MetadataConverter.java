@@ -13,29 +13,29 @@ import me.liuli.ez4h.utils.BedrockUtils;
 import java.util.ArrayList;
 
 public class MetadataConverter {
-    public void convert(EntityDataMap bedrockMetadata,Client client,int entityId){
-        ArrayList<EntityMetadata> metadata=new ArrayList<>();
-        if(bedrockMetadata.containsKey(EntityData.AIR_SUPPLY)) {
+    public void convert(EntityDataMap bedrockMetadata, Client client, int entityId) {
+        ArrayList<EntityMetadata> metadata = new ArrayList<>();
+        if (bedrockMetadata.containsKey(EntityData.AIR_SUPPLY)) {
             metadata.add(new EntityMetadata(1, MetadataType.INT, (int) bedrockMetadata.getShort(EntityData.AIR_SUPPLY)));
         }
-        if(bedrockMetadata.containsKey(EntityData.NAMETAG)) {
-            metadata.add(new EntityMetadata(2, MetadataType.STRING, BedrockUtils.lengthCutter(bedrockMetadata.getString(EntityData.NAMETAG),16)));
+        if (bedrockMetadata.containsKey(EntityData.NAMETAG)) {
+            metadata.add(new EntityMetadata(2, MetadataType.STRING, BedrockUtils.lengthCutter(bedrockMetadata.getString(EntityData.NAMETAG), 16)));
         }
-        if(client.getPlayer().getEntityId()!=entityId) {
+        if (client.getPlayer().getEntityId() != entityId) {
             if (bedrockMetadata.containsKey(EntityData.HEALTH)) {
-                float hp=20;
+                float hp = 20;
                 try {
-                    hp=bedrockMetadata.getInt(EntityData.HEALTH);
+                    hp = bedrockMetadata.getInt(EntityData.HEALTH);
                 } catch (Exception e) {
-                    hp=bedrockMetadata.getFloat(EntityData.HEALTH);
+                    hp = bedrockMetadata.getFloat(EntityData.HEALTH);
                 }
                 metadata.add(new EntityMetadata(7, MetadataType.FLOAT, hp));
             }
         }
-        client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[0])));
+        client.sendPacket(new ServerEntityMetadataPacket(entityId, metadata.toArray(new EntityMetadata[0])));
         metadata.clear();
 
-        if(bedrockMetadata.getFlags()==null)
+        if (bedrockMetadata.getFlags() == null)
             return;
 
         Entity.Pose pose = Entity.Pose.NONE;
@@ -45,11 +45,11 @@ public class MetadataConverter {
         if (bedrockMetadata.getFlags().getFlag(EntityFlag.ON_FIRE)) {
             pose = Entity.Pose.FIRE;
         }
-        if(entityId==client.getPlayer().getEntityId()){
+        if (entityId == client.getPlayer().getEntityId()) {
             metadata.add(new EntityMetadata(0, MetadataType.BYTE, pose.data));
         }
-        Entity entity=client.getData().getEntity(entityId);
-        if(entity!=null) {
+        Entity entity = client.getData().getEntity(entityId);
+        if (entity != null) {
             boolean canShowName = bedrockMetadata.getFlags().getFlag(EntityFlag.CAN_SHOW_NAME),
                     hasGravity = bedrockMetadata.getFlags().getFlag(EntityFlag.HAS_GRAVITY);
             if (entity.getMetadata().get(EntityFlag.CAN_SHOW_NAME) != canShowName) {
@@ -74,8 +74,8 @@ public class MetadataConverter {
             }
         }
 
-        if(metadata.size()>0){
-            client.sendPacket(new ServerEntityMetadataPacket(entityId,metadata.toArray(new EntityMetadata[metadata.size()])));
+        if (metadata.size() > 0) {
+            client.sendPacket(new ServerEntityMetadataPacket(entityId, metadata.toArray(new EntityMetadata[metadata.size()])));
         }
 //        //score below name
 //        if(entity!=null){

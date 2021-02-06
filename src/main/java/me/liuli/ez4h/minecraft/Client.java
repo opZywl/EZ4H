@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class Client {
     @Getter
     private final PlayerData player;
+    private final TranslatorManager translatorManager;
     //xbox access token
     private String accessToken = null;
     @Getter
@@ -52,13 +53,11 @@ public class Client {
     @Getter
     private boolean alive = true;
 
-    private final TranslatorManager translatorManager;
-
     public Client(PacketReceivedEvent event, String playerName) {
         this.player = new PlayerData();
         player.setName(playerName);
         Client clientM = this;
-        this.translatorManager=EZ4H.getTranslatorManager();
+        this.translatorManager = EZ4H.getTranslatorManager();
         try {
             javaSession = event.getSession();
             this.data = new ClientData(this);
@@ -107,11 +106,11 @@ public class Client {
     }
 
     public void addPacket(Packet packet) {
-        translatorManager.translatePacket(packet,this);
+        translatorManager.translatePacket(packet, this);
     }
 
     public void addPacket(BedrockPacket packet) {
-        translatorManager.translatePacket(packet,this);
+        translatorManager.translatePacket(packet, this);
     }
 
     public void sendMessage(String msg) {
@@ -304,8 +303,8 @@ public class Client {
         skinData.put("CurrentInputMode", 1);
         skinData.put("DefaultInputMode", 1);
         skinData.put("DeviceId", UUID.randomUUID().toString());
-        skinData.put("DeviceModel", "");
-        skinData.put("DeviceOS", 7);//windows 10?
+        skinData.put("DeviceModel", "EZ4H");
+        skinData.put("DeviceOS", 1);//android (make angle check disable :D)
         skinData.put("GameVersion", EZ4H.getBedrockCodec().getMinecraftVersion());
         skinData.put("GuiScale", 0);
         skinData.put("LanguageCode", "en_US");

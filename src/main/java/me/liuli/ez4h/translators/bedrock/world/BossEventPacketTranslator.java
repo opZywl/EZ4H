@@ -15,7 +15,7 @@ import me.liuli.ez4h.utils.OtherUtils;
 import java.util.UUID;
 
 public class BossEventPacketTranslator implements BedrockTranslator {
-    private final BossBarColor[] colors=BossBarColor.values();
+    private final BossBarColor[] colors = BossBarColor.values();
 
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
@@ -24,7 +24,7 @@ public class BossEventPacketTranslator implements BedrockTranslator {
         String title = BedrockUtils.lengthCutter(packet.getTitle(), 40);
         switch (packet.getAction()) {
             case CREATE: {
-                client.sendPacket(new ServerBossBarPacket(uuid, BossBarAction.ADD, new TextMessage(title), packet.getHealthPercentage(), getColor(packet.getColor()), BossBarDivision.NONE, OtherUtils.intToBool(packet.getDarkenSky(),false), false));
+                client.sendPacket(new ServerBossBarPacket(uuid, BossBarAction.ADD, new TextMessage(title), packet.getHealthPercentage(), getColor(packet.getColor()), BossBarDivision.NONE, OtherUtils.intToBool(packet.getDarkenSky(), false), false));
                 break;
             }
             case REMOVE: {
@@ -42,10 +42,10 @@ public class BossEventPacketTranslator implements BedrockTranslator {
         }
     }
 
-    private BossBarColor getColor(int color){
-        if(color<colors.length){
+    private BossBarColor getColor(int color) {
+        if (color < colors.length) {
             return colors[color];
-        }else{
+        } else {
             return BossBarColor.PURPLE;
         }
     }

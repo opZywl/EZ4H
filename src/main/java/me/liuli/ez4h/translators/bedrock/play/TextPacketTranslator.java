@@ -12,8 +12,8 @@ import me.liuli.ez4h.utils.FileUtils;
 public class TextPacketTranslator implements BedrockTranslator {
     private final JSONObject textJson;
 
-    public TextPacketTranslator(){
-        this.textJson=JSONObject.parseObject(FileUtils.getTextFromResource("resources/lang.json"));
+    public TextPacketTranslator() {
+        this.textJson = JSONObject.parseObject(FileUtils.getTextFromResource("resources/lang.json"));
     }
 
     @Override

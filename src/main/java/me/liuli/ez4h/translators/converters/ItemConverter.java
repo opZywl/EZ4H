@@ -25,13 +25,13 @@ public class ItemConverter {
         bedrockEnchantMap = enchant.getJSONObject("bedrock");
         javaEnchantMap = enchant.getJSONObject("java");
 
-        bedrockRewindItemMap=new JSONObject();
-        javaRewindItemMap=new JSONObject();
-        for(Map.Entry<String, Object> entry:bedrockItemMap.entrySet()){
-            bedrockRewindItemMap.put((String) entry.getValue(),entry.getKey());
+        bedrockRewindItemMap = new JSONObject();
+        javaRewindItemMap = new JSONObject();
+        for (Map.Entry<String, Object> entry : bedrockItemMap.entrySet()) {
+            bedrockRewindItemMap.put((String) entry.getValue(), entry.getKey());
         }
-        for(Map.Entry<String, Object> entry:javaItemMap.entrySet()){
-            javaRewindItemMap.put((String) entry.getValue(),entry.getKey());
+        for (Map.Entry<String, Object> entry : javaItemMap.entrySet()) {
+            javaRewindItemMap.put((String) entry.getValue(), entry.getKey());
         }
 
         usableItems.add("bow");
@@ -142,19 +142,19 @@ public class ItemConverter {
         return new ItemStack(id, itemData.getCount(), data, tag);
     }
 
-    public ItemData convertToBE(ItemStack itemStack){
+    public ItemData convertToBE(ItemStack itemStack) {
         int id = 1, data = 0;
         String name = javaRewindItemMap.getString(itemStack.getId() + ":" + itemStack.getData());
-        if(name==null){
-            name = javaRewindItemMap.getString(itemStack.getId()+"");
+        if (name == null) {
+            name = javaRewindItemMap.getString(itemStack.getId() + "");
         }
         String item = bedrockRewindItemMap.getString(name);
-        if(item!=null){
+        if (item != null) {
             String[] splitData = item.split(":");
             id = new Integer(splitData[0]);
             data = new Integer(splitData[1]);
         }
-        return ItemData.of(id, (short) itemStack.getAmount(),data);
+        return ItemData.of(id, (short) itemStack.getAmount(), data);
     }
 
     public short getJavaEnchant(short id) {
@@ -169,8 +169,8 @@ public class ItemConverter {
         return javaResult;
     }
 
-    public boolean isUseableItem(ItemData itemData){
-        String name=bedrockItemMap.getString(itemData.getId() + ":" + itemData.getDamage());
+    public boolean isUseableItem(ItemData itemData) {
+        String name = bedrockItemMap.getString(itemData.getId() + ":" + itemData.getDamage());
         return usableItems.contains(name);
     }
 }

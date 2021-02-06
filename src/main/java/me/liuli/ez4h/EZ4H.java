@@ -2,7 +2,6 @@ package me.liuli.ez4h;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
-import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import me.liuli.ez4h.minecraft.JavaServer;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
-import me.liuli.ez4h.translators.bedrock.play.TextPacketTranslator;
 import me.liuli.ez4h.utils.FileUtils;
 import me.liuli.ez4h.utils.MetricsLite;
 import org.apache.logging.log4j.Level;
@@ -71,7 +69,7 @@ public class EZ4H {
     private static void initFile() {
         new File("./data").mkdir();
         if (!new File("./config.json").exists()) {
-            FileUtils.writeFile("./config.json",FileUtils.getTextFromResource("resources/config.json"));
+            FileUtils.writeFile("./config.json", FileUtils.getTextFromResource("resources/config.json"));
         }
         configManager = new ConfigManager(JSONObject.parseObject(FileUtils.readFile(new File("./config.json"))));
 

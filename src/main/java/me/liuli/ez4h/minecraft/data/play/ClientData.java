@@ -1,6 +1,5 @@
 package me.liuli.ez4h.minecraft.data.play;
 
-import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityPositionRotationPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.entity.ServerEntityTeleportPacket;
 import com.nukkitx.math.vector.Vector3f;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import me.liuli.ez4h.minecraft.data.entity.Entity;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
 import me.liuli.ez4h.minecraft.data.world.ChestData;
 import me.liuli.ez4h.minecraft.data.world.Weather;
-import me.liuli.ez4h.utils.BedrockUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +64,7 @@ public class ClientData {
 
         float packetY = position.getY();
         //player head height
-        if(entity.getType().equals(Entity.Type.PLAYER))
+        if (entity.getType().equals(Entity.Type.PLAYER))
             packetY -= 1.62F;
 
         client.sendPacket(new ServerEntityTeleportPacket(entity.getId(), position.getX(), packetY, position.getZ(), rotation.getY(), rotation.getX(), onGround));

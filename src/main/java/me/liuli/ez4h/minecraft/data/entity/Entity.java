@@ -18,6 +18,7 @@ public class Entity extends Location {
     @Getter
     @Setter
     private Pose pose;
+
     public Entity(float x, float y, float z, int id, Type type) {
         super(x, y, z);
 
@@ -29,6 +30,7 @@ public class Entity extends Location {
         metadata.put(EntityFlag.HAS_GRAVITY, false);
 //        this.scoretag=null;
     }
+
     public enum Pose {
         NONE((byte) 0), FIRE((byte) 1), SNEAK((byte) 2);
 

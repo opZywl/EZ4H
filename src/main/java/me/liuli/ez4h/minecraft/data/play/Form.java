@@ -6,6 +6,7 @@ public class Form {
     public Type type;
     public int array;
     public JSONObject data;
+
     public Form(Type type, int array, JSONObject data) {
         this.type = type;
         this.array = array;

@@ -9,7 +9,9 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class TranslatorManager {
 
@@ -24,52 +26,55 @@ public class TranslatorManager {
     private final Map<Class<? extends Packet>, JavaTranslator> javaTranslators = new HashMap<>();
     private final Map<Class<? extends BedrockPacket>, BedrockTranslator> bedrockTranslators = new HashMap<>();
 
-    public void addBedrockTranslator(BedrockTranslator translator){
-        bedrockTranslators.put(translator.getPacketClass(),translator);
-    }
-    public void addJavaTranslator(JavaTranslator translator){
-        javaTranslators.put(translator.getPacketClass(),translator);
+    public void addBedrockTranslator(BedrockTranslator translator) {
+        bedrockTranslators.put(translator.getPacketClass(), translator);
     }
 
-    public void translatePacket(BedrockPacket packet, Client client){
-        if(EZ4H.getDebugManager().isAllPackets()){
-            EZ4H.getLogger().debug("Bedrock IN "+packet.toString());
-        }
-        BedrockTranslator translator=bedrockTranslators.get(packet.getClass());
-        if(translator!=null){
-            try {
-                this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
-            }catch (Throwable t){
-                EZ4H.getLogger().throwing(t);
-            }
-        }else{
-            if(EZ4H.getDebugManager().isUnknownPackets()){
-                EZ4H.getLogger().debug("Bedrock IN-UNKNOWN "+packet.toString());
-            }
-        }
+    public void addJavaTranslator(JavaTranslator translator) {
+        javaTranslators.put(translator.getPacketClass(), translator);
     }
-    public void translatePacket(Packet packet, Client client){
-        if(EZ4H.getDebugManager().isAllPackets()){
-            EZ4H.getLogger().debug("Java IN "+packet.toString());
+
+    public void translatePacket(BedrockPacket packet, Client client) {
+        if (EZ4H.getDebugManager().isAllPackets()) {
+            EZ4H.getLogger().debug("Bedrock IN " + packet.toString());
         }
-        JavaTranslator translator=javaTranslators.get(packet.getClass());
-        if(translator!=null) {
+        BedrockTranslator translator = bedrockTranslators.get(packet.getClass());
+        if (translator != null) {
             try {
                 this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
-            }catch (Throwable t){
+            } catch (Throwable t) {
                 EZ4H.getLogger().throwing(t);
             }
-        }else{
-            if(EZ4H.getDebugManager().isUnknownPackets()){
-                EZ4H.getLogger().debug("Java IN-UNKNOWN "+packet.toString());
+        } else {
+            if (EZ4H.getDebugManager().isUnknownPackets()) {
+                EZ4H.getLogger().debug("Bedrock IN-UNKNOWN " + packet.toString());
             }
         }
     }
 
-    public BedrockTranslator getBedrockTranslator(Class<? extends BedrockPacket> clazz){
+    public void translatePacket(Packet packet, Client client) {
+        if (EZ4H.getDebugManager().isAllPackets()) {
+            EZ4H.getLogger().debug("Java IN " + packet.toString());
+        }
+        JavaTranslator translator = javaTranslators.get(packet.getClass());
+        if (translator != null) {
+            try {
+                this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
+            } catch (Throwable t) {
+                EZ4H.getLogger().throwing(t);
+            }
+        } else {
+            if (EZ4H.getDebugManager().isUnknownPackets()) {
+                EZ4H.getLogger().debug("Java IN-UNKNOWN " + packet.toString());
+            }
+        }
+    }
+
+    public BedrockTranslator getBedrockTranslator(Class<? extends BedrockPacket> clazz) {
         return bedrockTranslators.get(clazz);
     }
-    public JavaTranslator getJavaTranslator(Class<? extends Packet> clazz){
+
+    public JavaTranslator getJavaTranslator(Class<? extends Packet> clazz) {
         return javaTranslators.get(clazz);
     }
 }
