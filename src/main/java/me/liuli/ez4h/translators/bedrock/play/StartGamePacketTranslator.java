@@ -20,7 +20,7 @@ import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.Ping;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 import java.nio.charset.StandardCharsets;
 
@@ -49,19 +49,19 @@ public class StartGamePacketTranslator implements BedrockTranslator {
         //login translate
         Difficulty difficulty;
         try {
-            difficulty = BedrockUtils.convertDifficultyToJE(packet.getDifficulty());
+            difficulty = BedrockUtil.convertDifficultyToJE(packet.getDifficulty());
         } catch (Exception e) {
             difficulty = Difficulty.NORMAL;
         }
         ServerDifficultyPacket serverDifficultyPacket = new ServerDifficultyPacket(difficulty);
         ServerEntityStatusPacket serverEntityStatusPacket = new ServerEntityStatusPacket((int) packet.getRuntimeEntityId(), EntityStatus.PLAYER_OP_PERMISSION_LEVEL_0);
-        GameMode gameMode = BedrockUtils.convertGameModeToJE(packet.getPlayerGameType());
+        GameMode gameMode = BedrockUtil.convertGameModeToJE(packet.getPlayerGameType());
         ServerJoinGamePacket serverJoinGamePacket = new ServerJoinGamePacket(
                 (int) packet.getRuntimeEntityId(),
                 false,
                 gameMode,
                 packet.getDimensionId(),
-                BedrockUtils.convertDifficultyToJE(packet.getDifficulty()),
+                BedrockUtil.convertDifficultyToJE(packet.getDifficulty()),
                 0,
                 WorldType.FLAT,
                 true

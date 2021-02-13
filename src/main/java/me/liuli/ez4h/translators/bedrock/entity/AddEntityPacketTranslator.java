@@ -19,8 +19,8 @@ import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.data.entity.Entity;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
-import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
+import me.liuli.ez4h.utils.FileUtil;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
     private final JSONObject entityMap;
 
     public AddEntityPacketTranslator() {
-        entityMap = JSONObject.parseObject(FileUtils.getTextFromResource("resources/entity.json"));
+        entityMap = JSONObject.parseObject(FileUtil.getTextFromResource("resources/entity.json"));
     }
 
     @Override
@@ -44,14 +44,15 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
             String name = entityData.getString("name").toUpperCase();
             switch (entityData.getString("type")) {
                 case "mob": {
-                    Vector3f rotation = packet.getRotation(), motion = packet.getMotion();
-                    client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), MobType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
+                    Vector3f rotation = packet.getRotation(),
+                             motion = packet.getMotion();
+                    client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtil.getUUID(packet.getRuntimeEntityId()), MobType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
                     EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
                     break;
                 }
                 case "object": {
                     Vector3f rotation = packet.getRotation(), motion = packet.getMotion();
-                    client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), BedrockUtils.getUUID(packet.getRuntimeEntityId()), ObjectType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
+                    client.sendPacket(new ServerSpawnObjectPacket((int) packet.getRuntimeEntityId(), BedrockUtil.getUUID(packet.getRuntimeEntityId()), ObjectType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), motion.getX(), motion.getY(), motion.getZ()));
                     EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
                     break;
                 }
@@ -69,9 +70,9 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
             EZ4H.getLogger().warn("Can't translate entity with name " + prepareEntityName(packet.getIdentifier()) + " for player " + client.getPlayer().getName());
 
             //add a fakeplayer to replace this unknown entity
-            UUID uuid = BedrockUtils.getUUID(packet.getRuntimeEntityId());
+            UUID uuid = BedrockUtil.getUUID(packet.getRuntimeEntityId());
             ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();
-            playerListEntries.add(new PlayerListEntry(new GameProfile(uuid, BedrockUtils.lengthCutter(prepareEntityName(packet.getIdentifier()), 16)), GameMode.SURVIVAL, 0, new TextMessage(packet.getIdentifier())));
+            playerListEntries.add(new PlayerListEntry(new GameProfile(uuid, BedrockUtil.lengthCutter(prepareEntityName(packet.getIdentifier()), 16)), GameMode.SURVIVAL, 0, new TextMessage(packet.getIdentifier())));
             PlayerListEntry[] playerListEntriesL = playerListEntries.toArray(new PlayerListEntry[0]);
             client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, playerListEntriesL));
 

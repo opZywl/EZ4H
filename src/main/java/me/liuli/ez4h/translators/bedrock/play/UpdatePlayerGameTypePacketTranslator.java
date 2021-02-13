@@ -6,14 +6,14 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.UpdatePlayerGameTypePacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 public class UpdatePlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         UpdatePlayerGameTypePacket packet = (UpdatePlayerGameTypePacket) inPacket;
         if (packet.getEntityId() == client.getPlayer().getEntityId()) {
-            client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, BedrockUtils.convertGameModeToJE(packet.getGameType())));
+            client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, BedrockUtil.convertGameModeToJE(packet.getGameType())));
         }
     }
 

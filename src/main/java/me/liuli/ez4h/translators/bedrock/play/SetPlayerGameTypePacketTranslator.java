@@ -8,14 +8,14 @@ import com.nukkitx.protocol.bedrock.data.GameType;
 import com.nukkitx.protocol.bedrock.packet.SetPlayerGameTypePacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 public class SetPlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetPlayerGameTypePacket packet = (SetPlayerGameTypePacket) inPacket;
 
-        GameMode gameMode = BedrockUtils.convertGameModeToJE(GameType.from(packet.getGamemode()));
+        GameMode gameMode = BedrockUtil.convertGameModeToJE(GameType.from(packet.getGamemode()));
         client.getPlayer().setGameMode(gameMode);
         client.sendPacket(new ServerNotifyClientPacket(ClientNotification.CHANGE_GAMEMODE, gameMode));
     }

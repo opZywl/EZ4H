@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.auth.XboxLogin;
-import me.liuli.ez4h.utils.FileUtils;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.FileUtil;
+import me.liuli.ez4h.utils.OtherUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,15 +22,15 @@ public class AuthManager {
         xboxLogin = new XboxLogin();
         if (EZ4H.getConfigManager().isAutoLogin()) {
             if (!new File("./data/accounts.json").exists()) {
-                FileUtils.writeFile("./data/accounts.json", "{}");
+                FileUtil.writeFile("./data/accounts.json", "{}");
             }
-            accounts = JSONObject.parseObject(FileUtils.readFile(new File("./data/accounts.json")));
+            accounts = JSONObject.parseObject(FileUtil.readFile(new File("./data/accounts.json")));
         }
     }
 
     public JSONObject getAccount(String mcUsername) {
         if (EZ4H.getConfigManager().isAutoLogin() && accounts.containsKey(mcUsername)) {
-            return JSONObject.parseObject(OtherUtils.base64Decode((String) accounts.get(mcUsername)));
+            return JSONObject.parseObject(OtherUtil.base64Decode((String) accounts.get(mcUsername)));
         }
         return null;
     }
@@ -40,7 +40,7 @@ public class AuthManager {
             JSONObject account = new JSONObject();
             account.put("username", username);
             account.put("password", password);
-            accounts.put(mcUsername, OtherUtils.base64Encode(account.toJSONString()));
+            accounts.put(mcUsername, OtherUtil.base64Encode(account.toJSONString()));
             saveAccountsToFile();
         }
     }
@@ -53,6 +53,6 @@ public class AuthManager {
     }
 
     public void saveAccountsToFile() {
-        FileUtils.writeFile("./data/accounts.json", accounts.toJSONString());
+        FileUtil.writeFile("./data/accounts.json", accounts.toJSONString());
     }
 }

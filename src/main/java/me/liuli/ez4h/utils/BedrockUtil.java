@@ -6,7 +6,7 @@ import com.nukkitx.protocol.bedrock.data.GameType;
 
 import java.util.UUID;
 
-public class BedrockUtils {
+public class BedrockUtil {
     public static Difficulty convertDifficultyToJE(int diff) {
         Difficulty difficulty;
         switch (diff) {

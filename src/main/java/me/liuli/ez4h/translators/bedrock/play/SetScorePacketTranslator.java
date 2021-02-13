@@ -6,7 +6,7 @@ import com.nukkitx.protocol.bedrock.data.ScoreInfo;
 import com.nukkitx.protocol.bedrock.packet.SetScorePacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class SetScorePacketTranslator implements BedrockTranslator {
                     if (client.getData().getScoreSortorder() == 0) {
                         score = -score;
                     }
-                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtils.lengthCutter(scoreInfo.getName(), 40), scoreInfo.getObjectiveId(), score));
+                    client.sendPacket(new ServerUpdateScorePacket(BedrockUtil.lengthCutter(scoreInfo.getName(), 40), scoreInfo.getObjectiveId(), score));
                     break;
                 }
             }

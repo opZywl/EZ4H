@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerPluginMessagePacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.data.play.Form;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.OtherUtil;
 
 //simple form:{"type":"form","title":"LSSW","content":"Choose Kits","buttons":[{"text":"Empty(NOW)"}],"closed":false}
 //modal form:{"type":"modal","title":"TITLE","content":"Context","button1":"button1","button2":"button2","closed":false}
@@ -17,7 +17,7 @@ public class FormConverter {
         formJSON.put("id", formId);
         JSONObject formJ = new JSONObject();
         formJ.put("type", "form");
-        formJ.put("data", OtherUtils.base64Encode(formJSON.toJSONString()));
+        formJ.put("data", OtherUtil.base64Encode(formJSON.toJSONString()));
         client.sendPacket(new ServerPluginMessagePacket("EZ4H", formJ.toJSONString().getBytes()));
         if (formJSON.getString("type").equals("form")) {
             showSimpleForm(client, formJSON);

@@ -3,8 +3,8 @@ package me.liuli.ez4h.minecraft.auth;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.utils.FileUtils;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.FileUtil;
+import me.liuli.ez4h.utils.OtherUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
@@ -83,7 +83,7 @@ public class Xbox {
 
         this.writeJsonObjectToPost(connection, jsonObject);
 
-        String responce = FileUtils.getTextFromInputStream(connection.getInputStream());
+        String responce = FileUtil.getTextFromInputStream(connection.getInputStream());
         JSONObject responceJsonObject = JSONObject.parseObject(responce);
 
         return responceJsonObject.getString("Token");
@@ -122,7 +122,7 @@ public class Xbox {
 
         this.writeJsonObjectToPost(connection, jsonObject);
 
-        String responce = FileUtils.getTextFromInputStream(connection.getInputStream());
+        String responce = FileUtil.getTextFromInputStream(connection.getInputStream());
         JSONObject responceJsonObject = JSONObject.parseObject(responce);
 
         return responceJsonObject.getString("Token");
@@ -160,7 +160,7 @@ public class Xbox {
 
         this.writeJsonObjectToPost(connection, jsonObject);
 
-        String responce = FileUtils.getTextFromInputStream(connection.getInputStream());
+        String responce = FileUtil.getTextFromInputStream(connection.getInputStream());
         JSONObject responceJsonObject = JSONObject.parseObject(responce);
 
         return responceJsonObject.getString("Token");
@@ -203,7 +203,7 @@ public class Xbox {
 
         this.writeJsonObjectToPost(connection, jsonObject);
 
-        return FileUtils.getTextFromInputStream(connection.getInputStream());
+        return FileUtil.getTextFromInputStream(connection.getInputStream());
     }
 
     public String requestMinecraftChain(String xsts, ECPublicKey publicKey) throws Exception {
@@ -225,7 +225,7 @@ public class Xbox {
 
         this.writeJsonObjectToPost(connection, jsonObject);
 
-        return FileUtils.getTextFromInputStream(connection.getInputStream());
+        return FileUtil.getTextFromInputStream(connection.getInputStream());
     }
 
     private void writeJsonObjectToPost(HttpsURLConnection connection, JSONObject jsonObject) throws Exception {
@@ -249,7 +249,7 @@ public class Xbox {
         ByteArrayOutputStream bytesToSign = new ByteArrayOutputStream();
 
         bytesToSign.write(new byte[]{0, 0, 0, 1, 0});
-        bytesToSign.write(OtherUtils.toByteArray(currentTime));
+        bytesToSign.write(OtherUtil.toByteArray(currentTime));
         bytesToSign.write(new byte[]{0});
 
         bytesToSign.write("POST".getBytes());
@@ -276,7 +276,7 @@ public class Xbox {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byteArrayOutputStream.write(new byte[]{0, 0, 0, 1});
-        byteArrayOutputStream.write(OtherUtils.toByteArray(currentTime));
+        byteArrayOutputStream.write(OtherUtil.toByteArray(currentTime));
         byteArrayOutputStream.write(signatureBytes);
         httpsURLConnection.addRequestProperty("Signature", Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
     }

@@ -12,7 +12,7 @@ import me.liuli.ez4h.minecraft.JavaServer;
 import me.liuli.ez4h.minecraft.auth.AuthUtils;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
-import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.FileUtil;
 import me.liuli.ez4h.utils.MetricsLite;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -69,9 +69,9 @@ public class EZ4H {
     private static void initFile() {
         new File("./data").mkdir();
         if (!new File("./config.json").exists()) {
-            FileUtils.writeFile("./config.json", FileUtils.getTextFromResource("resources/config.json"));
+            FileUtil.writeFile("./config.json", FileUtil.getTextFromResource("resources/config.json"));
         }
-        configManager = new ConfigManager(JSONObject.parseObject(FileUtils.readFile(new File("./config.json"))));
+        configManager = new ConfigManager(JSONObject.parseObject(FileUtil.readFile(new File("./config.json"))));
 
         if (debugManager.enableDebug()) {
             logger.warn("Debug Mode Enabled in Config");

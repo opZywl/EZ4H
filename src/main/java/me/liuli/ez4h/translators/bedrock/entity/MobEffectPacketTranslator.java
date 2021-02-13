@@ -11,13 +11,13 @@ import com.nukkitx.protocol.bedrock.packet.MobEffectPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.FileUtil;
 
 public class MobEffectPacketTranslator implements BedrockTranslator {
     private final JSONObject bedrockEffects, javaEffects;
 
     public MobEffectPacketTranslator() {
-        JSONObject effectJSON = JSONObject.parseObject(FileUtils.getTextFromResource("resources/effect.json"));
+        JSONObject effectJSON = JSONObject.parseObject(FileUtil.getTextFromResource("resources/effect.json"));
         bedrockEffects = effectJSON.getJSONObject("bedrock");
         javaEffects = effectJSON.getJSONObject("java");
     }

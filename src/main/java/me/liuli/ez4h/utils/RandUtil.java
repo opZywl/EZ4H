@@ -2,7 +2,7 @@ package me.liuli.ez4h.utils;
 
 import java.util.SplittableRandom;
 
-public class RandUtils {
+public class RandUtil {
 
     public static final SplittableRandom random = new SplittableRandom();
 

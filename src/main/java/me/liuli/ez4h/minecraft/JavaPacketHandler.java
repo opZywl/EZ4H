@@ -12,7 +12,7 @@ import com.github.steveice10.packetlib.event.session.PacketReceivedEvent;
 import com.github.steveice10.packetlib.event.session.SessionAdapter;
 import com.github.steveice10.packetlib.packet.Packet;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.OtherUtil;
 
 public class JavaPacketHandler extends SessionAdapter {
     @Override
@@ -29,7 +29,7 @@ public class JavaPacketHandler extends SessionAdapter {
             }
             GameProfile profile = event.getSession().getFlag(MinecraftConstants.PROFILE_KEY);
             Client client = null;
-            if (!OtherUtils.isNull(profile)) {
+            if (!OtherUtil.isNull(profile)) {
                 client = EZ4H.getClient(profile.getName());
             }
             if (event.getPacket().getClass().equals(LoginStartPacket.class)) {

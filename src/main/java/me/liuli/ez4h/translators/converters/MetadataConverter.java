@@ -8,7 +8,7 @@ import com.nukkitx.protocol.bedrock.data.entity.EntityDataMap;
 import com.nukkitx.protocol.bedrock.data.entity.EntityFlag;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.data.entity.Entity;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class MetadataConverter {
             metadata.add(new EntityMetadata(1, MetadataType.INT, (int) bedrockMetadata.getShort(EntityData.AIR_SUPPLY)));
         }
         if (bedrockMetadata.containsKey(EntityData.NAMETAG)) {
-            metadata.add(new EntityMetadata(2, MetadataType.STRING, BedrockUtils.lengthCutter(bedrockMetadata.getString(EntityData.NAMETAG), 16)));
+            metadata.add(new EntityMetadata(2, MetadataType.STRING, BedrockUtil.lengthCutter(bedrockMetadata.getString(EntityData.NAMETAG), 16)));
         }
         if (client.getPlayer().getEntityId() != entityId) {
             if (bedrockMetadata.containsKey(EntityData.HEALTH)) {

@@ -1,7 +1,7 @@
 package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONObject;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.OtherUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +19,7 @@ public class XboxLogin {
     private JSONObject getPreAuthToken() throws Exception {
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
         connection.setRequestMethod("GET");
-        OtherUtils.setBaseHeaders(connection);
+        OtherUtil.setBaseHeaders(connection);
         String responce = uncompressGzip(connection.getInputStream());
         JSONObject resJson = new JSONObject();
         resJson.put("urlPost", findArgs(responce, "urlPost:'"));
@@ -40,7 +40,7 @@ public class XboxLogin {
         JSONObject preAuthToken = getPreAuthToken();
         HttpsURLConnection connection = (HttpsURLConnection) new URL(preAuthToken.getString("urlPost")).openConnection();
         connection.setRequestMethod("POST");
-        OtherUtils.setBaseHeaders(connection);
+        OtherUtil.setBaseHeaders(connection);
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         connection.setRequestProperty("Cookie", preAuthToken.getString("cookie"));
 

@@ -12,7 +12,7 @@ import com.nukkitx.protocol.bedrock.BedrockClient;
 import lombok.Getter;
 import lombok.Setter;
 import me.liuli.ez4h.EZ4H;
-import me.liuli.ez4h.utils.RandUtils;
+import me.liuli.ez4h.utils.RandUtil;
 
 import java.net.InetSocketAddress;
 
@@ -35,7 +35,7 @@ class PingThread implements Runnable {
 
     @Override
     public void run() {
-        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtils.rand(10000, 50000));
+        InetSocketAddress bindAddress = new InetSocketAddress("0.0.0.0", RandUtil.rand(10000, 50000));
         BedrockClient client = new BedrockClient(bindAddress);
         InetSocketAddress addressToPing = new InetSocketAddress(EZ4H.getConfigManager().getBedrockHost(), EZ4H.getConfigManager().getBedrockPort());
         client.bind().join();

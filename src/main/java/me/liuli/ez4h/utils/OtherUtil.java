@@ -4,7 +4,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-public class OtherUtils {
+public class OtherUtil {
     public static boolean isNull(Object object) {
         return object == null;
     }
@@ -37,7 +37,7 @@ public class OtherUtils {
         if (connection.getResponseCode() == 204) {
             return null;
         }
-        return FileUtils.getTextFromInputStream(connection.getInputStream());
+        return FileUtil.getTextFromInputStream(connection.getInputStream());
     }
 
     public static byte[] httpGetByte(String url) throws Exception {
@@ -47,7 +47,7 @@ public class OtherUtils {
         if (connection.getResponseCode() == 204) {
             return null;
         }
-        return FileUtils.getByteFromInputStream(connection.getInputStream());
+        return FileUtil.getByteFromInputStream(connection.getInputStream());
     }
 
     public static String toHttps(String url) {

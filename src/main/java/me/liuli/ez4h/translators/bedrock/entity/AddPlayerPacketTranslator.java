@@ -18,15 +18,15 @@ import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.data.entity.Entity;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 public class AddPlayerPacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         AddPlayerPacket packet = (AddPlayerPacket) inPacket;
 
-        GameProfile gameProfile = new GameProfile(packet.getUuid(), BedrockUtils.lengthCutter(packet.getUsername(), 16));
-        client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, new PlayerListEntry[]{new PlayerListEntry(gameProfile, GameMode.SURVIVAL, 0, new TextMessage(BedrockUtils.lengthCutter(packet.getMetadata().getString(EntityData.NAMETAG), 16)))}));
+        GameProfile gameProfile = new GameProfile(packet.getUuid(), BedrockUtil.lengthCutter(packet.getUsername(), 16));
+        client.sendPacket(new ServerPlayerListEntryPacket(PlayerListEntryAction.ADD_PLAYER, new PlayerListEntry[]{new PlayerListEntry(gameProfile, GameMode.SURVIVAL, 0, new TextMessage(BedrockUtil.lengthCutter(packet.getMetadata().getString(EntityData.NAMETAG), 16)))}));
 
         Vector3f position = packet.getPosition(), rotation = packet.getRotation();
         client.getData().addEntity((int) packet.getRuntimeEntityId(), new Entity(position.getX(), position.getY(), position.getZ(), (int) packet.getRuntimeEntityId(), Entity.Type.PLAYER));

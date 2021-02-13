@@ -21,7 +21,7 @@ import com.github.steveice10.packetlib.event.session.SessionListener;
 import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.auth.fakeAuthServer.FakeServer;
-import me.liuli.ez4h.utils.OtherUtils;
+import me.liuli.ez4h.utils.OtherUtil;
 
 public class JavaServer {
     private final Server server;
@@ -38,7 +38,7 @@ public class JavaServer {
                 GameProfile profile = session.getFlag(MinecraftConstants.PROFILE_KEY);
                 Client client = EZ4H.getClient(profile.getName());
                 if (client != null) {
-                    session.send(new ServerPluginMessagePacket("EZ4H", ("{\"type\":\"join\",\"data\":\"" + OtherUtils.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) + "\"}").getBytes()));
+                    session.send(new ServerPluginMessagePacket("EZ4H", ("{\"type\":\"join\",\"data\":\"" + OtherUtil.base64Encode(EZ4H.getConfigManager().getConfig().toJSONString()) + "\"}").getBytes()));
                 } else {
                     ServerJoinGamePacket serverJoinGamePacket = new ServerJoinGamePacket(
                             1,

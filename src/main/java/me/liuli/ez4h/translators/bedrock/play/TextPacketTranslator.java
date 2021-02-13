@@ -7,13 +7,13 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.TextPacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.FileUtils;
+import me.liuli.ez4h.utils.FileUtil;
 
 public class TextPacketTranslator implements BedrockTranslator {
     private final JSONObject textJson;
 
     public TextPacketTranslator() {
-        this.textJson = JSONObject.parseObject(FileUtils.getTextFromResource("resources/lang.json"));
+        this.textJson = JSONObject.parseObject(FileUtil.getTextFromResource("resources/lang.json"));
     }
 
     @Override

@@ -9,14 +9,14 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.packet.SetDisplayObjectivePacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.BedrockTranslator;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
     @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetDisplayObjectivePacket packet = (SetDisplayObjectivePacket) inPacket;
 
-        String name = BedrockUtils.lengthCutter(packet.getDisplayName(), 32);
+        String name = BedrockUtil.lengthCutter(packet.getDisplayName(), 32);
 
         switch (packet.getDisplaySlot()) {
             case "sidebar": {

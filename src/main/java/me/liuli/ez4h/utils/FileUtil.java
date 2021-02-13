@@ -6,7 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-public class FileUtils {
+public class FileUtil {
     public static String getTextFromInputStream(InputStream inputStream) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];

@@ -1,14 +1,19 @@
 package me.liuli.ez4h.translators.bedrock.window;
 
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
+import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerOpenWindowPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.server.window.ServerWindowItemsPacket;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.packet.InventoryContentPacket;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.minecraft.Client;
+import me.liuli.ez4h.minecraft.data.world.ChestData;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.converters.ItemConverter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class InventoryContentPacketTranslator implements BedrockTranslator {
@@ -36,19 +41,19 @@ public class InventoryContentPacketTranslator implements BedrockTranslator {
                 break;
             }
             default: {
-//                if(client.clientStat.queueChest!=null&&client.clientStat.queueChest.id==packet.getContainerId()){
-//                    ChestData chestData=client.clientStat.queueChest;
-//                    //open window
-//                    client.sendPacket(new ServerOpenWindowPacket(chestData.id,chestData.type,chestData.name,contents.size()));
-//                    //translate items
-//                    ArrayList<ItemStack> javaItems = new ArrayList<>(Arrays.asList(client.clientStat.inventory));
-//                    for(ItemData itemData:contents){
-//                        javaItems.add(itemConverter.convertToJE(itemData));
-//                    }
-//                    client.sendPacket(new ServerWindowItemsPacket(chestData.id,javaItems.toArray(new ItemStack[javaItems.size()])));
-//                    //clear chestData
-//                    client.clientStat.queueChest=null;
-//                }
+                if(client.getData().getQueueChest()!=null&&client.getData().getQueueChest().id==packet.getContainerId()){
+                    ChestData chestData=client.getData().getQueueChest();
+                    //open window
+                    client.sendPacket(new ServerOpenWindowPacket(chestData.id,chestData.type,"minecraft:menu",45+contents.size()));
+                    //translate items
+                    ArrayList<ItemStack> javaItems = new ArrayList<>(Arrays.asList(client.getInventory().getJavaInventory()));
+                    for(ItemData itemData:contents){
+                        javaItems.add(EZ4H.getConverterManager().getItemConverter().convertToJE(itemData));
+                    }
+                    client.sendPacket(new ServerWindowItemsPacket(chestData.id,javaItems.toArray(new ItemStack[0])));
+                    //clear chestData
+                    client.getData().setQueueChest(null);
+                }
                 break;
             }
         }

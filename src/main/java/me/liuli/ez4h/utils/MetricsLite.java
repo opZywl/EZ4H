@@ -34,7 +34,7 @@ public class MetricsLite {
     }
 
     // The uuid of the server
-    private final String serverUUID = UUID.randomUUID().toString();
+    private final String serverUUID;
 
     // The plugin id
     private final int pluginId;
@@ -51,6 +51,19 @@ public class MetricsLite {
     public MetricsLite(String pluginName, int pluginId) {
         this.pluginId = pluginId;
         this.pluginName = pluginName;
+
+        File configFile=new File("./data/bstats.json");
+        if(!configFile.exists()){
+            serverUUID=UUID.randomUUID().toString();
+
+            JSONObject bstatsJSON=new JSONObject();
+            bstatsJSON.put("uuid",serverUUID);
+            FileUtil.writeFile("./data/bstats.json",bstatsJSON.toJSONString());
+        }else{
+            JSONObject bstatsJSON=JSONObject.parseObject(FileUtil.readFile(configFile));
+            serverUUID=bstatsJSON.getString("uuid");
+        }
+
         startSubmitting();
     }
 

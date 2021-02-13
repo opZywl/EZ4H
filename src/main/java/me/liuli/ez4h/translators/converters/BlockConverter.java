@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.game.chunk.NibbleArray3d;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import lombok.Getter;
-import me.liuli.ez4h.utils.BedrockUtils;
+import me.liuli.ez4h.utils.BedrockUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +73,7 @@ public class BlockConverter {
         for (int x = posX; x <= posXend; x++) {
             for (int y = posY; y <= posYend; y++) {
                 for (int z = posZ; z <= posZend; z++) {
-                    int reLight = (int) Math.max(light - BedrockUtils.calcDistance(X, Y, Z, x, y, z), 0);
+                    int reLight = (int) Math.max(light - BedrockUtil.calcDistance(X, Y, Z, x, y, z), 0);
                     if (lightArray.get(x, y, z) < reLight) {
                         lightArray.set(x, y, z, reLight);
                     }
