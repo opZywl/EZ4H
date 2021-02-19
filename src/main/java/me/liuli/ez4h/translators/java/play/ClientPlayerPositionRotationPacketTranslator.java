@@ -5,6 +5,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlaye
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.protocol.bedrock.data.PlayerActionType;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import me.liuli.ez4h.minecraft.Client;
@@ -15,7 +16,7 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
         if (!onGround && client.getData().isJumpTiming()) {
             PlayerActionPacket playerActionPacket = new PlayerActionPacket();
             playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
-            playerActionPacket.setAction(PlayerActionPacket.Action.JUMP);
+            playerActionPacket.setAction(PlayerActionType.JUMP);
             playerActionPacket.setBlockPosition(Vector3i.ZERO);
             playerActionPacket.setFace(0);
             client.sendPacket(playerActionPacket);

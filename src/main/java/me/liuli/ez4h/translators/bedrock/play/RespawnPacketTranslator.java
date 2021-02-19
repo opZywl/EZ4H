@@ -5,6 +5,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.server.ServerRespawnPacke
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.protocol.bedrock.BedrockPacket;
+import com.nukkitx.protocol.bedrock.data.PlayerActionType;
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import com.nukkitx.protocol.bedrock.packet.RespawnPacket;
@@ -22,7 +23,7 @@ public class RespawnPacketTranslator implements BedrockTranslator {
             }
             case SERVER_READY: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.RESPAWN);
+                playerActionPacket.setAction(PlayerActionType.RESPAWN);
                 playerActionPacket.setFace(-1);
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
                 playerActionPacket.setBlockPosition(Vector3i.from(0, 0, 0));

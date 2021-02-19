@@ -7,6 +7,7 @@ import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlaye
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3f;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.protocol.bedrock.data.PlayerActionType;
 import com.nukkitx.protocol.bedrock.data.inventory.InventoryActionData;
 import com.nukkitx.protocol.bedrock.data.inventory.InventorySource;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
@@ -25,7 +26,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             case START_DIGGING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
-                playerActionPacket.setAction(PlayerActionPacket.Action.START_BREAK);
+                playerActionPacket.setAction(PlayerActionType.START_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
@@ -35,7 +36,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                     Vector3i blockPosition = Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                     playerActionPacket = new PlayerActionPacket();
                     playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
-                    playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
+                    playerActionPacket.setAction(PlayerActionType.STOP_BREAK);
                     playerActionPacket.setBlockPosition(blockPosition);
                     playerActionPacket.setFace(packet.getFace().ordinal());
                     client.sendPacket(playerActionPacket);
@@ -57,7 +58,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             case CANCEL_DIGGING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
-                playerActionPacket.setAction(PlayerActionPacket.Action.ABORT_BREAK);
+                playerActionPacket.setAction(PlayerActionType.ABORT_BREAK);
                 playerActionPacket.setBlockPosition(Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);
@@ -67,7 +68,7 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
                 Vector3i blockPosition = Vector3i.from(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
-                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_BREAK);
+                playerActionPacket.setAction(PlayerActionType.STOP_BREAK);
                 playerActionPacket.setBlockPosition(blockPosition);
                 playerActionPacket.setFace(packet.getFace().ordinal());
                 client.sendPacket(playerActionPacket);

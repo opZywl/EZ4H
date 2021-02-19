@@ -4,6 +4,7 @@ import com.github.steveice10.mc.protocol.packet.MinecraftPacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.player.ClientPlayerStatePacket;
 import com.github.steveice10.packetlib.packet.Packet;
 import com.nukkitx.math.vector.Vector3i;
+import com.nukkitx.protocol.bedrock.data.PlayerActionType;
 import com.nukkitx.protocol.bedrock.packet.PlayerActionPacket;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.translators.JavaTranslator;
@@ -15,7 +16,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
         switch (packet.getState()) {
             case START_SNEAKING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.START_SNEAK);
+                playerActionPacket.setAction(PlayerActionType.START_SNEAK);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
@@ -24,7 +25,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
             }
             case STOP_SNEAKING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SNEAK);
+                playerActionPacket.setAction(PlayerActionType.STOP_SNEAK);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
@@ -33,7 +34,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
             }
             case START_SPRINTING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.START_SPRINT);
+                playerActionPacket.setAction(PlayerActionType.START_SPRINT);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
@@ -42,7 +43,7 @@ public class ClientPlayerStatePacketTranslator implements JavaTranslator {
             }
             case STOP_SPRINTING: {
                 PlayerActionPacket playerActionPacket = new PlayerActionPacket();
-                playerActionPacket.setAction(PlayerActionPacket.Action.STOP_SPRINT);
+                playerActionPacket.setAction(PlayerActionType.STOP_SPRINT);
                 playerActionPacket.setBlockPosition(Vector3i.ZERO);
                 playerActionPacket.setFace(0);
                 playerActionPacket.setRuntimeEntityId(client.getPlayer().getEntityId());
