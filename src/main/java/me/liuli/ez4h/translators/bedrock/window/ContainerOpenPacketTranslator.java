@@ -9,6 +9,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ContainerOpenPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ContainerOpenPacket packet = (ContainerOpenPacket) inPacket;
         if (packet.getId() == 0) return;

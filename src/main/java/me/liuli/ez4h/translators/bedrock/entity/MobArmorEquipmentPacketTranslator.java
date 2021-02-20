@@ -11,6 +11,11 @@ import me.liuli.ez4h.translators.converters.ItemConverter;
 
 public class MobArmorEquipmentPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobArmorEquipmentPacket packet = (MobArmorEquipmentPacket) inPacket;
 

@@ -19,11 +19,16 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class BlockEntityDataPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         BlockEntityDataPacket packet = (BlockEntityDataPacket) inPacket;
         Vector3i pos = packet.getBlockPosition();
         NbtMap data = packet.getData();
-        Position position=new Position(pos.getX(), pos.getY(), pos.getZ());
+        Position position = new Position(pos.getX(), pos.getY(), pos.getZ());
         switch (data.getString("id")) {
             case "Chest": {
                 client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(position, new BlockState(54, 3))));
@@ -44,23 +49,23 @@ public class BlockEntityDataPacketTranslator implements BedrockTranslator {
             case "Sign": {
                 client.sendPacket(new ServerBlockChangePacket(new BlockChangeRecord(position, new BlockState(63, 0))));
 
-                CompoundTag tag=new CompoundTag("");
-                tag.put(new IntTag("x",position.getX()));
-                tag.put(new IntTag("y",position.getY()));
-                tag.put(new IntTag("z",position.getZ()));
-                tag.put(new StringTag("id","minecraft:sign"));
-                String[] rawText=data.getString("Text").split("\n");
-                for(int i=0;i<4;i++){
-                    JSONObject jsonText=new JSONObject();
-                    if(rawText.length>i){
-                        jsonText.put("text",rawText[i]);
-                    }else{
-                        jsonText.put("text","");
+                CompoundTag tag = new CompoundTag("");
+                tag.put(new IntTag("x", position.getX()));
+                tag.put(new IntTag("y", position.getY()));
+                tag.put(new IntTag("z", position.getZ()));
+                tag.put(new StringTag("id", "minecraft:sign"));
+                String[] rawText = data.getString("Text").split("\n");
+                for (int i = 0; i < 4; i++) {
+                    JSONObject jsonText = new JSONObject();
+                    if (rawText.length > i) {
+                        jsonText.put("text", rawText[i]);
+                    } else {
+                        jsonText.put("text", "");
                     }
-                    tag.put(new StringTag("Text"+(i+1),jsonText.toJSONString()));
+                    tag.put(new StringTag("Text" + (i + 1), jsonText.toJSONString()));
                 }
 
-                client.sendPacket(new ServerUpdateTileEntityPacket(position, UpdatedTileType.SIGN,tag));
+                client.sendPacket(new ServerUpdateTileEntityPacket(position, UpdatedTileType.SIGN, tag));
                 break;
             }
         }

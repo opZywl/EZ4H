@@ -52,16 +52,16 @@ public class MetricsLite {
         this.pluginId = pluginId;
         this.pluginName = pluginName;
 
-        File configFile=new File("./data/bstats.json");
-        if(!configFile.exists()){
-            serverUUID=UUID.randomUUID().toString();
+        File configFile = new File("./data/bstats.json");
+        if (!configFile.exists()) {
+            serverUUID = UUID.randomUUID().toString();
 
-            JSONObject bstatsJSON=new JSONObject();
-            bstatsJSON.put("uuid",serverUUID);
-            FileUtil.writeFile("./data/bstats.json",bstatsJSON.toJSONString());
-        }else{
-            JSONObject bstatsJSON=JSONObject.parseObject(FileUtil.readFile(configFile));
-            serverUUID=bstatsJSON.getString("uuid");
+            JSONObject bstatsJSON = new JSONObject();
+            bstatsJSON.put("uuid", serverUUID);
+            FileUtil.writeFile("./data/bstats.json", bstatsJSON.toJSONString());
+        } else {
+            JSONObject bstatsJSON = JSONObject.parseObject(FileUtil.readFile(configFile));
+            serverUUID = bstatsJSON.getString("uuid");
         }
 
         startSubmitting();

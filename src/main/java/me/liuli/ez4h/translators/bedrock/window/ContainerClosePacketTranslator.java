@@ -8,6 +8,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ContainerClosePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ContainerClosePacket packet = (ContainerClosePacket) inPacket;
 

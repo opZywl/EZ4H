@@ -28,6 +28,11 @@ public class ClientPlayerPositionRotationPacketTranslator implements JavaTransla
     }
 
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerPositionRotationPacket packet = (ClientPlayerPositionRotationPacket) inPacket;
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();

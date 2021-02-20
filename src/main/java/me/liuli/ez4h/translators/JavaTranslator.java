@@ -5,6 +5,8 @@ import com.github.steveice10.packetlib.packet.Packet;
 import me.liuli.ez4h.minecraft.Client;
 
 public interface JavaTranslator {
+    boolean needOrder();
+
     void translate(Packet inPacket, Client client);
 
     Class<? extends MinecraftPacket> getPacketClass();

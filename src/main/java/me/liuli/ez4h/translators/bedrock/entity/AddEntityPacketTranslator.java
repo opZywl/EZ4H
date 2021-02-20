@@ -33,6 +33,11 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
     }
 
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         AddEntityPacket packet = (AddEntityPacket) inPacket;
         Vector3f position = packet.getPosition();
@@ -45,7 +50,7 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
             switch (entityData.getString("type")) {
                 case "mob": {
                     Vector3f rotation = packet.getRotation(),
-                             motion = packet.getMotion();
+                            motion = packet.getMotion();
                     client.sendPacket(new ServerSpawnMobPacket((int) packet.getRuntimeEntityId(), BedrockUtil.getUUID(packet.getRuntimeEntityId()), MobType.valueOf(name), position.getX(), position.getY() + 1.62, position.getZ(), rotation.getY(), rotation.getX(), rotation.getZ(), motion.getX(), motion.getY(), motion.getZ(), new EntityMetadata[0]));
                     EZ4H.getConverterManager().getMetadataConverter().convert(packet.getMetadata(), client, (int) packet.getRuntimeEntityId());
                     break;

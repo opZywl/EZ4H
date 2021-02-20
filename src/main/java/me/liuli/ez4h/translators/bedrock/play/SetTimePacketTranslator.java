@@ -8,6 +8,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class SetTimePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetTimePacket packet = (SetTimePacket) inPacket;
         client.sendPacket(new ServerUpdateTimePacket(0, packet.getTime()));

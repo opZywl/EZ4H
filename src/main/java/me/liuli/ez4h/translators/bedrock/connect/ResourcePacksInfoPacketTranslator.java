@@ -8,6 +8,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ResourcePacksInfoPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return true;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ResourcePacksInfoPacket packet = (ResourcePacksInfoPacket) inPacket;
         ResourcePackClientResponsePacket resourcePackClientResponsePacket = new ResourcePackClientResponsePacket();

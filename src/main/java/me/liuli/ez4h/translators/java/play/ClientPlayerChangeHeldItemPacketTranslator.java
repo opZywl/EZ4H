@@ -9,6 +9,11 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientPlayerChangeHeldItemPacketTranslator implements JavaTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerChangeHeldItemPacket packet = (ClientPlayerChangeHeldItemPacket) inPacket;
         PlayerHotbarPacket playerHotbarPacket = new PlayerHotbarPacket();

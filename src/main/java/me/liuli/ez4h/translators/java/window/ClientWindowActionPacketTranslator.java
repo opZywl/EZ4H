@@ -19,6 +19,11 @@ import me.liuli.ez4h.translators.java.play.ClientPlayerActionPacketTranslator;
 
 public class ClientWindowActionPacketTranslator implements JavaTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientWindowActionPacket packet = (ClientWindowActionPacket) inPacket;
         //TODO:Rewrite

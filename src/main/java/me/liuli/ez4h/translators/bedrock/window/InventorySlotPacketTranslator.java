@@ -9,6 +9,11 @@ import me.liuli.ez4h.translators.converters.ItemConverter;
 
 public class InventorySlotPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         InventorySlotPacket packet = (InventorySlotPacket) inPacket;
 

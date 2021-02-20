@@ -35,6 +35,11 @@ public class StartGamePacketTranslator implements BedrockTranslator {
     }
 
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         StartGamePacket packet = (StartGamePacket) inPacket;
         //player list

@@ -10,6 +10,11 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientRequestPacketTranslator implements JavaTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientRequestPacket packet = (ClientRequestPacket) inPacket;
         switch (packet.getRequest()) {

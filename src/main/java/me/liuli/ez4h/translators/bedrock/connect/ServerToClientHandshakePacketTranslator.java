@@ -14,6 +14,11 @@ import java.util.Base64;
 
 public class ServerToClientHandshakePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return true;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ServerToClientHandshakePacket packet = (ServerToClientHandshakePacket) inPacket;
         try {

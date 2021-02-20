@@ -10,6 +10,11 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientPlayerRotationPacketTranslator implements JavaTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerRotationPacket packet = (ClientPlayerRotationPacket) inPacket;
         MovePlayerPacket movePlayerPacket = new MovePlayerPacket();

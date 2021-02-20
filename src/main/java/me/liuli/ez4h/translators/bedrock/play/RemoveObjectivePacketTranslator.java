@@ -8,6 +8,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class RemoveObjectivePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         RemoveObjectivePacket packet = (RemoveObjectivePacket) inPacket;
         client.sendPacket(new ServerScoreboardObjectivePacket(packet.getObjectiveId()));

@@ -19,6 +19,11 @@ import java.util.List;
 
 public class UpdateAttributesPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         boolean updateHP = false, updateEXP = false;
         UpdateAttributesPacket packet = (UpdateAttributesPacket) inPacket;

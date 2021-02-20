@@ -18,6 +18,11 @@ import java.util.List;
 
 public class InventoryContentPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         InventoryContentPacket packet = (InventoryContentPacket) inPacket;
 
@@ -41,16 +46,16 @@ public class InventoryContentPacketTranslator implements BedrockTranslator {
                 break;
             }
             default: {
-                if(client.getData().getQueueChest()!=null&&client.getData().getQueueChest().id==packet.getContainerId()){
-                    ChestData chestData=client.getData().getQueueChest();
+                if (client.getData().getQueueChest() != null && client.getData().getQueueChest().id == packet.getContainerId()) {
+                    ChestData chestData = client.getData().getQueueChest();
                     //open window
-                    client.sendPacket(new ServerOpenWindowPacket(chestData.id,chestData.type,"minecraft:menu",45+contents.size()));
+                    client.sendPacket(new ServerOpenWindowPacket(chestData.id, chestData.type, "minecraft:menu", 45 + contents.size()));
                     //translate items
                     ArrayList<ItemStack> javaItems = new ArrayList<>(Arrays.asList(client.getInventory().getJavaInventory()));
-                    for(ItemData itemData:contents){
+                    for (ItemData itemData : contents) {
                         javaItems.add(EZ4H.getConverterManager().getItemConverter().convertToJE(itemData));
                     }
-                    client.sendPacket(new ServerWindowItemsPacket(chestData.id,javaItems.toArray(new ItemStack[0])));
+                    client.sendPacket(new ServerWindowItemsPacket(chestData.id, javaItems.toArray(new ItemStack[0])));
                     //clear chestData
                     client.getData().setQueueChest(null);
                 }

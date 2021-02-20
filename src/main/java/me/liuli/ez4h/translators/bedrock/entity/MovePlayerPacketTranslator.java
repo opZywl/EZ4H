@@ -11,13 +11,18 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MovePlayerPacket packet = (MovePlayerPacket) inPacket;
         Vector3f position = packet.getPosition(), rotation = packet.getRotation();
         if (packet.getRuntimeEntityId() == client.getPlayer().getEntityId()) {
             ServerPlayerPositionRotationPacket serverPlayerPositionRotationPacket = new ServerPlayerPositionRotationPacket(position.getX(), position.getY() - 1.62, position.getZ(), rotation.getY(), rotation.getX(), 1);
             client.sendPacket(serverPlayerPositionRotationPacket);
-            client.getPlayer().setPosition(position.getX(), position.getY()-1.62, position.getZ());
+            client.getPlayer().setPosition(position.getX(), position.getY() - 1.62, position.getZ());
         } else {
             Entity entity = client.getData().getEntity((int) packet.getRuntimeEntityId());
             client.getData().moveEntity(entity, position, rotation, packet.isOnGround());

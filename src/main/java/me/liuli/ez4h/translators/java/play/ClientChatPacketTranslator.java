@@ -16,6 +16,11 @@ import java.util.List;
 
 public class ClientChatPacketTranslator implements JavaTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(Packet inPacket, Client client) {
         ClientChatPacket packet = (ClientChatPacket) inPacket;
         Character firstChar = packet.getMessage().charAt(0);

@@ -18,6 +18,11 @@ public class BossEventPacketTranslator implements BedrockTranslator {
     private final BossBarColor[] colors = BossBarColor.values();
 
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         BossEventPacket packet = (BossEventPacket) inPacket;
         UUID uuid = UUID.nameUUIDFromBytes(String.valueOf(packet.getBossUniqueEntityId()).getBytes());

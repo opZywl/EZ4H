@@ -17,6 +17,11 @@ public class TextPacketTranslator implements BedrockTranslator {
     }
 
     @Override
+    public boolean needOrder() {
+        return true;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         TextPacket packet = (TextPacket) inPacket;
         switch (packet.getType()) {

@@ -12,6 +12,11 @@ import java.util.List;
 
 public class SetScorePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return true;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetScorePacket packet = (SetScorePacket) inPacket;
         List<ScoreInfo> infos = packet.getInfos();

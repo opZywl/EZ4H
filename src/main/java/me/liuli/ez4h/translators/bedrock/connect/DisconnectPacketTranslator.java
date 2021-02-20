@@ -7,6 +7,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class DisconnectPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         DisconnectPacket packet = (DisconnectPacket) inPacket;
         client.disconnectJava(packet.getKickMessage());

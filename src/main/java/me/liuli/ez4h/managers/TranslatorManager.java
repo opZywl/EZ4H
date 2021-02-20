@@ -41,7 +41,11 @@ public class TranslatorManager {
         BedrockTranslator translator = bedrockTranslators.get(packet.getClass());
         if (translator != null) {
             try {
-                this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
+                if (translator.needOrder()) {
+                    translator.translate(packet, client);
+                } else {
+                    this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
+                }
             } catch (Throwable t) {
                 EZ4H.getLogger().throwing(t);
             }
@@ -59,7 +63,11 @@ public class TranslatorManager {
         JavaTranslator translator = javaTranslators.get(packet.getClass());
         if (translator != null) {
             try {
-                this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
+                if (translator.needOrder()) {
+                    translator.translate(packet, client);
+                } else {
+                    this.threadPoolExecutor.execute(() -> translator.translate(packet, client));
+                }
             } catch (Throwable t) {
                 EZ4H.getLogger().throwing(t);
             }

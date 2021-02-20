@@ -13,6 +13,11 @@ import me.liuli.ez4h.utils.BedrockUtil;
 
 public class SetDisplayObjectivePacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return true;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetDisplayObjectivePacket packet = (SetDisplayObjectivePacket) inPacket;
 

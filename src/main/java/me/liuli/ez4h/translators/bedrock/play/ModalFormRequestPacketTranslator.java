@@ -8,6 +8,11 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class ModalFormRequestPacketTranslator implements BedrockTranslator {
     @Override
+    public boolean needOrder() {
+        return false;
+    }
+
+    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         ModalFormRequestPacket packet = (ModalFormRequestPacket) inPacket;
         EZ4H.getConverterManager().getFormConverter().showForm(client, packet.getFormData(), packet.getFormId());

@@ -52,12 +52,15 @@ public class Client {
     private ClientData data;
     @Getter
     private boolean alive = true;
+    //translate with order
 
     public Client(PacketReceivedEvent event, String playerName) {
         this.player = new PlayerData();
         player.setName(playerName);
         Client clientM = this;
         this.translatorManager = EZ4H.getTranslatorManager();
+
+        //try login
         try {
             javaSession = event.getSession();
             this.data = new ClientData(this);
