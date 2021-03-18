@@ -2,7 +2,7 @@ package me.liuli.ez4h;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
-import com.nukkitx.protocol.bedrock.v422.Bedrock_v422;
+import com.nukkitx.protocol.bedrock.v428.Bedrock_v428;
 import lombok.Getter;
 import lombok.Setter;
 import me.liuli.ez4h.managers.*;
@@ -33,7 +33,7 @@ public class EZ4H {
     @Getter
     private static final long startTime = System.currentTimeMillis();
     @Getter
-    private static final BedrockPacketCodec bedrockCodec = Bedrock_v422.V422_CODEC;
+    private static final BedrockPacketCodec bedrockCodec = Bedrock_v428.V428_CODEC;
     private static final Map<String, Client> clients = new HashMap<>();
     private static JavaServer javaServer;
     @Getter
