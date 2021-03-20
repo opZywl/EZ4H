@@ -4,7 +4,10 @@ import com.nukkitx.protocol.bedrock.BedrockPacket;
 import me.liuli.ez4h.minecraft.Client;
 
 public interface BedrockTranslator {
-    boolean needOrder();
+
+    default boolean needOrder() {
+        return true;
+    }
 
     void translate(BedrockPacket inPacket, Client client);
 

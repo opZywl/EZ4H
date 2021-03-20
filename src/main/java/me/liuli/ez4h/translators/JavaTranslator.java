@@ -5,7 +5,10 @@ import com.github.steveice10.packetlib.packet.Packet;
 import me.liuli.ez4h.minecraft.Client;
 
 public interface JavaTranslator {
-    boolean needOrder();
+
+    default boolean needOrder() {
+        return true;
+    }
 
     void translate(Packet inPacket, Client client);
 
