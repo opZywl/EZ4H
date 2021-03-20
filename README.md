@@ -3,7 +3,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
 [![discord](https://img.shields.io/discord/799644723328974868?style=for-the-badge)](https://discord.gg/s3H67gYe7Z)
 # EZ4H
-Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.200) servers!  
+Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.210) servers!  
 
 ## Bstats
 [![bstats](https://bstats.org/signatures/bukkit/EZ4H.svg)](https://bstats.org/plugin/bukkit/EZ4H/10109)
