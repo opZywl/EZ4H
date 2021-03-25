@@ -55,6 +55,19 @@ public class FileUtil {
         }
     }
 
+    public static void unzipResource(String resourceName,File targetPath){
+        InputStream inputStream = EZ4H.class.getClassLoader().getResourceAsStream(resourceName);
+        try {
+            byte[] bytes=getByteFromInputStream(inputStream);
+            FileOutputStream fos=new FileOutputStream(targetPath);
+            fos.write(bytes);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getTextFromResource(String resourceName) {
         InputStream inputStream = EZ4H.class.getClassLoader().getResourceAsStream(resourceName);
         try {
@@ -70,20 +83,6 @@ public class FileUtil {
         connection.setRequestMethod("GET");
         connection.connect();
         return FileUtil.getTextFromInputStream(connection.getInputStream());
-    }
-
-    public static byte[] httpsGetByte(String url) throws Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-        connection.setRequestMethod("GET");
-        connection.connect();
-        return FileUtil.getByteFromInputStream(connection.getInputStream());
-    }
-
-    public static String toHttps(String url) {
-        if ((!url.startsWith("https")) && url.startsWith("http")) {
-            return "https" + url.substring(4);
-        }
-        return url;
     }
 
     public static String uncompressGzip(InputStream inputStream) throws IOException {

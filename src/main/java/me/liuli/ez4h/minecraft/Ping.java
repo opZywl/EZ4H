@@ -46,7 +46,7 @@ class PingThread implements Runnable {
                             new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                             new PlayerInfo(0, 0, new GameProfile[0]),
                             new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:" + throwable.getLocalizedMessage()),
-                            null
+                            EZ4H.getConfigManager().getServerIcon()
                     ));
                     return;
                 }
@@ -56,7 +56,7 @@ class PingThread implements Runnable {
                         new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                         new PlayerInfo(pong.getMaximumPlayerCount(), pong.getPlayerCount(), new GameProfile[0]),
                         Ping.getDescription(),
-                        null
+                        EZ4H.getConfigManager().getServerIcon()
                 ));
                 client.close();
             }).join();
@@ -67,7 +67,7 @@ class PingThread implements Runnable {
                     new VersionInfo("EZ4H", session.getFlag(MinecraftConstants.PROTOCOL_KEY)),
                     new PlayerInfo(0, 0, new GameProfile[0]),
                     new TextMessage("§eA EZ4H Proxied Server!\n§cPING FAILED:" + e.getLocalizedMessage()),
-                    null
+                    EZ4H.getConfigManager().getServerIcon()
             ));
         }
     }

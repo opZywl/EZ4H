@@ -21,6 +21,9 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.reflections.Reflections;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -70,9 +73,16 @@ public class EZ4H {
 
     private static void initFile() {
         new File("./data/locale").mkdirs();
-        if (!new File("./config.json").exists()) {
-            FileUtil.writeFile("./config.json", FileUtil.getTextFromResource("resources/config.json"));
+
+        File configFile=new File("./config.json");
+        if (!configFile.exists()) {
+            FileUtil.unzipResource("resources/config.json",configFile);
         }
+        File iconFile=new File("./data/icon.png");
+        if (!iconFile.exists()) {
+            FileUtil.unzipResource("resources/icon.png",iconFile);
+        }
+
         configManager = new ConfigManager(JSONObject.parseObject(FileUtil.readFile(new File("./config.json"))));
 
         if (debugManager.enableDebug()) {

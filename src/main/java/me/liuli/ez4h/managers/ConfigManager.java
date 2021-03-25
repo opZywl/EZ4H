@@ -4,6 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.steveice10.mc.protocol.data.message.TextMessage;
 import lombok.Getter;
 import me.liuli.ez4h.EZ4H;
+import me.liuli.ez4h.utils.OtherUtil;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 
 public class ConfigManager {
     @Getter
@@ -24,7 +36,8 @@ public class ConfigManager {
     private final boolean updateLocale;
     @Getter
     private final TextMessage playerList;
-
+    @Getter
+    private BufferedImage serverIcon=null;
 
     public ConfigManager(JSONObject json) {
         config = json;
@@ -44,5 +57,17 @@ public class ConfigManager {
         updateLocale = advanced.getBoolean("update-locale");
 
         EZ4H.setDebugManager(new DebugManager(json.getJSONObject("debug")));
+
+        try {
+            BufferedImage rawImage = ImageIO.read(new File("./data/icon.png"));
+            if(rawImage.getType()!=6||rawImage.getWidth()!=64||rawImage.getHeight()!=64){
+                EZ4H.getLogger().info("Icon not usable (type="+rawImage.getType()+",width="+rawImage.getWidth()
+                        +",height="+rawImage.getHeight()+") converting...");
+                rawImage=OtherUtil.compressImage(rawImage,64,64);
+            }
+            serverIcon=rawImage;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

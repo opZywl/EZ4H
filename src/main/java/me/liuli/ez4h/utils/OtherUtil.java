@@ -1,6 +1,8 @@
 package me.liuli.ez4h.utils;
 
 import javax.net.ssl.HttpsURLConnection;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.Base64;
 
@@ -44,5 +46,16 @@ public class OtherUtil {
         } else {
             return defaultValue;
         }
+    }
+
+    public static BufferedImage compressImage(BufferedImage image, int width,int height) {
+        try {
+            BufferedImage buffImg = new BufferedImage(width,height, BufferedImage.TYPE_4BYTE_ABGR);
+            buffImg.getGraphics().drawImage(image.getScaledInstance(width,height, Image.SCALE_SMOOTH), 0, 0, null);
+            return buffImg;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

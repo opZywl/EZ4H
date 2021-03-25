@@ -15,7 +15,7 @@ public class LocaleManager {
     private static final String baseURL="https://project-ez4h.github.io/MCLanguage/";
     private static final String defaultLocale="zh_cn";
 
-    private Map<String,MCLocale> locales=new HashMap<>();
+    private final Map<String,MCLocale> locales=new HashMap<>();
 
     public LocaleManager(){
         //update/download locale
