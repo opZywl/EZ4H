@@ -19,7 +19,7 @@ public class BossEventPacketTranslator implements BedrockTranslator {
 
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override

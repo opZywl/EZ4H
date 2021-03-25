@@ -16,11 +16,6 @@ import java.util.ArrayList;
 
 public class PlayerListPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         PlayerListPacket packet = (PlayerListPacket) inPacket;
         ArrayList<PlayerListEntry> playerListEntries = new ArrayList<>();

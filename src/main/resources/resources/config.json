@@ -1,11 +1,11 @@
 {
-  "je_host": "127.0.0.1",
-  "je_port": 25565,
-  "be_host": "127.0.0.1",
-  "be_port": 19132,
+  "je-host": "127.0.0.1",
+  "je-port": 25565,
+  "be-host": "127.0.0.1",
+  "be-port": 19132,
   "player-list": "A §bEZ§94§bH§f§r Proxyed Server!\nhttps://github.com/Project-EZ4H/EZ4H",
   "auth": {
-    "autologin": false,
+    "auto-login": false,
     "xbox-auth": true
   },
   "debug": {
@@ -13,5 +13,8 @@
     "unknown-packet": false,
     "out-packet": false,
     "other": false
+  },
+  "advanced": {
+    "update-locale": true
   }
 }

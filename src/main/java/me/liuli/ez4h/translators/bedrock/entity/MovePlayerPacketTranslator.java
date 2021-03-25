@@ -11,11 +11,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MovePlayerPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MovePlayerPacket packet = (MovePlayerPacket) inPacket;
         Vector3f position = packet.getPosition(), rotation = packet.getRotation();

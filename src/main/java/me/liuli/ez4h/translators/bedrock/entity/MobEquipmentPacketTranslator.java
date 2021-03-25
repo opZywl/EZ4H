@@ -10,11 +10,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MobEquipmentPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobEquipmentPacket packet = (MobEquipmentPacket) inPacket;
         if (packet.getRuntimeEntityId() == client.getPlayer().getEntityId()) {

@@ -13,11 +13,6 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientPlayerPlaceBlockPacketTranslator implements JavaTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerPlaceBlockPacket packet = (ClientPlayerPlaceBlockPacket) inPacket;
         Position position = packet.getPosition();

@@ -30,33 +30,6 @@ public class OtherUtil {
         return result;
     }
 
-    public static String httpGet(String url) throws Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-        connection.setRequestMethod("GET");
-        connection.connect();
-        if (connection.getResponseCode() == 204) {
-            return null;
-        }
-        return FileUtil.getTextFromInputStream(connection.getInputStream());
-    }
-
-    public static byte[] httpGetByte(String url) throws Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
-        connection.setRequestMethod("GET");
-        connection.connect();
-        if (connection.getResponseCode() == 204) {
-            return null;
-        }
-        return FileUtil.getByteFromInputStream(connection.getInputStream());
-    }
-
-    public static String toHttps(String url) {
-        if ((!url.startsWith("https")) && url.startsWith("http")) {
-            return "https" + url.substring(4);
-        }
-        return url;
-    }
-
     public static void setBaseHeaders(HttpsURLConnection connection) {
         connection.setRequestProperty("Accept-encoding", "gzip");
         connection.setRequestProperty("Accept-Language", "en-US");

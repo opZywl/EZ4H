@@ -11,11 +11,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class LevelEventPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         LevelEventPacket packet = (LevelEventPacket) inPacket;
         //TODO:PARTICLES

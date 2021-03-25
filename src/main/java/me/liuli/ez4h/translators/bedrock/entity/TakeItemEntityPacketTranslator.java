@@ -9,11 +9,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class TakeItemEntityPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         TakeItemEntityPacket packet = (TakeItemEntityPacket) inPacket;
         int[] entityIds = new int[1];

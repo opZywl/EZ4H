@@ -22,11 +22,6 @@ import me.liuli.ez4h.utils.BedrockUtil;
 
 public class AddPlayerPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         AddPlayerPacket packet = (AddPlayerPacket) inPacket;
 

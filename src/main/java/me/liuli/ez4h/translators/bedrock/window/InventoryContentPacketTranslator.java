@@ -19,7 +19,7 @@ import java.util.List;
 public class InventoryContentPacketTranslator implements BedrockTranslator {
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override

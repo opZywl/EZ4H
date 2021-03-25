@@ -22,11 +22,6 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientCreativeInventoryActionPacketTranslator implements JavaTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(Packet inPacket, Client client) {
         ClientCreativeInventoryActionPacket packet = (ClientCreativeInventoryActionPacket) inPacket;
 

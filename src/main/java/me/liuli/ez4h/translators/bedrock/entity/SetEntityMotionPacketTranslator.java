@@ -9,11 +9,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class SetEntityMotionPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         SetEntityMotionPacket packet = (SetEntityMotionPacket) inPacket;
         Vector3f motion = packet.getMotion();

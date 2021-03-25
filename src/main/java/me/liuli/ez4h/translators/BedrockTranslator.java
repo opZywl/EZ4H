@@ -6,7 +6,7 @@ import me.liuli.ez4h.minecraft.Client;
 public interface BedrockTranslator {
 
     default boolean needOrder() {
-        return true;
+        return false;
     }
 
     void translate(BedrockPacket inPacket, Client client);

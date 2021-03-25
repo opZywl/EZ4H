@@ -11,11 +11,6 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientPlayerStatePacketTranslator implements JavaTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(Packet inPacket, Client client) {
         ClientPlayerStatePacket packet = (ClientPlayerStatePacket) inPacket;
         switch (packet.getState()) {

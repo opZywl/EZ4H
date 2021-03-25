@@ -8,11 +8,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class RemoveEntityPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         RemoveEntityPacket packet = (RemoveEntityPacket) inPacket;
         int[] entityIds = new int[1];

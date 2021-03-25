@@ -10,7 +10,7 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class ContainerOpenPacketTranslator implements BedrockTranslator {
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class ContainerOpenPacketTranslator implements BedrockTranslator {
         switch (packet.getType()) {
             case CONTAINER: {
                 //bedrock dont send slots data in this packet.slot count send to client in InventoryContentPacket
-                client.getData().setQueueChest(new ChestData(packet.getId(), "", WindowType.CHEST));
+                client.getData().setQueueChest(new ChestData(packet.getId(), "{}", WindowType.CHEST));
                 break;
             }
         }

@@ -10,7 +10,7 @@ import me.liuli.ez4h.translators.converters.ItemConverter;
 public class InventorySlotPacketTranslator implements BedrockTranslator {
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override

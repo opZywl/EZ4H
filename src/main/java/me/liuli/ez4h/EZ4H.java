@@ -9,7 +9,7 @@ import me.liuli.ez4h.managers.*;
 import me.liuli.ez4h.managers.command.CommandBase;
 import me.liuli.ez4h.minecraft.Client;
 import me.liuli.ez4h.minecraft.JavaServer;
-import me.liuli.ez4h.minecraft.auth.AuthUtils;
+import me.liuli.ez4h.utils.AuthUtil;
 import me.liuli.ez4h.translators.BedrockTranslator;
 import me.liuli.ez4h.translators.JavaTranslator;
 import me.liuli.ez4h.utils.FileUtil;
@@ -29,7 +29,7 @@ public class EZ4H {
     @Getter
     private static final String name = "EZ4H";
     @Getter
-    private static final String version = "0.3";
+    private static final String version = "1.0";
     @Getter
     private static final long startTime = System.currentTimeMillis();
     @Getter
@@ -49,6 +49,8 @@ public class EZ4H {
     @Getter
     private static AuthManager authManager;
     @Getter
+    private static LocaleManager localeManager;
+    @Getter
     @Setter
     private static DebugManager debugManager;
 
@@ -58,7 +60,7 @@ public class EZ4H {
 
         logger.info("Init files...");
         initFile();
-        logger.info("Init Protocol...");
+        logger.info("Init protocol...");
         initProtocol();
         logger.info("Loading things...");
         //https://bstats.org/plugin/bukkit/EZ4H/10109
@@ -67,7 +69,7 @@ public class EZ4H {
     }
 
     private static void initFile() {
-        new File("./data").mkdir();
+        new File("./data/locale").mkdirs();
         if (!new File("./config.json").exists()) {
             FileUtil.writeFile("./config.json", FileUtil.getTextFromResource("resources/config.json"));
         }
@@ -124,9 +126,11 @@ public class EZ4H {
         converterManager = new ConverterManager();
 
         //load key pair
-        AuthUtils.load();
-
+        AuthUtil.load();
         authManager = new AuthManager();
+
+        //load locales
+        localeManager = new LocaleManager();
 
         //opening server
         javaServer = new JavaServer();

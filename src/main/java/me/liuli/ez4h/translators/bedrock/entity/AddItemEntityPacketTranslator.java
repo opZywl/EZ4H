@@ -17,11 +17,6 @@ import java.util.UUID;
 
 public class AddItemEntityPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         AddItemEntityPacket packet = (AddItemEntityPacket) inPacket;
         Vector3f position = packet.getPosition();

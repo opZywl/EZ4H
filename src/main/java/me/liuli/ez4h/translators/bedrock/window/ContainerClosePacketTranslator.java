@@ -9,7 +9,7 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 public class ContainerClosePacketTranslator implements BedrockTranslator {
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override

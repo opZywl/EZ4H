@@ -36,7 +36,7 @@ public class StartGamePacketTranslator implements BedrockTranslator {
 
     @Override
     public boolean needOrder() {
-        return false;
+        return true;
     }
 
     @Override

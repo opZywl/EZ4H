@@ -19,11 +19,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class BlockEntityDataPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         BlockEntityDataPacket packet = (BlockEntityDataPacket) inPacket;
         Vector3i pos = packet.getBlockPosition();

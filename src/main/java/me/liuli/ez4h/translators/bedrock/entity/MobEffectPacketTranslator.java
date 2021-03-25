@@ -23,11 +23,6 @@ public class MobEffectPacketTranslator implements BedrockTranslator {
     }
 
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MobEffectPacket packet = (MobEffectPacket) inPacket;
 

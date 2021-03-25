@@ -10,11 +10,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class MoveEntityAbsolutePacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         MoveEntityAbsolutePacket packet = (MoveEntityAbsolutePacket) inPacket;
         Vector3f position = packet.getPosition(), rotation = packet.getRotation();

@@ -1,6 +1,7 @@
 package me.liuli.ez4h.minecraft.auth;
 
 import com.alibaba.fastjson.JSONObject;
+import me.liuli.ez4h.utils.FileUtil;
 import me.liuli.ez4h.utils.OtherUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -20,7 +21,7 @@ public class XboxLogin {
         HttpsURLConnection connection = (HttpsURLConnection) new URL(XBOX_PRE_AUTH_URL).openConnection();
         connection.setRequestMethod("GET");
         OtherUtil.setBaseHeaders(connection);
-        String responce = uncompressGzip(connection.getInputStream());
+        String responce = FileUtil.uncompressGzip(connection.getInputStream());
         JSONObject resJson = new JSONObject();
         resJson.put("urlPost", findArgs(responce, "urlPost:'"));
         String argTmp = findArgs(responce, "sFTTag:'");
@@ -85,19 +86,5 @@ public class XboxLogin {
         } else {
             throw new IllegalArgumentException("CANNOT FIND ARGUMENT");
         }
-    }
-
-    private String uncompressGzip(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        GZIPInputStream gZIPInputStream = new GZIPInputStream(inputStream);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = gZIPInputStream.read(buffer)) != -1) {
-            byteArrayOutputStream.write(buffer, 0, length);
-        }
-        byteArrayOutputStream.close();
-        inputStream.close();
-        gZIPInputStream.close();
-        return byteArrayOutputStream.toString("UTF-8");
     }
 }

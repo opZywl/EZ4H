@@ -13,11 +13,6 @@ import me.liuli.ez4h.translators.converters.BlockConverter;
 
 public class UpdateBlockPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         UpdateBlockPacket packet = (UpdateBlockPacket) inPacket;
         if (packet.getDataLayer() == 0) {//layer 1 for waterlogging,and you know mc1.12 not support this....

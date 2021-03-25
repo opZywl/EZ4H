@@ -21,22 +21,27 @@ public class ConfigManager {
     @Getter
     private final boolean autoLogin;
     @Getter
+    private final boolean updateLocale;
+    @Getter
     private final TextMessage playerList;
 
 
     public ConfigManager(JSONObject json) {
         config = json;
 
-        javaHost = json.getString("je_host");
-        javaPort = json.getInteger("je_port");
-        bedrockHost = json.getString("be_host");
-        bedrockPort = json.getInteger("be_port");
+        javaHost = json.getString("je-host");
+        javaPort = json.getInteger("je-port");
+        bedrockHost = json.getString("be-host");
+        bedrockPort = json.getInteger("be-port");
         playerList = new TextMessage(json.getString("player-list"));
 
         JSONObject auth = json.getJSONObject("auth");
-        autoLogin = auth.getBoolean("autologin");
+        autoLogin = auth.getBoolean("auto-login");
         xboxAuth = auth.getBoolean("xbox-auth");
 //        mojangSkin=advanced.getBoolean("mojang-skin");
+
+        JSONObject advanced = json.getJSONObject("advanced");
+        updateLocale = advanced.getBoolean("update-locale");
 
         EZ4H.setDebugManager(new DebugManager(json.getJSONObject("debug")));
     }

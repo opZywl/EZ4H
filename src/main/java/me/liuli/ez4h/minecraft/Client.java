@@ -14,13 +14,15 @@ import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
 import io.netty.util.AsciiString;
 import lombok.Getter;
+import lombok.Setter;
 import me.liuli.ez4h.EZ4H;
 import me.liuli.ez4h.managers.TranslatorManager;
-import me.liuli.ez4h.minecraft.auth.AuthUtils;
+import me.liuli.ez4h.utils.AuthUtil;
 import me.liuli.ez4h.minecraft.auth.Xbox;
 import me.liuli.ez4h.minecraft.data.entity.Inventory;
 import me.liuli.ez4h.minecraft.data.entity.PlayerData;
 import me.liuli.ez4h.minecraft.data.play.ClientData;
+import me.liuli.ez4h.minecraft.data.play.MCLocale;
 import me.liuli.ez4h.minecraft.data.world.Weather;
 import me.liuli.ez4h.utils.OtherUtil;
 import me.liuli.ez4h.utils.RandUtil;
@@ -52,13 +54,15 @@ public class Client {
     private ClientData data;
     @Getter
     private boolean alive = true;
-    //translate with order
+    @Getter
+    private MCLocale mcLocale;
 
     public Client(PacketReceivedEvent event, String playerName) {
         this.player = new PlayerData();
         player.setName(playerName);
         Client clientM = this;
         this.translatorManager = EZ4H.getTranslatorManager();
+        this.mcLocale=EZ4H.getLocaleManager().getDefaultLocale();
 
         //try login
         try {
@@ -106,6 +110,10 @@ public class Client {
             }
             e.printStackTrace();
         }
+    }
+
+    public void updateLocale(String localeName){
+        this.mcLocale=EZ4H.getLocaleManager().getLocale(localeName);
     }
 
     public void addPacket(Packet packet) {
@@ -171,7 +179,7 @@ public class Client {
     private void onlineLogin() throws Exception {
         LoginPacket loginPacket = new LoginPacket();
 
-        KeyPair ecdsa256KeyPair = AuthUtils.createKeyPair();//for xbox live, xbox live requests use, ES256, ECDSA256
+        KeyPair ecdsa256KeyPair = AuthUtil.createKeyPair();//for xbox live, xbox live requests use, ES256, ECDSA256
         this.publicKey = (ECPublicKey) ecdsa256KeyPair.getPublic();
         this.privateKey = (ECPrivateKey) ecdsa256KeyPair.getPrivate();
 
@@ -215,11 +223,11 @@ public class Client {
             String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(newFirstChain.toJSONString().getBytes());
 
             byte[] dataToSign = (header + "." + payload).getBytes();
-            String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
+            String signatureString = AuthUtil.signBytes(dataToSign, this.privateKey);
 
             String jwt = header + "." + payload + "." + signatureString;
 
-            chainDataObject.put("chain", AuthUtils.addChainToBeginning(jwt, minecraftNetChain));//replace the chain with our new chain
+            chainDataObject.put("chain", AuthUtil.addChainToBeginning(jwt, minecraftNetChain));//replace the chain with our new chain
         }
         {
             //we are now going to get some data from a chain minecraft sent us(the last chain)
@@ -269,7 +277,7 @@ public class Client {
         String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(chain.toJSONString().getBytes());
 
         byte[] dataToSign = (header + "." + payload).getBytes();
-        String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
+        String signatureString = AuthUtil.signBytes(dataToSign, this.privateKey);
 
         String jwt = header + "." + payload + "." + signatureString;
 
@@ -335,7 +343,7 @@ public class Client {
         String payload = Base64.getUrlEncoder().withoutPadding().encodeToString(skinData.toJSONString().getBytes());
 
         byte[] dataToSign = (header + "." + payload).getBytes();
-        String signatureString = AuthUtils.signBytes(dataToSign, this.privateKey);
+        String signatureString = AuthUtil.signBytes(dataToSign, this.privateKey);
 
         return header + "." + payload + "." + signatureString;
     }

@@ -1,6 +1,7 @@
-package me.liuli.ez4h.minecraft.auth;
+package me.liuli.ez4h.utils;
 
 import com.alibaba.fastjson.JSONArray;
+import me.liuli.ez4h.minecraft.auth.JoseStuff;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -9,7 +10,7 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Base64;
 
-public class AuthUtils {
+public class AuthUtil {
     private static KeyPairGenerator KEY_PAIR_GEN;
 
     public static void load() {

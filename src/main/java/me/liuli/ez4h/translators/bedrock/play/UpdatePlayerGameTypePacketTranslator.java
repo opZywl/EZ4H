@@ -10,11 +10,6 @@ import me.liuli.ez4h.utils.BedrockUtil;
 
 public class UpdatePlayerGameTypePacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         UpdatePlayerGameTypePacket packet = (UpdatePlayerGameTypePacket) inPacket;
         if (packet.getEntityId() == client.getPlayer().getEntityId()) {

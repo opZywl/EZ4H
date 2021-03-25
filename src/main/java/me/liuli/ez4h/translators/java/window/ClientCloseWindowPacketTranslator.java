@@ -9,11 +9,6 @@ import me.liuli.ez4h.translators.JavaTranslator;
 
 public class ClientCloseWindowPacketTranslator implements JavaTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(Packet inPacket, Client client) {
         ClientCloseWindowPacket packet = (ClientCloseWindowPacket) inPacket;
 

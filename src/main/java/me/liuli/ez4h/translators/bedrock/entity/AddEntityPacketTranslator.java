@@ -33,11 +33,6 @@ public class AddEntityPacketTranslator implements BedrockTranslator {
     }
 
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         AddEntityPacket packet = (AddEntityPacket) inPacket;
         Vector3f position = packet.getPosition();

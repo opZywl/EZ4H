@@ -7,7 +7,7 @@ import me.liuli.ez4h.minecraft.Client;
 public interface JavaTranslator {
 
     default boolean needOrder() {
-        return true;
+        return false;
     }
 
     void translate(Packet inPacket, Client client);

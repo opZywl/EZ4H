@@ -14,11 +14,6 @@ import me.liuli.ez4h.translators.BedrockTranslator;
 
 public class RespawnPacketTranslator implements BedrockTranslator {
     @Override
-    public boolean needOrder() {
-        return false;
-    }
-
-    @Override
     public void translate(BedrockPacket inPacket, Client client) {
         RespawnPacket packet = (RespawnPacket) inPacket;
         switch (packet.getState()) {
