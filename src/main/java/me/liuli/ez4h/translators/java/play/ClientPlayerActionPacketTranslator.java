@@ -101,8 +101,10 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
             return;
         }
 
-        ItemData itemData = ItemData.of(oldItem.getId(), oldItem.getDamage(), itemCount, oldItem.getTag(), oldItem.getCanPlace(), oldItem.getCanBreak(), oldItem.getBlockingTicks()),
-                newItem = ItemData.of(oldItem.getId(), oldItem.getDamage(), oldItem.getCount() - itemCount, oldItem.getTag(), oldItem.getCanPlace(), oldItem.getCanBreak(), oldItem.getBlockingTicks());
+
+
+        ItemData itemData = ItemData.builder().id(oldItem.getId()).damage(oldItem.getDamage()).count(itemCount).tag(oldItem.getTag()).canPlace(oldItem.getCanPlace()).canBreak(oldItem.getCanBreak()).blockingTicks(oldItem.getBlockingTicks()).build(),
+                newItem = ItemData.builder().id(oldItem.getId()).damage(oldItem.getDamage()).count(oldItem.getCount() - itemCount).tag(oldItem.getTag()).canPlace(oldItem.getCanPlace()).canBreak(oldItem.getCanBreak()).blockingTicks(oldItem.getBlockingTicks()).build();
         if (newItem.getCount() == 0) {
             newItem = ItemData.AIR;
         }
@@ -115,7 +117,8 @@ public class ClientPlayerActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.setBlockFace(0);
         inventoryTransactionPacket.setHotbarSlot(0);
         inventoryTransactionPacket.setBlockRuntimeId(0);
-        inventoryTransactionPacket.setHasNetworkIds(false);
+        //TODO check
+        //inventoryTransactionPacket.setHasNetworkIds(false);
         InventorySource inventorySource = InventorySource.fromWorldInteraction(InventorySource.Flag.DROP_ITEM);
         InventoryActionData inventoryActionData = new InventoryActionData(inventorySource, 0, ItemData.AIR, itemData);
         inventoryTransactionPacket.getActions().add(inventoryActionData);

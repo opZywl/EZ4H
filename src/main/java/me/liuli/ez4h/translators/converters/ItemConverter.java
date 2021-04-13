@@ -154,7 +154,7 @@ public class ItemConverter {
             id = new Integer(splitData[0]);
             data = new Integer(splitData[1]);
         }
-        return ItemData.of(id, (short) itemStack.getAmount(), data);
+        return ItemData.builder().id(id).damage((short) itemStack.getAmount()).count(data).build();
     }
 
     public short getJavaEnchant(short id) {

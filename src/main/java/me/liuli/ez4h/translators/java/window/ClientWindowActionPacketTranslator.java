@@ -81,7 +81,8 @@ public class ClientWindowActionPacketTranslator implements JavaTranslator {
         inventoryTransactionPacket.setBlockFace(0);
         inventoryTransactionPacket.setHotbarSlot(0);
         inventoryTransactionPacket.setBlockRuntimeId(0);
-        inventoryTransactionPacket.setHasNetworkIds(false);
+        //TODO check
+        //inventoryTransactionPacket.setHasNetworkIds(false);
         InventoryActionData inventoryActionData = new InventoryActionData(InventorySource.fromContainerWindowId(0), itemConverter.inventoryIndex(fromSlot, true), fromItem, toItem);
         inventoryTransactionPacket.getActions().add(inventoryActionData);
         inventoryActionData = new InventoryActionData(InventorySource.fromContainerWindowId(0), itemConverter.inventoryIndex(toSlot, true), toItem, fromItem);
