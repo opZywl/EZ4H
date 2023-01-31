@@ -1,7 +1,5 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1cc63c381abb4db38e4f25ced750ef3f)](https://app.codacy.com/gh/Project-EZ4H/EZ4H?utm_source=github.com&utm_medium=referral&utm_content=Project-EZ4H/EZ4H&utm_campaign=Badge_Grade)
-[![HitCount](http://hits.dwyl.com/Project-EZ4H/EZ4H.svg)](http://hits.dwyl.com/Project-EZ4H/EZ4H)
-[![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
-[![discord](https://img.shields.io/discord/799644723328974868?style=for-the-badge)](https://discord.gg/s3H67gYe7Z)
+# Project discontinued.
+
 # EZ4H
 Allow Minecraft:JE(1.12.2) connect to Minecraft:BE(1.16.210) servers!  
 
@@ -66,5 +64,3 @@ After this, you will see some files generated under the EZ4H root directory.Let'
 ~~~  
 (Yes, it's a JSON file)  
 I think you already know how to configure this, but I'm going to go through it briefly.
-
-# 琉璃我爱你我要做你的狗呜呜呜呜我好喜欢琉璃小姐琉璃小姐琉璃小姐琉璃小姐琉璃琉璃琉璃琉璃琉璃琉璃琉璃琉璃琉璃琉璃啊啊啊啊啊啊嘚斯
