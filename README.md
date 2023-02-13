@@ -1,14 +1,6 @@
 # Project discontinued.
 
-<div align="right">
-  Languages:
-  English | 
-  <a title="中文" href="/README_CN.md">中文</a>
-</div>
-
 # EZ4H [![releases](https://img.shields.io/github/v/release/opZywl/EZ4H?display_name=tag&color=%231ab1ad)](https://github.com/opZywl/EZ4H/releases) [![players](https://img.shields.io/bstats/players/10109)](https://bstats.org/plugin/bukkit/EZ4H/10109) [![servers](https://img.shields.io/bstats/servers/10109)](https://bstats.org/plugin/bukkit/EZ4H/10109) [![license](https://img.shields.io/github/license/opZywl/EZ4H)](https://github.com/opZywl/EZ4H/blob/main/LICENSE)
-
-![EZ4H](/EZ4H.png)
 
 EZ4H is a bridge/proxy between Minecraft: JE and Minecraft: BE, which allows JE-clients (1.12.2) to connect to BE-servers (1.16.210) .
 
@@ -34,8 +26,8 @@ EZ4H is a bridge/proxy between Minecraft: JE and Minecraft: BE, which allows JE-
 - [X] Level Events
 - [ ] Sounds
 
-## 👍Credits
-It would basically be impossible to build EZ4H without these open-source projects, wheather its just looking how thing works inorder to reverse translate them, looking at their code to see how thing work or copying a little bit of their code. We apperiate all these projects. ❤
+## Credits
+It would basically be impossible to build EZ4H without these open-source projects, wheather its just looking how thing works inorder to reverse translate them, looking at their code to see how thing work or copying a little bit of their code. We apperiate all these projects. 
 - [MCProtocolLib](https://github.com/Steveice10/MCProtocolLib)
 - [Bedrock-Protocol](https://github.com/CloudburstMC/Protocol)
 - [TunnelMC](https://github.com/THEREALWWEFAN231/TunnelMC)
